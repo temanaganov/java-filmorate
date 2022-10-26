@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.film;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,7 @@ public class InMemoryFilmService implements FilmService{
 
     @Override
     public List<Film> getAllFilms() {
-        return films.values().stream().toList();
+        return new ArrayList<>(films.values());
     }
 
     @Override

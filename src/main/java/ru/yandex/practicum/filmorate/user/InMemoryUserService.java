@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.user;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,7 @@ public class InMemoryUserService implements UserService {
 
     @Override
     public List<User> getAllUsers() {
-        return users.values().stream().toList();
+        return new ArrayList<>(users.values());
     }
 
     @Override
