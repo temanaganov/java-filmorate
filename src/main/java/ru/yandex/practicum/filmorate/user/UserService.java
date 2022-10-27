@@ -6,6 +6,6 @@ public interface UserService {
     List<User> getAllUsers();
     User getUser(int id);
     User createUser(User user);
-    User updateUser(int id, User user);
+    User updateUser(User user);
     User deleteUser(int id);
 }
