@@ -41,21 +41,21 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User createUser(@Valid @RequestBody User user) {
-        log.info("Создание пользователя" + user);
+        log.info("Creating User " + user);
         validateUserLogin(user.getLogin());
         return userService.createUser(user);
     }
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
-        log.info("Обновление пользователя" + user);
+        log.info("Updating User " + user);
         validateUserLogin(user.getLogin());
         return userService.updateUser(user);
     }
 
     @DeleteMapping("/{id}")
     public User deleteUser(@PathVariable int id) {
-        log.info("Удаление пользователя" + id);
+        log.info("Deleting User " + id);
         return userService.deleteUser(id);
     }
 

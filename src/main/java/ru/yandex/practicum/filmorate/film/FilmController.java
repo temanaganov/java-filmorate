@@ -42,21 +42,21 @@ public class FilmController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Film createFilm(@Valid @RequestBody Film film) {
-        log.info("Создание фильма" + film);
+        log.info("Creating Film " + film);
         validateFilmReleaseDate(film.getReleaseDate());
         return filmService.createFilm(film);
     }
 
     @PutMapping
     public Film updateFilm(@Valid @RequestBody Film film) {
-        log.info("Обновление фильма" + film);
+        log.info("Updating Film " + film);
         validateFilmReleaseDate(film.getReleaseDate());
         return filmService.updateFilm(film);
     }
 
     @DeleteMapping("/{id}")
     public Film deleteFilm(@PathVariable int id) {
-        log.info("Удаление фильма" + id);
+        log.info("Deleting Film " + id);
         return filmService.deleteFilm(id);
     }
 
