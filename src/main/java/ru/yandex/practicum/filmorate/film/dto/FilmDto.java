@@ -6,16 +6,18 @@ import lombok.NoArgsConstructor;
 import lombok.With;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @With
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateFilmDto {
+public class FilmDto {
+    int id;
+
     @NotBlank(message = "Name is required")
     String name;
 

@@ -1,10 +1,10 @@
 package ru.yandex.practicum.filmorate.film;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.core.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
-import ru.yandex.practicum.filmorate.film.dto.CreateFilmDto;
-import ru.yandex.practicum.filmorate.film.dto.UpdateFilmDto;
+import ru.yandex.practicum.filmorate.film.dto.FilmDto;
 import ru.yandex.practicum.filmorate.user.User;
 import ru.yandex.practicum.filmorate.user.UserStorage;
 
@@ -14,23 +14,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class InMemoryFilmService implements FilmService {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
-    private final Mapper<CreateFilmDto, Film> createFilmDtoToFilmMapper;
-    private final Mapper<UpdateFilmDto, Film> updateFilmDtoToFilmMapper;
-
-    public InMemoryFilmService(
-            FilmStorage filmStorage,
-            UserStorage userStorage,
-            Mapper<CreateFilmDto, Film> createFilmDtoToFilmMapper,
-            Mapper<UpdateFilmDto, Film> updateFilmDtoToFilmMapper
-    ) {
-        this.filmStorage = filmStorage;
-        this.userStorage = userStorage;
-        this.createFilmDtoToFilmMapper = createFilmDtoToFilmMapper;
-        this.updateFilmDtoToFilmMapper = updateFilmDtoToFilmMapper;
-    }
+    private final Mapper<FilmDto, Film> filmDtoToFilmMapper;
 
     @Override
     public List<Film> getAll() {
@@ -40,23 +28,29 @@ public class InMemoryFilmService implements FilmService {
     @Override
     public Film getById(int id) {
         Film film = filmStorage.getById(id);
-        if (film == null) throw new NotFoundException("film", id);
+
+        if (film == null) {
+            throw new NotFoundException("film", id);
+        }
+
         return film;
     }
 
     @Override
-    public Film create(CreateFilmDto dto) {
-        Film newFilm = createFilmDtoToFilmMapper.mapFrom(dto);
+    public Film create(FilmDto dto) {
+        Film newFilm = filmDtoToFilmMapper.mapFrom(dto);
         return filmStorage.create(newFilm);
     }
 
     @Override
-    public Film update(UpdateFilmDto dto) {
+    public Film update(FilmDto dto) {
         Film currentFilm = filmStorage.getById(dto.getId());
 
-        if (currentFilm == null) throw new NotFoundException("film", dto.getId());
+        if (currentFilm == null) {
+            throw new NotFoundException("film", dto.getId());
+        }
 
-        Film film = updateFilmDtoToFilmMapper.mapFrom(dto).withLikes(currentFilm.getLikes());
+        Film film = filmDtoToFilmMapper.mapFrom(dto).withLikes(currentFilm.getLikes());
 
         return filmStorage.update(film);
     }
@@ -64,7 +58,11 @@ public class InMemoryFilmService implements FilmService {
     @Override
     public Film delete(int id) {
         Film film = filmStorage.delete(id);
-        if (film == null) throw new NotFoundException("film", id);
+
+        if (film == null) {
+            throw new NotFoundException("film", id);
+        }
+
         return film;
     }
 
@@ -73,8 +71,13 @@ public class InMemoryFilmService implements FilmService {
         Film film = filmStorage.getById(filmId);
         User user = userStorage.getById(userId);
 
-        if (film == null) throw new NotFoundException("film", filmId);
-        if (user == null) throw new NotFoundException("user", userId);
+        if (film == null) {
+            throw new NotFoundException("film", filmId);
+        }
+
+        if (user == null) {
+            throw new NotFoundException("user", userId);
+        }
 
         Set<Integer> currentLikes = new HashSet<>(film.getLikes());
         currentLikes.add(userId);
@@ -89,8 +92,13 @@ public class InMemoryFilmService implements FilmService {
         Film film = filmStorage.getById(filmId);
         User user = userStorage.getById(userId);
 
-        if (film == null) throw new NotFoundException("film", filmId);
-        if (user == null) throw new NotFoundException("user", userId);
+        if (film == null) {
+            throw new NotFoundException("film", filmId);
+        }
+
+        if (user == null) {
+            throw new NotFoundException("user", userId);
+        }
 
         Set<Integer> currentLikes = new HashSet<>(film.getLikes());
         currentLikes.remove(userId);

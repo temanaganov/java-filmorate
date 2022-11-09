@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.core.exception.FieldValidationException;
-import ru.yandex.practicum.filmorate.film.dto.CreateFilmDto;
-import ru.yandex.practicum.filmorate.film.dto.UpdateFilmDto;
+import ru.yandex.practicum.filmorate.film.dto.FilmDto;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -42,14 +41,14 @@ public class FilmController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Film createFilm(@Valid @RequestBody CreateFilmDto dto) {
+    public Film createFilm(@Valid @RequestBody FilmDto dto) {
         log.info("Creating Film " + dto);
         validateFilmReleaseDate(dto.getReleaseDate());
         return filmService.create(dto);
     }
 
     @PutMapping
-    public Film updateFilm(@Valid @RequestBody UpdateFilmDto dto) {
+    public Film updateFilm(@Valid @RequestBody FilmDto dto) {
         log.info("Updating Film " + dto);
         validateFilmReleaseDate(dto.getReleaseDate());
         return filmService.update(dto);

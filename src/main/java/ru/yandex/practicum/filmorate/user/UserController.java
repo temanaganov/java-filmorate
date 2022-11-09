@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import ru.yandex.practicum.filmorate.user.dto.CreateUserDto;
-import ru.yandex.practicum.filmorate.user.dto.UpdateUserDto;
+import ru.yandex.practicum.filmorate.user.dto.UserDto;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -39,13 +38,13 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User createUser(@Valid @RequestBody CreateUserDto dto) {
+    public User createUser(@Valid @RequestBody UserDto dto) {
         log.info("Creating User " + dto);
         return userService.create(dto);
     }
 
     @PutMapping
-    public User updateUser(@Valid @RequestBody UpdateUserDto dto) {
+    public User updateUser(@Valid @RequestBody UserDto dto) {
         log.info("Updating User " + dto);
         return userService.update(dto);
     }

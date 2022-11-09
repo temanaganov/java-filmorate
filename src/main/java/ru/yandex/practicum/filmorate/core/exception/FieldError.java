@@ -1,13 +1,11 @@
 package ru.yandex.practicum.filmorate.core.exception;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class FieldError {
     private final String field;
     private final String description;
-
-    public FieldError(String field, String description) {
-        this.field = field;
-        this.description = description;
-    }
 
     public String getField() {
         return field;
