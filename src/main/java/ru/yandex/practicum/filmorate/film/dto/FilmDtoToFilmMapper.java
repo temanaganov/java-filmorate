@@ -10,7 +10,6 @@ import java.util.HashSet;
 public class FilmDtoToFilmMapper implements Mapper<FilmDto, Film> {
     @Override
     public Film mapFrom(FilmDto dto) {
-        System.out.println(dto);
         return Film.builder()
                 .id(dto.getId())
                 .name(dto.getName())

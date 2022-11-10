@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class InMemoryUserService implements UserService {
+public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
     private final Mapper<UserDto, User> userDtoToUserMapper;
 
@@ -49,7 +49,7 @@ public class InMemoryUserService implements UserService {
 
         User user = userDtoToUserMapper.mapFrom(dto).withFriends(currentUser.getFriends());
 
-        return userStorage.update(user);
+        return userStorage.update(user.getId(), user);
     }
 
     @Override
@@ -82,9 +82,9 @@ public class InMemoryUserService implements UserService {
         currentUserFriends.add(friendId);
         currentFriendFriends.add(userId);
 
-        userStorage.update(friend.withFriends(currentFriendFriends));
+        userStorage.update(friendId, friend.withFriends(currentFriendFriends));
 
-        return userStorage.update(user.withFriends(currentUserFriends));
+        return userStorage.update(userId, user.withFriends(currentUserFriends));
     }
 
     @Override
@@ -106,9 +106,9 @@ public class InMemoryUserService implements UserService {
         currentUserFriends.remove(friendId);
         currentFriendFriends.remove(userId);
 
-        userStorage.update(friend.withFriends(currentFriendFriends));
+        userStorage.update(friendId, friend.withFriends(currentFriendFriends));
 
-        return userStorage.update(user.withFriends(currentUserFriends));
+        return userStorage.update(userId, user.withFriends(currentUserFriends));
     }
 
     @Override

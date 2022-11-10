@@ -6,6 +6,6 @@ public interface CrudStorage<K> {
     List<K> getAll();
     K getById(int id);
     K create(K film);
-    K update(K film);
+    K update(int id, K film);
     K delete(int id);
 }

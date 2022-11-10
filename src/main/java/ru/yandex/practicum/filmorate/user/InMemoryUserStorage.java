@@ -6,12 +6,7 @@ import ru.yandex.practicum.filmorate.core.storage.InMemoryStorage;
 @Component
 public class InMemoryUserStorage extends InMemoryStorage<User> implements UserStorage {
     @Override
-    protected int getId(User user) {
-        return user.getId();
-    }
-
-    @Override
-    protected User withId(User user) {
-        return user.withId(getNextId());
+    protected User withId(User user, int id) {
+        return user.withId(id);
     }
 }

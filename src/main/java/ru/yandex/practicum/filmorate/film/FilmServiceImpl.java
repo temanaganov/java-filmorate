@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class InMemoryFilmService implements FilmService {
+public class FilmServiceImpl implements FilmService {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
     private final Mapper<FilmDto, Film> filmDtoToFilmMapper;
@@ -52,7 +52,7 @@ public class InMemoryFilmService implements FilmService {
 
         Film film = filmDtoToFilmMapper.mapFrom(dto).withLikes(currentFilm.getLikes());
 
-        return filmStorage.update(film);
+        return filmStorage.update(film.getId(), film);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class InMemoryFilmService implements FilmService {
 
         Film updatedFilm = film.withLikes(currentLikes);
 
-        return filmStorage.update(updatedFilm);
+        return filmStorage.update(filmId, updatedFilm);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class InMemoryFilmService implements FilmService {
 
         Film updatedFilm = film.withLikes(currentLikes);
 
-        return filmStorage.update(updatedFilm);
+        return filmStorage.update(filmId, updatedFilm);
     }
 
     @Override

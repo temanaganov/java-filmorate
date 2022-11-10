@@ -18,13 +18,14 @@ public abstract class InMemoryStorage<T> {
     }
 
     public T create(T entity) {
-        T newEntity = withId(entity);
-        storage.put(getId(newEntity), newEntity);
+        int id = getNextId();
+        T newEntity = withId(entity, id);
+        storage.put(id, newEntity);
         return newEntity;
     }
 
-    public T update(T entity) {
-        storage.put(getId(entity), entity);
+    public T update(int id, T entity) {
+        storage.put(id, entity);
         return entity;
     }
 
@@ -36,6 +37,5 @@ public abstract class InMemoryStorage<T> {
         return ++id;
     }
 
-    protected abstract int getId(T entity);
-    protected abstract T withId(T entity);
+    protected abstract T withId(T entity, int id);
 }
