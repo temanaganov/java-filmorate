@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class ExceptionsHandler {
     @ExceptionHandler
-    public List<FieldError> handler(MethodArgumentNotValidException exception) {
+    public List<FieldError> fieldValidationExceptionHandler(MethodArgumentNotValidException exception) {
         log.error("Invalid arguments", exception);
         return exception
                 .getFieldErrors()
@@ -26,21 +26,21 @@ public class ExceptionsHandler {
     }
 
     @ExceptionHandler
-    public List<FieldError> handler(FieldValidationException exception) {
+    public List<FieldError> fieldValidationExceptionHandler(FieldValidationException exception) {
         log.error("Invalid arguments", exception);
         return List.of(new FieldError(exception.getField(), exception.getDescription()));
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handler(NotFoundException exception) {
+    public Map<String, String> notFoundExceptionHandler(NotFoundException exception) {
         log.error("Entity not found", exception);
         return Map.of("error", exception.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> handler(Exception exception) {
+    public Map<String, String> internalServerErrorHandler(Exception exception) {
         log.error("Internal error", exception);
         return Map.of("error", exception.getMessage());
     }
