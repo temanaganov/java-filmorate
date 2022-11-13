@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.film.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.With;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 
 @With
 @Getter
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class FilmDto {

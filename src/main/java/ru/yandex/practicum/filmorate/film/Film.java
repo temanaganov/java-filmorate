@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.film;
 
-import lombok.Builder;
 import lombok.Value;
 import lombok.With;
 
@@ -9,7 +8,6 @@ import java.util.Set;
 
 @With
 @Value
-@Builder
 public class Film {
     int id;
     String name;
