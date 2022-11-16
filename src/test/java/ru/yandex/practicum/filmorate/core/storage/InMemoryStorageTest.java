@@ -11,7 +11,7 @@ public abstract class InMemoryStorageTest<T> {
     protected InMemoryStorage<T> storage;
 
     @Test
-    void getAll_shouldReturnEmptyListIfStorageIsEmpty() {
+    void getAll_shouldReturnEmptyList_ifStorageIsEmpty() {
         assertEquals(Collections.emptyList(), storage.getAll());
     }
 
@@ -26,7 +26,7 @@ public abstract class InMemoryStorageTest<T> {
     }
 
     @Test
-    void getAll_shouldReturnEntity() {
+    void getById_shouldReturnEntity() {
         int id = 1;
         T entity1 = getEntity(id);
         storage.create(entity1);
@@ -35,7 +35,7 @@ public abstract class InMemoryStorageTest<T> {
     }
 
     @Test
-    void getById_shouldReturnNullIfStorageHasNoEntityWithGivenId() {
+    void getById_shouldReturnNull_ifStorageHasNoEntityWithGivenId() {
         assertNull(storage.getById(1));
     }
 
@@ -68,7 +68,7 @@ public abstract class InMemoryStorageTest<T> {
     }
 
     @Test
-    void update_shouldReturnNullIfStorageHasNoEntityWithGivenId() {
+    void update_shouldReturnNull_ifStorageHasNoEntityWithGivenId() {
         assertNull(storage.update(1, getEntity(1)));
     }
 
@@ -85,7 +85,7 @@ public abstract class InMemoryStorageTest<T> {
     }
 
     @Test
-    void delete_shouldReturnNullIfStorageHasNoEntityWithGivenId() {
+    void delete_shouldReturnNull_ifStorageHasNoEntityWithGivenId() {
         assertNull(storage.delete(1));
     }
 

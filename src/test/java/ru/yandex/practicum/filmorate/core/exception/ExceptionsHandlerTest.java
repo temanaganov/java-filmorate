@@ -1,16 +1,12 @@
 package ru.yandex.practicum.filmorate.core.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ru.yandex.practicum.filmorate.film.FilmController;
 import ru.yandex.practicum.filmorate.film.FilmService;
 import ru.yandex.practicum.filmorate.film.dto.FilmDto;
 
@@ -24,22 +20,17 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class ExceptionsHandlerTest {
-    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    @Autowired
+    private ObjectMapper objectMapper;
 
+    @Autowired
     private MockMvc mockMvc;
 
-    @Mock
+    @MockBean
     private FilmService filmService;
-
-    @InjectMocks
-    private FilmController filmController;
-
-    @BeforeEach
-    void setMockMvc() {
-        mockMvc = MockMvcBuilders.standaloneSetup(filmController).setControllerAdvice(new ExceptionsHandler()).build();
-    }
 
     @Test
     void fieldExceptionHandler_shouldReturnListOfFieldErrors() throws Exception {

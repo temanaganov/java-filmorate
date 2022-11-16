@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ru.yandex.practicum.filmorate.core.exception.ExceptionsHandler;
 import ru.yandex.practicum.filmorate.film.dto.FilmDto;
 
 import java.time.LocalDate;
@@ -44,7 +43,7 @@ public class FilmControllerTest {
 
     @BeforeEach
     void setMockMvc() {
-        mockMvc = MockMvcBuilders.standaloneSetup(filmController).setControllerAdvice(new ExceptionsHandler()).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(filmController).build();
     }
 
     @Test
@@ -104,7 +103,7 @@ public class FilmControllerTest {
 
     @ParameterizedTest
     @MethodSource("filmInvalidArgumentsProvider")
-    void createFilm_updateFilm_shouldResponseWithBadRequestIfFilmIsInvalid(FilmDto filmDto) throws Exception {
+    void createFilm_updateFilm_shouldResponseWithBadRequest_ifFilmIsInvalid(FilmDto filmDto) throws Exception {
         String json = objectMapper.writeValueAsString(filmDto);
 
         mockMvc.perform(post("/films").contentType("application/json").content(json))

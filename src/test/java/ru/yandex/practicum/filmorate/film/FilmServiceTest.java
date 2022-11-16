@@ -8,7 +8,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.yandex.practicum.filmorate.core.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.film.dto.FilmDto;
 import ru.yandex.practicum.filmorate.film.dto.FilmDtoToFilmMapper;
-import ru.yandex.practicum.filmorate.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.user.User;
 import ru.yandex.practicum.filmorate.user.UserStorage;
 
@@ -24,25 +23,25 @@ import java.util.Set;
 @ExtendWith(MockitoExtension.class)
 public class FilmServiceTest {
     @Mock
-    FilmStorage filmStorage = new InMemoryFilmStorage();
+    FilmStorage filmStorage;
 
     @Mock
-    UserStorage userStorage = new InMemoryUserStorage();
+    UserStorage userStorage;
 
     @Mock
-    FilmDtoToFilmMapper filmDtoToFilmMapper = new FilmDtoToFilmMapper();
+    FilmDtoToFilmMapper filmDtoToFilmMapper;
 
     @InjectMocks
     private FilmServiceImpl filmService;
 
     @Test
-    void getAll_shouldReturnEmptyListIfStorageIsEmpty() {
+    void getAll_shouldReturnEmptyList_ifStorageIsEmpty() {
         when(filmStorage.getAll()).thenReturn(Collections.emptyList());
         assertEquals(Collections.EMPTY_LIST, filmService.getAll());
     }
 
     @Test()
-    void getAll_shouldReturnThreeFilmsIfStorageHasThreeFilms() {
+    void getAll_shouldReturnThreeFilms_ifStorageHasThreeFilms() {
         List<Film> films = List.of(getFilm(1), getFilm(2), getFilm(3));
 
         when(filmStorage.getAll()).thenReturn(films);
@@ -51,7 +50,7 @@ public class FilmServiceTest {
     }
 
     @Test()
-    void getById_shouldReturnFilmIfStorageHasIt() {
+    void getById_shouldReturnFilm_ifStorageHasIt() {
         int id = 1;
         Film film = getFilm(id);
 
@@ -64,7 +63,7 @@ public class FilmServiceTest {
     }
 
     @Test()
-    void getById_shouldThrowNotFoundExceptionIfStorageHasNoFilm() {
+    void getById_shouldThrowNotFoundException_ifStorageHasNoFilm() {
         int id = 1;
         when(filmStorage.getById(id)).thenReturn(null);
 
@@ -101,7 +100,7 @@ public class FilmServiceTest {
     }
 
     @Test()
-    void update_shouldThrowNotFoundExceptionIfStorageHasNoFilm() {
+    void update_shouldThrowNotFoundException_ifStorageHasNoFilm() {
         int id = 1;
         FilmDto dto = getFilmDto(id);
 
@@ -122,7 +121,7 @@ public class FilmServiceTest {
     }
 
     @Test()
-    void delete_shouldThrowNotFoundExceptionIfStorageHasNoFilm() {
+    void delete_shouldThrowNotFoundException_ifStorageHasNoFilm() {
         int id = 1;
 
         when(filmStorage.delete(id)).thenReturn(null);
@@ -150,7 +149,7 @@ public class FilmServiceTest {
     }
 
     @Test
-    void likeFilm_shouldReturnNotChangedFilmIfUserHasAlreadyLikedIt() {
+    void likeFilm_shouldReturnNotChangedFilm_ifUserHasAlreadyLikedIt() {
         int filmId = 1;
         int userId = 2;
         Film film = getFilm(filmId).withLikes(Set.of(userId));
@@ -167,7 +166,7 @@ public class FilmServiceTest {
     }
 
     @Test
-    void likeFilm_shouldThrowNotFoundExceptionIfStorageHasNoFilm() {
+    void likeFilm_shouldThrowNotFoundException_ifStorageHasNoFilm() {
         int filmId = 1;
         int userId = 2;
         User user = getUser(userId);
@@ -180,7 +179,7 @@ public class FilmServiceTest {
     }
 
     @Test
-    void likeFilm_shouldThrowNotFoundExceptionIfStorageHasNoUser() {
+    void likeFilm_shouldThrowNotFoundException_ifStorageHasNoUser() {
         int filmId = 1;
         int userId = 2;
         Film film = getFilm(filmId);
@@ -211,7 +210,7 @@ public class FilmServiceTest {
     }
 
     @Test
-    void deleteLikeFromFilm_shouldReturnNotChangedFilmIfUserHasNotLikedIt() {
+    void deleteLikeFromFilm_shouldReturnNotChangedFilm_ifUserHasNotLikedIt() {
         int filmId = 1;
         int userId = 2;
         Film film = getFilm(filmId);
@@ -228,7 +227,7 @@ public class FilmServiceTest {
     }
 
     @Test
-    void deleteLikeFromFilm_shouldThrowNotFoundExceptionIfStorageHasNoFilm() {
+    void deleteLikeFromFilm_shouldThrowNotFoundException_ifStorageHasNoFilm() {
         int filmId = 1;
         int userId = 2;
         User user = getUser(userId);
@@ -241,7 +240,7 @@ public class FilmServiceTest {
     }
 
     @Test
-    void deleteLikeFromFilm_shouldThrowNotFoundExceptionIfStorageHasNoUser() {
+    void deleteLikeFromFilm_shouldThrowNotFoundException_ifStorageHasNoUser() {
         int filmId = 1;
         int userId = 2;
         Film film = getFilm(filmId);
@@ -254,7 +253,7 @@ public class FilmServiceTest {
     }
 
     @Test
-    void getPopularFilms_shouldReturnEmptyListIfStorageIsEmpty() {
+    void getPopularFilms_shouldReturnEmptyList_ifStorageIsEmpty() {
         int count = 10;
 
         when(filmStorage.getAll()).thenReturn(Collections.emptyList());
@@ -263,7 +262,7 @@ public class FilmServiceTest {
     }
 
     @Test
-    void getPopularFilms_shouldReturnEmptyListIfCountIsNegative() {
+    void getPopularFilms_shouldReturnEmptyList_ifCountIsNegative() {
         int count = -1;
         List<Film> films = List.of(
                 getFilm(1).withLikes(Set.of(1)),

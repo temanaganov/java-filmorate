@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ru.yandex.practicum.filmorate.core.exception.ExceptionsHandler;
 import ru.yandex.practicum.filmorate.user.dto.UserDto;
 
 import java.time.LocalDate;
@@ -42,7 +41,7 @@ public class UserControllerTest {
 
     @BeforeEach
     void setMockMvc() {
-        mockMvc = MockMvcBuilders.standaloneSetup(userController).setControllerAdvice(new ExceptionsHandler()).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
     }
 
     @Test
@@ -101,7 +100,7 @@ public class UserControllerTest {
 
     @ParameterizedTest
     @MethodSource("userInvalidArgumentsProvider")
-    void createUser_updateUser_shouldResponseWithBadRequestIfUserIsInvalid(UserDto userDto) throws Exception {
+    void createUser_updateUser_shouldResponseWithBadRequest_ifUserIsInvalid(UserDto userDto) throws Exception {
         String json = objectMapper.writeValueAsString(userDto);
 
         mockMvc.perform(post("/users").contentType("application/json").content(json))

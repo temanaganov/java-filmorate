@@ -23,22 +23,22 @@ import java.util.Set;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
     @Mock
-    UserStorage userStorage = new InMemoryUserStorage();
+    UserStorage userStorage;
 
     @Mock
-    UserDtoToUserMapper userDtoToUserMapper = new UserDtoToUserMapper();
+    UserDtoToUserMapper userDtoToUserMapper;
 
     @InjectMocks
     private UserServiceImpl userService;
 
     @Test
-    void getAll_shouldReturnEmptyListIfStorageIsEmpty() {
+    void getAll_shouldReturnEmptyList_ifStorageIsEmpty() {
         when(userStorage.getAll()).thenReturn(Collections.emptyList());
         assertEquals(Collections.EMPTY_LIST, userService.getAll());
     }
 
     @Test()
-    void getAll_shouldReturnThreeUsersIfStorageHasThreeUsers() {
+    void getAll_shouldReturnThreeUsers_ifStorageHasThreeUsers() {
         List<User> users = List.of(getUser(1), getUser(2), getUser(3));
 
         when(userStorage.getAll()).thenReturn(users);
@@ -47,7 +47,7 @@ public class UserServiceTest {
     }
 
     @Test()
-    void getById_shouldReturnUserIfStorageHasIt() {
+    void getById_shouldReturnUser_ifStorageHasIt() {
         int id = 1;
         User user = getUser(id);
 
@@ -60,7 +60,7 @@ public class UserServiceTest {
     }
 
     @Test()
-    void getById_shouldThrowNotFoundExceptionIfStorageHasNoUser() {
+    void getById_shouldThrowNotFoundException_ifStorageHasNoUser() {
         int id = 1;
         when(userStorage.getById(id)).thenReturn(null);
 
@@ -97,7 +97,7 @@ public class UserServiceTest {
     }
 
     @Test()
-    void update_shouldThrowNotFoundExceptionIfStorageHasNoUser() {
+    void update_shouldThrowNotFoundException_ifStorageHasNoUser() {
         int id = 1;
         UserDto dto = getUserDto(id);
 
@@ -118,7 +118,7 @@ public class UserServiceTest {
     }
 
     @Test()
-    void delete_shouldThrowNotFoundExceptionIfStorageHasNoUser() {
+    void delete_shouldThrowNotFoundException_ifStorageHasNoUser() {
         int id = 1;
 
         when(userStorage.delete(id)).thenReturn(null);
@@ -145,7 +145,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void addFriend_shouldNotChangeUsersIfTheyAreAlreadyFriendsAndReturnFirstUser() {
+    void addFriend_shouldNotChangeUsers_ifTheyAreAlreadyFriendsAndReturnFirstUser() {
         int user1Id = 1;
         int user2Id = 2;
         User user1 = getUser(user1Id).withFriends(Set.of(user2Id));
@@ -160,13 +160,13 @@ public class UserServiceTest {
     }
 
     @Test
-    void addFriend_shouldThrowFieldValidationExceptionIfUser1IdEqualsToUser2Id() {
+    void addFriend_shouldThrowFieldValidationException_ifUser1IdEqualsToUser2Id() {
         int userId = 1;
         assertThrows(FieldValidationException.class, () -> userService.addFriend(userId, userId));
     }
 
     @Test
-    void addFriend_shouldThrowNotFoundExceptionIfStorageHasNoUser1() {
+    void addFriend_shouldThrowNotFoundException_ifStorageHasNoUser1() {
         int user1Id = 1;
         int user2Id = 2;
         User user2 = getUser(user2Id);
@@ -179,7 +179,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void addFriend_shouldThrowNotFoundExceptionIfStorageHasNoUser2() {
+    void addFriend_shouldThrowNotFoundException_ifStorageHasNoUser2() {
         int user1Id = 1;
         int user2Id = 2;
         User user1 = getUser(user1Id);
@@ -209,7 +209,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void deleteFriend_shouldNotChangeUsersIfTheyHaveNotEachOtherInFriendsAndReturnFirstUser() {
+    void deleteFriend_shouldNotChangeUsers_ifTheyHaveNotEachOtherInFriendsAndReturnFirstUser() {
         int user1Id = 1;
         int user2Id = 2;
         User user1 = getUser(user1Id);
@@ -224,7 +224,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void deleteFriend_shouldThrowNotFoundExceptionIfStorageHasNoUser1() {
+    void deleteFriend_shouldThrowNotFoundException_ifStorageHasNoUser1() {
         int user1Id = 1;
         int user2Id = 2;
         User user2 = getUser(user2Id);
@@ -237,7 +237,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void deleteFriend_shouldThrowNotFoundExceptionIfStorageHasNoUser2() {
+    void deleteFriend_shouldThrowNotFoundException_ifStorageHasNoUser2() {
         int user1Id = 1;
         int user2Id = 2;
         User user1 = getUser(user1Id);
@@ -250,7 +250,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void getFriends_shouldReturnEmptyListIfUserHasNoFriends() {
+    void getFriends_shouldReturnEmptyList_ifUserHasNoFriends() {
         int userId = 1;
         User user = getUser(userId);
 
@@ -277,7 +277,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void getFriends_shouldThrowNotFoundExceptionIfStorageHasNoUser() {
+    void getFriends_shouldThrowNotFoundException_ifStorageHasNoUser() {
         int userId = 1;
 
         when(userStorage.getById(userId)).thenReturn(null);
@@ -303,7 +303,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void getCommonFriends_shouldReturnEmptyListIfUsersHaveNoCommonFriends() {
+    void getCommonFriends_shouldReturnEmptyList_ifUsersHaveNoCommonFriends() {
         int user1Id = 1;
         int user2Id = 2;
         User user1 = getUser(user1Id).withFriends(Set.of(user2Id));
@@ -316,7 +316,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void getCommonFriends_shouldReturnEmptyListIfUsersHaveNoFriends() {
+    void getCommonFriends_shouldReturnEmptyList_ifUsersHaveNoFriends() {
         int user1Id = 1;
         int user2Id = 2;
         User user1 = getUser(user1Id);
@@ -329,7 +329,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void getCommonFriends_shouldThrowNotFoundExceptionIfStorageHasNoUser1() {
+    void getCommonFriends_shouldThrowNotFoundException_ifStorageHasNoUser1() {
         int user1Id = 1;
         int user2Id = 2;
         User user2 = getUser(user2Id);
@@ -342,7 +342,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void getCommonFriends_shouldThrowNotFoundExceptionIfStorageHasNoUser2() {
+    void getCommonFriends_shouldThrowNotFoundException_ifStorageHasNoUser2() {
         int user1Id = 1;
         int user2Id = 2;
         User user1 = getUser(user1Id);

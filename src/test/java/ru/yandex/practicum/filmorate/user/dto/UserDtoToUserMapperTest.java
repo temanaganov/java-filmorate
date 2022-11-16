@@ -35,7 +35,7 @@ public class UserDtoToUserMapperTest {
     }
 
     @Test
-    void mapFrom_shouldCreateUserWithNameEqualsLoginIfNameIsNotGiven() {
+    void mapFrom_shouldCreateUserWithNameEqualsLogin_ifNameIsNotGiven() {
         UserDto userDto = new UserDto(
                 1,
                 "test@test.test",
