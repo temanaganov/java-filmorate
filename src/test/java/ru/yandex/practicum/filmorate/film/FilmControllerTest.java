@@ -5,17 +5,21 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ru.yandex.practicum.filmorate.core.exception.ExceptionsHandler;
+import ru.yandex.practicum.filmorate.film.dto.FilmDto;
 
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -38,20 +42,21 @@ public class FilmControllerTest {
     private FilmController filmController;
 
     @BeforeEach
-    public void setMockMvc() {
-        mockMvc = MockMvcBuilders.standaloneSetup(filmController).setControllerAdvice(new ExceptionsHandler()).build();
+    void setMockMvc() {
+        mockMvc = MockMvcBuilders.standaloneSetup(filmController).build();
     }
 
     @Test
-    public void getAll_shouldReturnEmptyList() throws Exception {
+    void getAllFilms_shouldReturnEmptyList() throws Exception {
         mockMvc.perform(get("/films"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
     }
 
     @Test
-    public void getAll_shouldReturnFilms() throws Exception {
+    void getAllFilms_shouldReturnFilms() throws Exception {
         List<Film> films = List.of(getFilm(1), getFilm(2));
+
         when(filmService.getAll()).thenReturn(films);
 
         mockMvc.perform(get("/films"))
@@ -60,102 +65,137 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void create_shouldSuccessfullyCreateAndUpdateFilm() throws Exception {
-        Film film = getFilm(1);
-        String json = objectMapper.writeValueAsString(film);
+    void getFilm_shouldReturnFilm() throws Exception {
+        int id = 1;
+        Film film = getFilm(id);
 
-        mockMvc.perform(post("/films")
-                        .accept("application/json")
-                        .contentType("application/json")
-                        .content(json)
-        ).andExpect(status().isCreated());
+        when(filmService.getById(id)).thenReturn(film);
 
-        json = objectMapper.writeValueAsString(film.withName("Updated name"));
-
-        mockMvc.perform(put("/films")
-                .accept("application/json")
-                .contentType("application/json")
-                .content(json)
-        ).andExpect(status().isOk());
-    }
-
-
-    @Test
-    public void create_shouldResponseWithBadRequest_ifFilmIsInvalid() throws Exception {
-        Film film;
-        String json;
-
-        film = getFilm(1).withName("");
-        json = objectMapper.writeValueAsString(film);
-        mockMvc.perform(post("/films").accept("application/json").contentType("application/json").content(json))
-                .andExpect(status().isBadRequest());
-        mockMvc.perform(put("/films").contentType("application/json").content(json))
-                .andExpect(status().isBadRequest());
-
-        film = getFilm(1).withDescription("a long string".repeat(20));
-        json = objectMapper.writeValueAsString(film);
-        mockMvc.perform(post("/films").contentType("application/json").content(json))
-                .andExpect(status().isBadRequest());
-        mockMvc.perform(put("/films").contentType("application/json").content(json))
-                .andExpect(status().isBadRequest());
-
-        film = getFilm(1).withReleaseDate(LocalDate.parse("1000-01-01"));
-        json = objectMapper.writeValueAsString(film);
-        mockMvc.perform(post("/films").contentType("application/json").content(json))
-                .andExpect(status().isBadRequest());
-        mockMvc.perform(put("/films").contentType("application/json").content(json))
-                .andExpect(status().isBadRequest());
-
-        film = getFilm(1).withDuration(-1);
-        json = objectMapper.writeValueAsString(film);
-        mockMvc.perform(post("/films").contentType("application/json").content(json))
-                .andExpect(status().isBadRequest());
-        mockMvc.perform(put("/films").contentType("application/json").content(json))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void delete_shouldSuccessfullyDeleteFilm() throws Exception {
-        when(filmService.delete(1)).thenReturn(getFilm(1));
-
-        mockMvc.perform(delete("/films/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(getFilm(1))));
-    }
-
-    @Test
-    public void shouldSuccessfullyAddAndRemoveLikeFromFilm() throws Exception {
-        Film film = getFilm(1);
-        Film filmWithLikes = film.withLikes(Set.of(1));
-
-        when(filmService.likeFilm(1, 1)).thenReturn(filmWithLikes);
-        when(filmService.deleteLikeFromFilm(1, 1)).thenReturn(film);
-
-        mockMvc.perform(put("/films/1/like/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(filmWithLikes)));
-
-        mockMvc.perform(delete("/films/1/like/1"))
+        mockMvc.perform(get("/films/" + id))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(film)));
     }
 
     @Test
-    public void shouldReturnFilmsByLikes() throws Exception {
-        Film film1 = getFilm(1).withLikes(Set.of(1));
-        Film film2 = getFilm(2).withLikes(Set.of(1, 2));
-        Film film3 = getFilm(3).withLikes(Set.of(1, 2, 3));
+    void createFilm_updateFilm_shouldSuccessfullyCreateAndUpdateFilm() throws Exception {
+        int id = 1;
+        FilmDto filmDto = getFilmDto(id);
+        Film film = getFilm(id);
+        String json = objectMapper.writeValueAsString(filmDto);
 
-        List<Film> films = List.of(film3, film2, film1);
+        when(filmService.create(filmDto)).thenReturn(film);
+
+        mockMvc.perform(post("/films").contentType("application/json").content(json))
+                .andExpect(status().isCreated())
+                .andExpect(content().json(objectMapper.writeValueAsString(film)));
+
+        filmDto = filmDto.withName("Updated name");
+        film = film.withName("Updated name");
+        json = objectMapper.writeValueAsString(filmDto);
+
+        when(filmService.update(filmDto)).thenReturn(film);
+
+        mockMvc.perform(put("/films").contentType("application/json").content(json))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(film)));
+    }
+
+
+    @ParameterizedTest
+    @MethodSource("filmInvalidArgumentsProvider")
+    void createFilm_updateFilm_shouldResponseWithBadRequest_ifFilmIsInvalid(FilmDto filmDto) throws Exception {
+        String json = objectMapper.writeValueAsString(filmDto);
+
+        mockMvc.perform(post("/films").contentType("application/json").content(json))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(put("/films").contentType("application/json").content(json))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void deleteFilm_shouldSuccessfullyDeleteFilm() throws Exception {
+        int id = 1;
+        Film film = getFilm(id);
+
+        when(filmService.delete(id)).thenReturn(film);
+
+        mockMvc.perform(delete("/films/" + id))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(film)));
+    }
+
+    @Test
+    void getPopularFilms_shouldReturnPopularFilms() throws Exception {
+        int count = 2;
+        List<Film> films = List.of(getFilm(1), getFilm(2), getFilm(3));
+        List<Film> limitFilms = films.stream().limit(count).collect(Collectors.toList());
 
         when(filmService.getPopularFilms(10)).thenReturn(films);
+        when(filmService.getPopularFilms(count)).thenReturn(limitFilms);
 
-        mockMvc.perform(get("/films/popular?count=10"))
+        mockMvc.perform(get("/films/popular"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(films)));
+
+        mockMvc.perform(get("/films/popular?count=" + count))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(limitFilms)));
+    }
+
+    @Test
+    void likeFilm_deleteLikeFromFilm_shouldSuccessfullyAddAndRemoveLikeFromFilm() throws Exception {
+        int filmId = 1;
+        int userId = 1;
+        Film film = getFilm(filmId);
+        Film filmWithLikes = film.withLikes(Set.of(userId));
+
+        when(filmService.likeFilm(filmId, userId)).thenReturn(filmWithLikes);
+        when(filmService.deleteLikeFromFilm(filmId, userId)).thenReturn(film);
+
+        mockMvc.perform(put("/films/" + filmId + "/like/" + userId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(filmWithLikes)));
+
+        mockMvc.perform(delete("/films/" + filmId + "/like/" + userId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(film)));
     }
 
     private static Film getFilm(int id) {
-        return new Film(id, "film", "description", LocalDate.parse("2000-01-01"), 120, Collections.emptySet());
+        return new Film(
+                id,
+                "Test film",
+                "Test description",
+                LocalDate.parse("2000-01-01"),
+                120,
+                Collections.emptySet()
+        );
+    }
+
+    private static FilmDto getFilmDto(int id) {
+        return new FilmDto(
+                id,
+                "Test film",
+                "Test description",
+                LocalDate.parse("2000-01-01"),
+                120
+        );
+    }
+
+    private static Stream<FilmDto> filmInvalidArgumentsProvider() {
+        FilmDto filmDto = getFilmDto(1);
+
+        return Stream.of(
+                filmDto.withName(null),
+                filmDto.withName(""),
+                filmDto.withName(" "),
+                filmDto.withDescription(null),
+                filmDto.withDescription(""),
+                filmDto.withDescription(" "),
+                filmDto.withDescription("a long string".repeat(20)),
+                filmDto.withReleaseDate(null),
+                filmDto.withReleaseDate(LocalDate.parse("1000-01-01")),
+                filmDto.withDuration(-1)
+        );
     }
 }

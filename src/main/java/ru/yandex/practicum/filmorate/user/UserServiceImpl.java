@@ -2,11 +2,12 @@ package ru.yandex.practicum.filmorate.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.core.exception.FieldValidationException;
 import ru.yandex.practicum.filmorate.core.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
 import ru.yandex.practicum.filmorate.user.dto.UserDto;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -65,6 +66,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addFriend(int userId, int friendId) {
+        if (userId == friendId) {
+            throw new FieldValidationException("friendId", "friendId can not be equal to userId");
+        }
+
         User user = userStorage.getById(userId);
         User friend = userStorage.getById(friendId);
 
@@ -76,8 +81,8 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException("user", friendId);
         }
 
-        Set<Integer> currentUserFriends = new HashSet<>(user.getFriends());
-        Set<Integer> currentFriendFriends = new HashSet<>(friend.getFriends());
+        Set<Integer> currentUserFriends = new LinkedHashSet<>(user.getFriends());
+        Set<Integer> currentFriendFriends = new LinkedHashSet<>(friend.getFriends());
 
         currentUserFriends.add(friendId);
         currentFriendFriends.add(userId);
@@ -100,8 +105,8 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException("user", friendId);
         }
 
-        Set<Integer> currentUserFriends = new HashSet<>(user.getFriends());
-        Set<Integer> currentFriendFriends = new HashSet<>(friend.getFriends());
+        Set<Integer> currentUserFriends = new LinkedHashSet<>(user.getFriends());
+        Set<Integer> currentFriendFriends = new LinkedHashSet<>(friend.getFriends());
 
         currentUserFriends.remove(friendId);
         currentFriendFriends.remove(userId);

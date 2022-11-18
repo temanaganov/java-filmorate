@@ -1,13 +1,13 @@
 package ru.yandex.practicum.filmorate.core.storage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public abstract class InMemoryStorage<T> {
     private int id = 0;
-    private final Map<Integer, T> storage = new HashMap<>();
+    private final Map<Integer, T> storage = new LinkedHashMap<>();
 
     public List<T> getAll() {
         return new ArrayList<>(storage.values());
@@ -25,6 +25,10 @@ public abstract class InMemoryStorage<T> {
     }
 
     public T update(int id, T entity) {
+        if (!storage.containsKey(id)) {
+            return null;
+        }
+
         storage.put(id, entity);
         return entity;
     }

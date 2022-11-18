@@ -8,7 +8,7 @@ import ru.yandex.practicum.filmorate.film.dto.FilmDto;
 import ru.yandex.practicum.filmorate.user.User;
 import ru.yandex.practicum.filmorate.user.UserStorage;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -79,7 +79,7 @@ public class FilmServiceImpl implements FilmService {
             throw new NotFoundException("user", userId);
         }
 
-        Set<Integer> currentLikes = new HashSet<>(film.getLikes());
+        Set<Integer> currentLikes = new LinkedHashSet<>(film.getLikes());
         currentLikes.add(userId);
 
         Film updatedFilm = film.withLikes(currentLikes);
@@ -100,7 +100,7 @@ public class FilmServiceImpl implements FilmService {
             throw new NotFoundException("user", userId);
         }
 
-        Set<Integer> currentLikes = new HashSet<>(film.getLikes());
+        Set<Integer> currentLikes = new LinkedHashSet<>(film.getLikes());
         currentLikes.remove(userId);
 
         Film updatedFilm = film.withLikes(currentLikes);
