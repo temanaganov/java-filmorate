@@ -6,8 +6,8 @@ import ru.yandex.practicum.filmorate.user.User;
 import java.time.LocalDate;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 public class UserDtoToUserMapperTest {
     private final UserDtoToUserMapper userDtoToUserMapper = new UserDtoToUserMapper();
@@ -25,12 +25,12 @@ public class UserDtoToUserMapperTest {
         User user = userDtoToUserMapper.mapFrom(userDto);
 
         assertAll(() -> {
-            assertEquals(userDto.getId(), user.getId());
-            assertEquals(userDto.getEmail(), user.getEmail());
-            assertEquals(userDto.getLogin(), user.getLogin());
-            assertEquals(userDto.getName(), user.getName());
-            assertEquals(userDto.getBirthday(), user.getBirthday());
-            assertEquals(Collections.emptySet(), user.getFriends());
+            assertThat(user.getId()).isEqualTo(userDto.getId());
+            assertThat(user.getEmail()).isEqualTo(userDto.getEmail());
+            assertThat(user.getLogin()).isEqualTo(userDto.getLogin());
+            assertThat(user.getName()).isEqualTo(userDto.getName());
+            assertThat(user.getBirthday()).isEqualTo(userDto.getBirthday());
+            assertThat(user.getFriends()).isEqualTo(Collections.emptySet());
         });
     }
 
@@ -47,12 +47,12 @@ public class UserDtoToUserMapperTest {
         User user = userDtoToUserMapper.mapFrom(userDto);
 
         assertAll(() -> {
-            assertEquals(userDto.getId(), user.getId());
-            assertEquals(userDto.getEmail(), user.getEmail());
-            assertEquals(userDto.getLogin(), user.getLogin());
-            assertEquals(userDto.getLogin(), user.getName());
-            assertEquals(userDto.getBirthday(), user.getBirthday());
-            assertEquals(Collections.emptySet(), user.getFriends());
+            assertThat(user.getId()).isEqualTo(userDto.getId());
+            assertThat(user.getEmail()).isEqualTo(userDto.getEmail());
+            assertThat(user.getLogin()).isEqualTo(userDto.getLogin());
+            assertThat(user.getName()).isEqualTo(userDto.getLogin());
+            assertThat(user.getBirthday()).isEqualTo(userDto.getBirthday());
+            assertThat(user.getFriends()).isEqualTo(Collections.emptySet());
         });
     }
 }

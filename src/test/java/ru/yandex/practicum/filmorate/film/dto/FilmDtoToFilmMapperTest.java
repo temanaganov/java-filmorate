@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 public class FilmDtoToFilmMapperTest {
     private final FilmDtoToFilmMapper filmDtoToFilmMapper = new FilmDtoToFilmMapper();
@@ -24,12 +25,12 @@ public class FilmDtoToFilmMapperTest {
         Film film = filmDtoToFilmMapper.mapFrom(filmDto);
 
         assertAll(() -> {
-            assertEquals(filmDto.getId(), film.getId());
-            assertEquals(filmDto.getName(), film.getName());
-            assertEquals(filmDto.getDescription(), film.getDescription());
-            assertEquals(filmDto.getReleaseDate(), film.getReleaseDate());
-            assertEquals(filmDto.getDuration(), film.getDuration());
-            assertEquals(Collections.emptySet(), film.getLikes());
+            assertThat(film.getId()).isEqualTo(filmDto.getId());
+            assertThat(film.getName()).isEqualTo(filmDto.getName());
+            assertThat(film.getDescription()).isEqualTo(filmDto.getDescription());
+            assertThat(film.getReleaseDate()).isEqualTo(filmDto.getReleaseDate());
+            assertThat(film.getDuration()).isEqualTo(filmDto.getDuration());
+            assertThat(film.getLikes()).isEqualTo(Collections.emptySet());
         });
     }
 }

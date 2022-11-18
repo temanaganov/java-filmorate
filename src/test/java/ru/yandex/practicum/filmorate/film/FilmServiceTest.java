@@ -12,6 +12,7 @@ import ru.yandex.practicum.filmorate.user.User;
 import ru.yandex.practicum.filmorate.user.UserStorage;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,7 +38,7 @@ public class FilmServiceTest {
     @Test
     void getAll_shouldReturnEmptyList_ifStorageIsEmpty() {
         when(filmStorage.getAll()).thenReturn(Collections.emptyList());
-        assertEquals(Collections.EMPTY_LIST, filmService.getAll());
+        assertThat(filmService.getAll()).isEqualTo(Collections.emptyList());
     }
 
     @Test()
@@ -46,7 +47,7 @@ public class FilmServiceTest {
 
         when(filmStorage.getAll()).thenReturn(films);
 
-        assertEquals(films, filmService.getAll());
+        assertThat(filmService.getAll()).isEqualTo(films);
     }
 
     @Test()
@@ -58,7 +59,7 @@ public class FilmServiceTest {
 
         Film resultFilm = filmService.getById(id);
 
-        assertEquals(film, resultFilm);
+        assertThat(resultFilm).isEqualTo(film);
         verify(filmStorage).getById(id);
     }
 
@@ -68,7 +69,7 @@ public class FilmServiceTest {
         when(filmStorage.getById(id)).thenReturn(null);
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> filmService.getById(id));
-        assertEquals("film with id=" + id + " not found", exception.getMessage());
+        assertThat(exception.getMessage()).isEqualTo("film with id=" + id + " not found");
     }
 
     @Test()
@@ -80,7 +81,7 @@ public class FilmServiceTest {
         when(filmDtoToFilmMapper.mapFrom(dto)).thenReturn(film);
         when(filmStorage.create(film)).thenReturn(resultFilm);
 
-        assertEquals(resultFilm, filmService.create(dto));
+        assertThat(filmService.create(dto)).isEqualTo(resultFilm);
         verify(filmStorage).create(film);
     }
 
@@ -96,7 +97,7 @@ public class FilmServiceTest {
         when(filmDtoToFilmMapper.mapFrom(dto)).thenReturn(newFilm);
         when(filmStorage.update(id, newFilm)).thenReturn(newFilm);
 
-        assertEquals(newFilm, filmService.update(dto));
+        assertThat(filmService.update(dto)).isEqualTo(newFilm);
     }
 
     @Test()
@@ -107,7 +108,7 @@ public class FilmServiceTest {
         when(filmStorage.getById(id)).thenReturn(null);
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> filmService.update(dto));
-        assertEquals("film with id=" + id + " not found", exception.getMessage());
+        assertThat(exception.getMessage()).isEqualTo("film with id=" + id + " not found");
     }
 
     @Test()
@@ -117,7 +118,7 @@ public class FilmServiceTest {
 
         when(filmStorage.delete(id)).thenReturn(film);
 
-        assertEquals(film, filmService.delete(id));
+        assertThat(filmService.delete(id)).isEqualTo(film);
     }
 
     @Test()
@@ -127,7 +128,7 @@ public class FilmServiceTest {
         when(filmStorage.delete(id)).thenReturn(null);
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> filmService.delete(id));
-        assertEquals("film with id=" + id + " not found", exception.getMessage());
+        assertThat(exception.getMessage()).isEqualTo("film with id=" + id + " not found");
     }
 
     @Test
@@ -144,7 +145,7 @@ public class FilmServiceTest {
 
         Film resultFilm = filmService.likeFilm(filmId, userId);
 
-        assertEquals(newFilm, resultFilm);
+        assertThat(resultFilm).isEqualTo(newFilm);
         verify(filmStorage).update(filmId, newFilm);
     }
 
@@ -161,7 +162,7 @@ public class FilmServiceTest {
 
         Film resultFilm = filmService.likeFilm(filmId, userId);
 
-        assertEquals(film, resultFilm);
+        assertThat(resultFilm).isEqualTo(film);
         verify(filmStorage).update(filmId, film);
     }
 
@@ -175,7 +176,7 @@ public class FilmServiceTest {
         when(userStorage.getById(userId)).thenReturn(user);
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> filmService.likeFilm(filmId, userId));
-        assertEquals("film with id=" + filmId + " not found", exception.getMessage());
+        assertThat(exception.getMessage()).isEqualTo("film with id=" + filmId + " not found");
     }
 
     @Test
@@ -188,7 +189,7 @@ public class FilmServiceTest {
         when(userStorage.getById(userId)).thenReturn(null);
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> filmService.likeFilm(filmId, userId));
-        assertEquals("user with id=" + userId + " not found", exception.getMessage());
+        assertThat(exception.getMessage()).isEqualTo("user with id=" + userId + " not found");
     }
 
     @Test
@@ -205,7 +206,7 @@ public class FilmServiceTest {
 
         Film resultFilm = filmService.deleteLikeFromFilm(filmId, userId);
 
-        assertEquals(newFilm, resultFilm);
+        assertThat(resultFilm).isEqualTo(newFilm);
         verify(filmStorage).update(filmId, newFilm);
     }
 
@@ -222,7 +223,7 @@ public class FilmServiceTest {
 
         Film resultFilm = filmService.deleteLikeFromFilm(filmId, userId);
 
-        assertEquals(film, resultFilm);
+        assertThat(resultFilm).isEqualTo(film);
         verify(filmStorage).update(filmId, film);
     }
 
@@ -236,7 +237,7 @@ public class FilmServiceTest {
         when(userStorage.getById(userId)).thenReturn(user);
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> filmService.deleteLikeFromFilm(filmId, userId));
-        assertEquals("film with id=" + filmId + " not found", exception.getMessage());
+        assertThat(exception.getMessage()).isEqualTo("film with id=" + filmId + " not found");
     }
 
     @Test
@@ -249,7 +250,7 @@ public class FilmServiceTest {
         when(userStorage.getById(userId)).thenReturn(null);
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> filmService.deleteLikeFromFilm(filmId, userId));
-        assertEquals("user with id=" + userId + " not found", exception.getMessage());
+        assertThat(exception.getMessage()).isEqualTo("user with id=" + userId + " not found");
     }
 
     @Test
@@ -258,7 +259,7 @@ public class FilmServiceTest {
 
         when(filmStorage.getAll()).thenReturn(Collections.emptyList());
 
-        assertEquals(Collections.emptyList(), filmService.getPopularFilms(count));
+        assertThat(filmService.getPopularFilms(count)).isEqualTo(Collections.emptyList());
     }
 
     @Test
@@ -272,7 +273,7 @@ public class FilmServiceTest {
 
         when(filmStorage.getAll()).thenReturn(films);
 
-        assertEquals(Collections.emptyList(), filmService.getPopularFilms(count));
+        assertThat(filmService.getPopularFilms(count)).isEqualTo(Collections.emptyList());
     }
 
     @Test
@@ -286,14 +287,11 @@ public class FilmServiceTest {
 
         when(filmStorage.getAll()).thenReturn(films);
 
-        assertEquals(
-                List.of(
-                        getFilm(3).withLikes(Set.of(1, 2, 3)),
-                        getFilm(2).withLikes(Set.of(1, 2)),
-                        getFilm(1).withLikes(Set.of(1))
-                ),
-                filmService.getPopularFilms(count)
-        );
+        assertThat(filmService.getPopularFilms(count)).isEqualTo(List.of(
+                getFilm(3).withLikes(Set.of(1, 2, 3)),
+                getFilm(2).withLikes(Set.of(1, 2)),
+                getFilm(1).withLikes(Set.of(1))
+        ));
     }
 
     @Test
@@ -307,13 +305,10 @@ public class FilmServiceTest {
 
         when(filmStorage.getAll()).thenReturn(films);
 
-        assertEquals(
-                List.of(
-                        getFilm(3).withLikes(Set.of(1, 2, 3)),
-                        getFilm(2).withLikes(Set.of(1, 2))
-                ),
-                filmService.getPopularFilms(count)
-        );
+        assertThat(filmService.getPopularFilms(count)).isEqualTo(List.of(
+                getFilm(3).withLikes(Set.of(1, 2, 3)),
+                getFilm(2).withLikes(Set.of(1, 2))
+        ));
     }
 
     private Film getFilm(int id) {

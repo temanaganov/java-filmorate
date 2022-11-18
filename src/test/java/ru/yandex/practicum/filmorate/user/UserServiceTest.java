@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.user.dto.UserDto;
 import ru.yandex.practicum.filmorate.user.dto.UserDtoToUserMapper;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -34,7 +35,7 @@ public class UserServiceTest {
     @Test
     void getAll_shouldReturnEmptyList_ifStorageIsEmpty() {
         when(userStorage.getAll()).thenReturn(Collections.emptyList());
-        assertEquals(Collections.EMPTY_LIST, userService.getAll());
+        assertThat(userService.getAll()).isEqualTo(Collections.emptyList());
     }
 
     @Test()
@@ -43,7 +44,7 @@ public class UserServiceTest {
 
         when(userStorage.getAll()).thenReturn(users);
 
-        assertEquals(users, userService.getAll());
+        assertThat(userService.getAll()).isEqualTo(users);
     }
 
     @Test()
@@ -55,7 +56,7 @@ public class UserServiceTest {
 
         User resultUser = userService.getById(id);
 
-        assertEquals(user, resultUser);
+        assertThat(resultUser).isEqualTo(user);
         verify(userStorage).getById(id);
     }
 
@@ -65,7 +66,7 @@ public class UserServiceTest {
         when(userStorage.getById(id)).thenReturn(null);
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> userService.getById(id));
-        assertEquals("user with id=" + id + " not found", exception.getMessage());
+        assertThat(exception.getMessage()).isEqualTo("user with id=" + id + " not found");
     }
 
     @Test()
@@ -77,7 +78,7 @@ public class UserServiceTest {
         when(userDtoToUserMapper.mapFrom(dto)).thenReturn(user);
         when(userStorage.create(user)).thenReturn(resultUser);
 
-        assertEquals(resultUser, userService.create(dto));
+        assertThat(userService.create(dto)).isEqualTo(resultUser);
         verify(userStorage).create(user);
     }
 
@@ -93,7 +94,7 @@ public class UserServiceTest {
         when(userDtoToUserMapper.mapFrom(dto)).thenReturn(newUser);
         when(userStorage.update(id, newUser)).thenReturn(newUser);
 
-        assertEquals(newUser, userService.update(dto));
+        assertThat(userService.update(dto)).isEqualTo(newUser);
     }
 
     @Test()
@@ -104,7 +105,7 @@ public class UserServiceTest {
         when(userStorage.getById(id)).thenReturn(null);
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> userService.update(dto));
-        assertEquals("user with id=" + id + " not found", exception.getMessage());
+        assertThat(exception.getMessage()).isEqualTo("user with id=" + id + " not found");
     }
 
     @Test()
@@ -114,7 +115,7 @@ public class UserServiceTest {
 
         when(userStorage.delete(id)).thenReturn(user);
 
-        assertEquals(user, userService.delete(id));
+        assertThat(userService.delete(id)).isEqualTo(user);
     }
 
     @Test()
@@ -124,7 +125,7 @@ public class UserServiceTest {
         when(userStorage.delete(id)).thenReturn(null);
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> userService.delete(id));
-        assertEquals("user with id=" + id + " not found", exception.getMessage());
+        assertThat(exception.getMessage()).isEqualTo("user with id=" + id + " not found");
     }
 
     @Test
@@ -141,7 +142,7 @@ public class UserServiceTest {
         when(userStorage.update(user1Id, newUser1)).thenReturn(newUser1);
         when(userStorage.update(user2Id, newUser2)).thenReturn(newUser2);
 
-        assertEquals(newUser1, userService.addFriend(user1Id, user2Id));
+        assertThat(userService.addFriend(user1Id, user2Id)).isEqualTo(newUser1);
     }
 
     @Test
@@ -156,7 +157,7 @@ public class UserServiceTest {
         when(userStorage.update(user1Id, user1)).thenReturn(user1);
         when(userStorage.update(user2Id, user2)).thenReturn(user2);
 
-        assertEquals(user1, userService.addFriend(user1Id, user2Id));
+        assertThat(userService.addFriend(user1Id, user2Id)).isEqualTo(user1);
     }
 
     @Test
@@ -175,7 +176,7 @@ public class UserServiceTest {
         when(userStorage.getById(user2Id)).thenReturn(user2);
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> userService.addFriend(user1Id, user2Id));
-        assertEquals("user with id=" + user1Id + " not found", exception.getMessage());
+        assertThat(exception.getMessage()).isEqualTo("user with id=" + user1Id + " not found");
     }
 
     @Test
@@ -188,7 +189,7 @@ public class UserServiceTest {
         when(userStorage.getById(user2Id)).thenReturn(null);
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> userService.addFriend(user1Id, user2Id));
-        assertEquals("user with id=" + user2Id + " not found", exception.getMessage());
+        assertThat(exception.getMessage()).isEqualTo("user with id=" + user2Id + " not found");
     }
 
     @Test
@@ -205,7 +206,7 @@ public class UserServiceTest {
         when(userStorage.update(user1Id, newUser1)).thenReturn(newUser1);
         when(userStorage.update(user2Id, newUser2)).thenReturn(newUser2);
 
-        assertEquals(newUser1, userService.deleteFriend(user1Id, user2Id));
+        assertThat(userService.deleteFriend(user1Id, user2Id)).isEqualTo(newUser1);
     }
 
     @Test
@@ -220,7 +221,7 @@ public class UserServiceTest {
         when(userStorage.update(user1Id, user1)).thenReturn(user1);
         when(userStorage.update(user2Id, user2)).thenReturn(user2);
 
-        assertEquals(user1, userService.deleteFriend(user1Id, user2Id));
+        assertThat(userService.deleteFriend(user1Id, user2Id)).isEqualTo(user1);
     }
 
     @Test
@@ -233,7 +234,7 @@ public class UserServiceTest {
         when(userStorage.getById(user2Id)).thenReturn(user2);
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> userService.deleteFriend(user1Id, user2Id));
-        assertEquals("user with id=" + user1Id + " not found", exception.getMessage());
+        assertThat(exception.getMessage()).isEqualTo("user with id=" + user1Id + " not found");
     }
 
     @Test
@@ -246,7 +247,7 @@ public class UserServiceTest {
         when(userStorage.getById(user2Id)).thenReturn(null);
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> userService.deleteFriend(user1Id, user2Id));
-        assertEquals("user with id=" + user2Id + " not found", exception.getMessage());
+        assertThat(exception.getMessage()).isEqualTo("user with id=" + user2Id + " not found");
     }
 
     @Test
@@ -256,7 +257,7 @@ public class UserServiceTest {
 
         when(userStorage.getById(userId)).thenReturn(user);
 
-        assertEquals(Collections.emptyList(), userService.getFriends(userId));
+        assertThat(userService.getFriends(userId)).isEqualTo(Collections.emptyList());
     }
 
     @Test
@@ -273,7 +274,7 @@ public class UserServiceTest {
         when(userStorage.getById(friend1Id)).thenReturn(friend1);
         when(userStorage.getById(friend2Id)).thenReturn(friend2);
 
-        assertEquals(List.of(friend1, friend2), userService.getFriends(userId));
+        assertThat(userService.getFriends(userId)).isEqualTo(List.of(friend1, friend2));
     }
 
     @Test
@@ -283,7 +284,7 @@ public class UserServiceTest {
         when(userStorage.getById(userId)).thenReturn(null);
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> userService.getFriends(userId));
-        assertEquals("user with id=" + userId + " not found", exception.getMessage());
+        assertThat(exception.getMessage()).isEqualTo("user with id=" + userId + " not found");
     }
 
     @Test
@@ -299,7 +300,7 @@ public class UserServiceTest {
         when(userStorage.getById(user2Id)).thenReturn(user2);
         when(userStorage.getById(user3Id)).thenReturn(user3);
 
-        assertEquals(List.of(user3), userService.getCommonFriends(user1Id, user2Id));
+        assertThat(userService.getCommonFriends(user1Id, user2Id)).isEqualTo(List.of(user3));
     }
 
     @Test
@@ -312,7 +313,7 @@ public class UserServiceTest {
         when(userStorage.getById(user1Id)).thenReturn(user1);
         when(userStorage.getById(user2Id)).thenReturn(user2);
 
-        assertEquals(Collections.emptyList(), userService.getCommonFriends(user1Id, user2Id));
+        assertThat(userService.getCommonFriends(user1Id, user2Id)).isEqualTo(Collections.emptyList());
     }
 
     @Test
@@ -325,7 +326,7 @@ public class UserServiceTest {
         when(userStorage.getById(user1Id)).thenReturn(user1);
         when(userStorage.getById(user2Id)).thenReturn(user2);
 
-        assertEquals(Collections.emptyList(), userService.getCommonFriends(user1Id, user2Id));
+        assertThat(userService.getCommonFriends(user1Id, user2Id)).isEqualTo(Collections.emptyList());
     }
 
     @Test
@@ -338,7 +339,7 @@ public class UserServiceTest {
         when(userStorage.getById(user2Id)).thenReturn(user2);
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> userService.getCommonFriends(user1Id, user2Id));
-        assertEquals("user with id=" + user1Id + " not found", exception.getMessage());
+        assertThat(exception.getMessage()).isEqualTo("user with id=" + user1Id + " not found");
     }
 
     @Test
@@ -351,7 +352,7 @@ public class UserServiceTest {
         when(userStorage.getById(user2Id)).thenReturn(null);
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> userService.getCommonFriends(user1Id, user2Id));
-        assertEquals("user with id=" + user2Id + " not found", exception.getMessage());
+        assertThat(exception.getMessage()).isEqualTo("user with id=" + user2Id + " not found");
     }
 
     private User getUser(int id) {
