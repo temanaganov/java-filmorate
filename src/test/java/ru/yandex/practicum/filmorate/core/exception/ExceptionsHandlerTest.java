@@ -7,7 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.yandex.practicum.filmorate.film.FilmService;
+import ru.yandex.practicum.filmorate.film.service.FilmService;
 import ru.yandex.practicum.filmorate.film.dto.FilmDto;
 
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.user;
+package ru.yandex.practicum.filmorate.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -12,6 +12,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ru.yandex.practicum.filmorate.user.model.User;
+import ru.yandex.practicum.filmorate.user.service.UserService;
 import ru.yandex.practicum.filmorate.user.dto.UserDto;
 
 import java.time.LocalDate;

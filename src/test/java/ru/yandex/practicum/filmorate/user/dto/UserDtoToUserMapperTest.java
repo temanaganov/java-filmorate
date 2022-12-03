@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.user.dto;
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.user.User;
+import ru.yandex.practicum.filmorate.user.model.User;
 
 import java.time.LocalDate;
 import java.util.Collections;

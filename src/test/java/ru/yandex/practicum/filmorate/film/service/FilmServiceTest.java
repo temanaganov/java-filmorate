@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.film;
+package ru.yandex.practicum.filmorate.film.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -6,10 +6,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.yandex.practicum.filmorate.core.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.film.model.Film;
+import ru.yandex.practicum.filmorate.film.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.film.dto.FilmDto;
 import ru.yandex.practicum.filmorate.film.dto.FilmDtoToFilmMapper;
-import ru.yandex.practicum.filmorate.user.User;
-import ru.yandex.practicum.filmorate.user.UserStorage;
+import ru.yandex.practicum.filmorate.user.model.User;
+import ru.yandex.practicum.filmorate.user.storage.UserStorage;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;

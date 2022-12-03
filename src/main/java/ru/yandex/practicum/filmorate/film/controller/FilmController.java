@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.film;
+package ru.yandex.practicum.filmorate.film.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.core.exception.FieldValidationException;
+import ru.yandex.practicum.filmorate.film.model.Film;
+import ru.yandex.practicum.filmorate.film.service.FilmService;
 import ru.yandex.practicum.filmorate.film.dto.FilmDto;
 
 import javax.validation.Valid;

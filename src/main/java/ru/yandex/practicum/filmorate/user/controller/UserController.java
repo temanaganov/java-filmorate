@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.user;
+package ru.yandex.practicum.filmorate.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import ru.yandex.practicum.filmorate.user.model.User;
+import ru.yandex.practicum.filmorate.user.service.UserService;
 import ru.yandex.practicum.filmorate.user.dto.UserDto;
 
 import javax.validation.Valid;

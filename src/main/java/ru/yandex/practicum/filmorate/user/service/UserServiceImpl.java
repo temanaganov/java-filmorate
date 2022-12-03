@@ -1,10 +1,12 @@
-package ru.yandex.practicum.filmorate.user;
+package ru.yandex.practicum.filmorate.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.core.exception.FieldValidationException;
 import ru.yandex.practicum.filmorate.core.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
+import ru.yandex.practicum.filmorate.user.model.User;
+import ru.yandex.practicum.filmorate.user.storage.UserStorage;
 import ru.yandex.practicum.filmorate.user.dto.UserDto;
 
 import java.util.LinkedHashSet;

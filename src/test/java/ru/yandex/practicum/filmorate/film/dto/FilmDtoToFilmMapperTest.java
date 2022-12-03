@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.film.dto;
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.film.Film;
+import ru.yandex.practicum.filmorate.film.model.Film;
 
 import java.time.LocalDate;
 import java.util.Collections;

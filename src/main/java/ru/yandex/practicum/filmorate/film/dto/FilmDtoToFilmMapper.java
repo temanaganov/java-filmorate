@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.film.dto;
 
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
-import ru.yandex.practicum.filmorate.film.Film;
+import ru.yandex.practicum.filmorate.film.model.Film;
 
 import java.util.LinkedHashSet;
 

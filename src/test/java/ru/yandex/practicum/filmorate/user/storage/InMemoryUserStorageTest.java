@@ -1,7 +1,8 @@
-package ru.yandex.practicum.filmorate.user;
+package ru.yandex.practicum.filmorate.user.storage;
 
 import org.junit.jupiter.api.BeforeEach;
 import ru.yandex.practicum.filmorate.core.storage.InMemoryStorageTest;
+import ru.yandex.practicum.filmorate.user.model.User;
 
 import java.time.LocalDate;
 import java.util.Collections;
