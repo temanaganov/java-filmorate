@@ -4,8 +4,6 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
 import ru.yandex.practicum.filmorate.film.model.Film;
 
-import java.util.LinkedHashSet;
-
 @Component
 public class FilmDtoToFilmMapper implements Mapper<FilmDto, Film> {
     @Override
@@ -16,7 +14,8 @@ public class FilmDtoToFilmMapper implements Mapper<FilmDto, Film> {
                 dto.getDescription(),
                 dto.getReleaseDate(),
                 dto.getDuration(),
-                new LinkedHashSet<>()
+                dto.getMpa(),
+                dto.getGenres()
         );
     }
 }

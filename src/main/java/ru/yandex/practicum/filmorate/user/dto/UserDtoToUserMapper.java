@@ -4,8 +4,6 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
 import ru.yandex.practicum.filmorate.user.model.User;
 
-import java.util.LinkedHashSet;
-
 @Component
 public class UserDtoToUserMapper implements Mapper<UserDto, User> {
     public User mapFrom(UserDto dto) {
@@ -16,8 +14,7 @@ public class UserDtoToUserMapper implements Mapper<UserDto, User> {
                 dto.getEmail(),
                 dto.getLogin(),
                 name,
-                dto.getBirthday(),
-                new LinkedHashSet<>()
+                dto.getBirthday()
         );
     }
 }

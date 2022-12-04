@@ -2,9 +2,11 @@ package ru.yandex.practicum.filmorate.film.model;
 
 import lombok.Value;
 import lombok.With;
+import ru.yandex.practicum.filmorate.genre.model.Genre;
+import ru.yandex.practicum.filmorate.mpa.model.Mpa;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 @With
 @Value
@@ -14,5 +16,6 @@ public class Film {
     String description;
     LocalDate releaseDate;
     int duration;
-    Set<Integer> likes;
+    Mpa mpa;
+    List<Genre> genres;
 }

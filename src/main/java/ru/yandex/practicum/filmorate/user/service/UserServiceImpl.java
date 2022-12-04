@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.user.service;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.core.exception.FieldValidationException;
 import ru.yandex.practicum.filmorate.core.exception.NotFoundException;
@@ -9,16 +9,20 @@ import ru.yandex.practicum.filmorate.user.model.User;
 import ru.yandex.practicum.filmorate.user.storage.UserStorage;
 import ru.yandex.practicum.filmorate.user.dto.UserDto;
 
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
     private final Mapper<UserDto, User> userDtoToUserMapper;
+
+    public UserServiceImpl(
+            @Qualifier("dbUserStorage") UserStorage userStorage,
+            Mapper<UserDto, User> userDtoToUserMapper
+    ) {
+        this.userStorage = userStorage;
+        this.userDtoToUserMapper = userDtoToUserMapper;
+    }
 
     @Override
     public List<User> getAll() {
@@ -39,6 +43,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User create(UserDto dto) {
         User newUser = userDtoToUserMapper.mapFrom(dto);
+
+        if (emailIsBusy(dto.getEmail())) {
+            throw new FieldValidationException("email", "User with this email is already exists");
+        }
+
         return userStorage.create(newUser);
     }
 
@@ -50,7 +59,11 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException("user", dto.getId());
         }
 
-        User user = userDtoToUserMapper.mapFrom(dto).withFriends(currentUser.getFriends());
+        if (emailIsBusy(dto.getEmail())) {
+            throw new FieldValidationException("email", "User with this email is already exists");
+        }
+
+        User user = userDtoToUserMapper.mapFrom(dto);
 
         return userStorage.update(user.getId(), user);
     }
@@ -67,7 +80,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addFriend(int userId, int friendId) {
+    public void addFriend(int userId, int friendId) {
         if (userId == friendId) {
             throw new FieldValidationException("friendId", "friendId can not be equal to userId");
         }
@@ -83,19 +96,11 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException("user", friendId);
         }
 
-        Set<Integer> currentUserFriends = new LinkedHashSet<>(user.getFriends());
-        Set<Integer> currentFriendFriends = new LinkedHashSet<>(friend.getFriends());
-
-        currentUserFriends.add(friendId);
-        currentFriendFriends.add(userId);
-
-        userStorage.update(friendId, friend.withFriends(currentFriendFriends));
-
-        return userStorage.update(userId, user.withFriends(currentUserFriends));
+        userStorage.addFriend(userId, friendId);
     }
 
     @Override
-    public User deleteFriend(int userId, int friendId) {
+    public void deleteFriend(int userId, int friendId) {
         User user = userStorage.getById(userId);
         User friend = userStorage.getById(friendId);
 
@@ -107,15 +112,7 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException("user", friendId);
         }
 
-        Set<Integer> currentUserFriends = new LinkedHashSet<>(user.getFriends());
-        Set<Integer> currentFriendFriends = new LinkedHashSet<>(friend.getFriends());
-
-        currentUserFriends.remove(friendId);
-        currentFriendFriends.remove(userId);
-
-        userStorage.update(friendId, friend.withFriends(currentFriendFriends));
-
-        return userStorage.update(userId, user.withFriends(currentUserFriends));
+        userStorage.deleteFriend(userId, friendId);
     }
 
     @Override
@@ -126,31 +123,26 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException("user", id);
         }
 
-        return user
-                .getFriends()
-                .stream()
-                .map(userStorage::getById)
-                .collect(Collectors.toList());
+        return userStorage.getFriends(id);
     }
 
     @Override
-    public List<User> getCommonFriends(int userId, int otherId) {
+    public List<User> getCommonFriends(int userId, int otherUserId) {
         User user = userStorage.getById(userId);
-        User otherUser = userStorage.getById(otherId);
+        User otherUser = userStorage.getById(otherUserId);
 
         if (user == null) {
             throw new NotFoundException("user", userId);
         }
 
         if (otherUser == null) {
-            throw new NotFoundException("user", otherId);
+            throw new NotFoundException("user", otherUserId);
         }
 
-        return user
-                .getFriends()
-                .stream()
-                .filter(friendId -> otherUser.getFriends().contains(friendId))
-                .map(userStorage::getById)
-                .collect(Collectors.toList());
+        return userStorage.getCommonFriends(userId, otherUserId);
+    }
+
+    private boolean emailIsBusy(String email) {
+        return userStorage.getByEmail(email) != null;
     }
 }

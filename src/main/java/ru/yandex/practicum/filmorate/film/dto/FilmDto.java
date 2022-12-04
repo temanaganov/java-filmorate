@@ -5,12 +5,15 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.With;
+import ru.yandex.practicum.filmorate.genre.model.Genre;
+import ru.yandex.practicum.filmorate.mpa.model.Mpa;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.List;
 
 @With
 @Getter
@@ -32,4 +35,9 @@ public class FilmDto {
 
     @Positive(message = "Duration is required and must be greater than 0")
     int duration;
+
+    @NotNull(message = "Mpa is required")
+    Mpa mpa;
+
+    List<Genre> genres;
 }

@@ -1,6 +1,18 @@
 package ru.yandex.practicum.filmorate.user.storage;
 
-import ru.yandex.practicum.filmorate.core.storage.CrudStorage;
 import ru.yandex.practicum.filmorate.user.model.User;
 
-public interface UserStorage extends CrudStorage<User> {}
+import java.util.List;
+
+public interface UserStorage {
+    List<User> getAll();
+    User getById(int id);
+    User getByEmail(String email);
+    User create(User film);
+    User update(int id, User film);
+    User delete(int id);
+    void addFriend(int userId, int friendId);
+    void deleteFriend(int userId, int friendId);
+    List<User> getFriends(int id);
+    List<User> getCommonFriends(int userId, int otherUserId);
+}

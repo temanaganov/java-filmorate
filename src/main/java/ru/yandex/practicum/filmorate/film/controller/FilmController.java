@@ -65,14 +65,16 @@ public class FilmController {
         return filmService.getPopularFilms(count);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}/like/{userId}")
-    public Film likeFilm(@PathVariable int id, @PathVariable int userId) {
-        return filmService.likeFilm(id, userId);
+    public void likeFilm(@PathVariable int id, @PathVariable int userId) {
+        filmService.likeFilm(id, userId);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}/like/{userId}")
-    public Film deleteLikeFromFilm(@PathVariable int id, @PathVariable int userId) {
-        return filmService.deleteLikeFromFilm(id, userId);
+    public void deleteLikeFromFilm(@PathVariable int id, @PathVariable int userId) {
+        filmService.deleteLikeFromFilm(id, userId);
     }
 
     private void validateFilmReleaseDate(LocalDate date) {
