@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.film.storage;
 import org.junit.jupiter.api.BeforeEach;
 import ru.yandex.practicum.filmorate.core.storage.InMemoryStorageTest;
 import ru.yandex.practicum.filmorate.film.model.Film;
+import ru.yandex.practicum.filmorate.mpa.model.Mpa;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -21,7 +22,8 @@ public class InMemoryFilmStorageTest extends InMemoryStorageTest<Film> {
                 "Test description",
                 LocalDate.EPOCH,
                 120,
-                Collections.emptySet()
+                new Mpa(1, "test mpa"),
+                Collections.emptyList()
         );
     }
 
@@ -33,7 +35,8 @@ public class InMemoryFilmStorageTest extends InMemoryStorageTest<Film> {
                 "Test description updated",
                 LocalDate.EPOCH,
                 120,
-                Collections.emptySet()
+                new Mpa(1, "test mpa"),
+                Collections.emptyList()
         );
     }
 }

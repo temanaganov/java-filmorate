@@ -5,7 +5,6 @@ import ru.yandex.practicum.filmorate.core.storage.InMemoryStorageTest;
 import ru.yandex.practicum.filmorate.user.model.User;
 
 import java.time.LocalDate;
-import java.util.Collections;
 
 public class InMemoryUserStorageTest extends InMemoryStorageTest<User> {
     @BeforeEach
@@ -20,8 +19,7 @@ public class InMemoryUserStorageTest extends InMemoryStorageTest<User> {
                 "test@test.test",
                 "Test login",
                 "Test name",
-                LocalDate.EPOCH,
-                Collections.emptySet()
+                LocalDate.EPOCH
         );
     }
 
@@ -32,8 +30,7 @@ public class InMemoryUserStorageTest extends InMemoryStorageTest<User> {
                 "test@test.test",
                 "Test login updated",
                 "Test name updated",
-                LocalDate.EPOCH,
-                Collections.emptySet()
+                LocalDate.EPOCH
         );
     }
 }

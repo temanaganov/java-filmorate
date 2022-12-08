@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.film.dto;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.film.model.Film;
+import ru.yandex.practicum.filmorate.mpa.model.Mpa;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -19,7 +20,9 @@ public class FilmDtoToFilmMapperTest {
                 "Test film",
                 "Test description",
                 LocalDate.EPOCH,
-                120
+                120,
+                new Mpa(1, "test mpa"),
+                Collections.emptyList()
         );
 
         Film film = filmDtoToFilmMapper.mapFrom(filmDto);
@@ -30,7 +33,8 @@ public class FilmDtoToFilmMapperTest {
             assertThat(film.getDescription()).isEqualTo(filmDto.getDescription());
             assertThat(film.getReleaseDate()).isEqualTo(filmDto.getReleaseDate());
             assertThat(film.getDuration()).isEqualTo(filmDto.getDuration());
-            assertThat(film.getLikes()).isEqualTo(Collections.emptySet());
+            assertThat(film.getMpa()).isEqualTo(filmDto.getMpa());
+            assertThat(film.getGenres()).isEqualTo(Collections.emptyList());
         });
     }
 }

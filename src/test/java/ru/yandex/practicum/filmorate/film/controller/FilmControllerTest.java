@@ -15,11 +15,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.yandex.practicum.filmorate.film.model.Film;
 import ru.yandex.practicum.filmorate.film.service.FilmService;
 import ru.yandex.practicum.filmorate.film.dto.FilmDto;
+import ru.yandex.practicum.filmorate.mpa.model.Mpa;
 
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -144,25 +144,6 @@ public class FilmControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(limitFilms)));
     }
 
-    @Test
-    void likeFilm_deleteLikeFromFilm_shouldSuccessfullyAddAndRemoveLikeFromFilm() throws Exception {
-        int filmId = 1;
-        int userId = 1;
-        Film film = getFilm(filmId);
-        Film filmWithLikes = film.withLikes(Set.of(userId));
-
-        when(filmService.likeFilm(filmId, userId)).thenReturn(filmWithLikes);
-        when(filmService.deleteLikeFromFilm(filmId, userId)).thenReturn(film);
-
-        mockMvc.perform(put("/films/" + filmId + "/like/" + userId))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(filmWithLikes)));
-
-        mockMvc.perform(delete("/films/" + filmId + "/like/" + userId))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(film)));
-    }
-
     private static Film getFilm(int id) {
         return new Film(
                 id,
@@ -170,7 +151,8 @@ public class FilmControllerTest {
                 "Test description",
                 LocalDate.parse("2000-01-01"),
                 120,
-                Collections.emptySet()
+                new Mpa(1, "test mpa"),
+                Collections.emptyList()
         );
     }
 
@@ -180,7 +162,9 @@ public class FilmControllerTest {
                 "Test film",
                 "Test description",
                 LocalDate.parse("2000-01-01"),
-                120
+                120,
+                new Mpa(1, "test mpa"),
+                Collections.emptyList()
         );
     }
 
