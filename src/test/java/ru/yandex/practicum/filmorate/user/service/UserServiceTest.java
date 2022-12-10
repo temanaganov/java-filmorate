@@ -23,10 +23,10 @@ import java.util.List;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
     @Mock
-    UserStorage userStorage;
+    private UserStorage userStorage;
 
     @Mock
-    UserDtoToUserMapper userDtoToUserMapper;
+    private UserDtoToUserMapper userDtoToUserMapper;
 
     @InjectMocks
     private UserServiceImpl userService;

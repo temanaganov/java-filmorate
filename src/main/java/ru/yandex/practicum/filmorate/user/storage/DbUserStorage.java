@@ -20,13 +20,13 @@ public class DbUserStorage implements UserStorage {
 
     @Override
     public List<User> getAll() {
-        return jdbcTemplate.query(UserQueries.getAll, this::mapRowToUser);
+        return jdbcTemplate.query(UserQueries.GET_ALL, this::mapRowToUser);
     }
 
     @Override
     public User getById(int id) {
         try {
-            return jdbcTemplate.queryForObject(UserQueries.getById, this::mapRowToUser, id);
+            return jdbcTemplate.queryForObject(UserQueries.GET_BY_ID, this::mapRowToUser, id);
         } catch (DataAccessException exception) {
             return null;
         }
@@ -35,7 +35,7 @@ public class DbUserStorage implements UserStorage {
     @Override
     public User getByEmail(String email) {
         try {
-            return jdbcTemplate.queryForObject(UserQueries.getByEmail, this::mapRowToUser, email);
+            return jdbcTemplate.queryForObject(UserQueries.GET_BY_EMAIL, this::mapRowToUser, email);
         } catch (DataAccessException exception) {
             return null;
         }
@@ -80,19 +80,19 @@ public class DbUserStorage implements UserStorage {
             return null;
         }
 
-        jdbcTemplate.update(UserQueries.delete, id);
+        jdbcTemplate.update(UserQueries.DELETE, id);
 
         return user;
     }
 
     @Override
     public List<User> getFriends(int id) {
-        return jdbcTemplate.query(UserQueries.getFriends, this::mapRowToUser, id);
+        return jdbcTemplate.query(UserQueries.GET_FRIENDS, this::mapRowToUser, id);
     }
 
     @Override
     public List<User> getCommonFriends(int userId, int otherUserId) {
-        return jdbcTemplate.query(UserQueries.getCommonFriends, this::mapRowToUser, userId, otherUserId);
+        return jdbcTemplate.query(UserQueries.GET_COMMON_FRIENDS, this::mapRowToUser, userId, otherUserId);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class DbUserStorage implements UserStorage {
 
     @Override
     public void deleteFriend(int userId, int friendId) {
-        jdbcTemplate.update(UserQueries.deleteFriend, userId, friendId);
+        jdbcTemplate.update(UserQueries.DELETE_FRIEND, userId, friendId);
     }
 
     private User mapRowToUser(ResultSet resultSet, int rowNum) throws SQLException {

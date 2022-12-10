@@ -35,6 +35,19 @@ public class DbGenreStorage implements GenreStorage {
         }
     }
 
+    @Override
+    public List<Genre> getAllByFilmId(int filmId) {
+        String sql = "SELECT fg.genre_id AS genre_id, g.name AS name " +
+                "FROM film_genre AS fg " +
+                "JOIN genre AS g ON fg.genre_id = g.genre_id " +
+                "WHERE fg.film_id = ? ";
+        try {
+            return jdbcTemplate.query(sql, this::mapRowToGenre, filmId);
+        } catch (DataAccessException exception) {
+            return null;
+        }
+    }
+
     private Genre mapRowToGenre(ResultSet resultSet, int rowNum) throws SQLException {
         return new Genre(resultSet.getInt("genre_id"), resultSet.getString("name"));
     }

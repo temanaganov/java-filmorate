@@ -27,16 +27,16 @@ import java.util.List;
 @ExtendWith(MockitoExtension.class)
 public class FilmServiceTest {
     @Mock
-    FilmStorage filmStorage;
+    private FilmStorage filmStorage;
 
     @Mock
-    UserStorage userStorage;
+    private UserStorage userStorage;
 
     @Mock
-    MpaStorage mpaStorage;
+    private MpaStorage mpaStorage;
 
     @Mock
-    FilmDtoToFilmMapper filmDtoToFilmMapper;
+    private FilmDtoToFilmMapper filmDtoToFilmMapper;
 
     @InjectMocks
     private FilmServiceImpl filmService;

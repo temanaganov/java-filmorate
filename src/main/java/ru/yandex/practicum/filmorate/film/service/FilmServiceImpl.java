@@ -62,13 +62,11 @@ public class FilmServiceImpl implements FilmService {
             throw new NotFoundException("mpa", newFilm.getMpa().getId());
         }
 
-        if (dto.getGenres() != null) {
-            dto.getGenres().forEach(genre -> {
-                if (genreStorage.getById(genre.getId()) == null) {
-                    throw new NotFoundException("genre", genre.getId());
-                }
-            });
-        }
+        newFilm.getGenres().forEach(genre -> {
+            if (genreStorage.getById(genre.getId()) == null) {
+                throw new NotFoundException("genre", genre.getId());
+            }
+        });
 
         return filmStorage.create(newFilm);
     }
@@ -81,19 +79,18 @@ public class FilmServiceImpl implements FilmService {
             throw new NotFoundException("film", dto.getId());
         }
 
-        if (mpaStorage.getById(dto.getMpa().getId()) == null) {
-            throw new NotFoundException("mpa", dto.getMpa().getId());
-        }
-
-        if (dto.getGenres() != null) {
-            dto.getGenres().forEach(genre -> {
-                if (genreStorage.getById(genre.getId()) == null) {
-                    throw new NotFoundException("genre", genre.getId());
-                }
-            });
-        }
-
         Film film = filmDtoToFilmMapper.mapFrom(dto);
+
+        if (mpaStorage.getById(film.getMpa().getId()) == null) {
+            throw new NotFoundException("mpa", film.getMpa().getId());
+        }
+
+        film.getGenres().forEach(genre -> {
+            if (genreStorage.getById(genre.getId()) == null) {
+                throw new NotFoundException("genre", genre.getId());
+            }
+        });
+
 
         return filmStorage.update(film.getId(), film);
     }

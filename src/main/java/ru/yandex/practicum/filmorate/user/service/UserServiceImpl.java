@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     public User create(UserDto dto) {
         User newUser = userDtoToUserMapper.mapFrom(dto);
 
-        if (emailIsBusy(dto.getEmail())) {
+        if (emailIsBusy(newUser.getEmail())) {
             throw new FieldValidationException("email", "User with this email is already exists");
         }
 
@@ -59,11 +59,11 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException("user", dto.getId());
         }
 
-        if (emailIsBusy(dto.getEmail())) {
+        User user = userDtoToUserMapper.mapFrom(dto);
+
+        if (emailIsBusy(user.getEmail())) {
             throw new FieldValidationException("email", "User with this email is already exists");
         }
-
-        User user = userDtoToUserMapper.mapFrom(dto);
 
         return userStorage.update(user.getId(), user);
     }

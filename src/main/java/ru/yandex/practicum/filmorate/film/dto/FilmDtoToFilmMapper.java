@@ -4,6 +4,9 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
 import ru.yandex.practicum.filmorate.film.model.Film;
 
+import java.util.Collections;
+import java.util.Optional;
+
 @Component
 public class FilmDtoToFilmMapper implements Mapper<FilmDto, Film> {
     @Override
@@ -15,7 +18,7 @@ public class FilmDtoToFilmMapper implements Mapper<FilmDto, Film> {
                 dto.getReleaseDate(),
                 dto.getDuration(),
                 dto.getMpa(),
-                dto.getGenres()
+                Optional.ofNullable(dto.getGenres()).orElse(Collections.emptyList())
         );
     }
 }

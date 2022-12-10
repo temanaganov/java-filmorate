@@ -1,11 +1,11 @@
 package ru.yandex.practicum.filmorate.user.storage;
 
 public class UserQueries {
-    static final String getAll = "SELECT * FROM users";
+    static final String GET_ALL = "SELECT * FROM users";
 
-    static final String getById = "SELECT * FROM users WHERE user_id = ?";
+    static final String GET_BY_ID = "SELECT * FROM users WHERE user_id = ?";
 
-    static final String getByEmail = "SELECT * FROM users WHERE email = ?";
+    static final String GET_BY_EMAIL = "SELECT * FROM users WHERE email = ?";
 
     static final String update = "UPDATE users " +
             "SET " +
@@ -15,9 +15,9 @@ public class UserQueries {
             "birthday = ? " +
             "WHERE user_id = ?";
 
-    static final String delete = "DELETE FROM users WHERE user_id = ?";
+    static final String DELETE = "DELETE FROM users WHERE user_id = ?";
 
-    static final String getFriends = "SELECT " +
+    static final String GET_FRIENDS = "SELECT " +
             "u.user_id, " +
             "u.email, " +
             "u.login, " +
@@ -27,7 +27,7 @@ public class UserQueries {
             "JOIN users AS u on u.user_id = f.friend_id " +
             "WHERE f.user_id = ?";
 
-    static final String getCommonFriends = "SELECT " +
+    static final String GET_COMMON_FRIENDS = "SELECT " +
             "u.user_id, " +
             "u.email, " +
             "u.login, " +
@@ -41,7 +41,7 @@ public class UserQueries {
             "FROM friendship " +
             "WHERE user_id = ?)";
 
-    static final String deleteFriend = "DELETE " +
+    static final String DELETE_FRIEND = "DELETE " +
             "FROM friendship " +
             "WHERE " +
             "user_id = ? AND friend_id = ? ";

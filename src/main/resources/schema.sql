@@ -1,4 +1,4 @@
--- Имя таблицы во множественном числе, т.к. user – зарезервированное слово
+-- The table name is plural because user is a reserved word
 CREATE TABLE IF NOT EXISTS users (
     user_id INTEGER AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(50) UNIQUE NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS film (
     release_date DATE NOT NULL,
     duration INTEGER NOT NULL,
     mpa_id INTEGER NOT NULL,
-    FOREIGN KEY (mpa_id) REFERENCES mpa (mpa_id) ON DELETE CASCADE
+    FOREIGN KEY (mpa_id) REFERENCES mpa (mpa_id) ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS film_genre (
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS film_genre (
     FOREIGN KEY (genre_id) REFERENCES genre (genre_id) ON DELETE CASCADE
 );
 
--- Имя таблицы во множественном числе, т.к. like – зарезервированное слово
+-- The table name is plural because like is a reserved word
 CREATE TABLE IF NOT EXISTS likes (
     film_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
