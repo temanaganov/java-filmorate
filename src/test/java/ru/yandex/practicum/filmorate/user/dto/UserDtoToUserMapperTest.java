@@ -1,10 +1,9 @@
 package ru.yandex.practicum.filmorate.user.dto;
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.user.User;
+import ru.yandex.practicum.filmorate.user.model.User;
 
 import java.time.LocalDate;
-import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
@@ -30,7 +29,6 @@ public class UserDtoToUserMapperTest {
             assertThat(user.getLogin()).isEqualTo(userDto.getLogin());
             assertThat(user.getName()).isEqualTo(userDto.getName());
             assertThat(user.getBirthday()).isEqualTo(userDto.getBirthday());
-            assertThat(user.getFriends()).isEqualTo(Collections.emptySet());
         });
     }
 
@@ -52,7 +50,6 @@ public class UserDtoToUserMapperTest {
             assertThat(user.getLogin()).isEqualTo(userDto.getLogin());
             assertThat(user.getName()).isEqualTo(userDto.getLogin());
             assertThat(user.getBirthday()).isEqualTo(userDto.getBirthday());
-            assertThat(user.getFriends()).isEqualTo(Collections.emptySet());
         });
     }
 }

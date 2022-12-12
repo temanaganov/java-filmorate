@@ -3,14 +3,17 @@ package ru.yandex.practicum.filmorate.core.exception;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.yandex.practicum.filmorate.film.FilmService;
+import ru.yandex.practicum.filmorate.film.service.FilmService;
 import ru.yandex.practicum.filmorate.film.dto.FilmDto;
+import ru.yandex.practicum.filmorate.mpa.model.Mpa;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@AutoConfigureTestDatabase
 public class ExceptionsHandlerTest {
     @Autowired
     private ObjectMapper objectMapper;
@@ -87,7 +91,9 @@ public class ExceptionsHandlerTest {
                 "Test film",
                 "Test description",
                 LocalDate.parse("2000-01-01"),
-                120
+                120,
+                new Mpa(1, "G"),
+                Collections.emptyList()
         );
     }
 }

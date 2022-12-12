@@ -2,9 +2,7 @@ package ru.yandex.practicum.filmorate.user.dto;
 
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
-import ru.yandex.practicum.filmorate.user.User;
-
-import java.util.LinkedHashSet;
+import ru.yandex.practicum.filmorate.user.model.User;
 
 @Component
 public class UserDtoToUserMapper implements Mapper<UserDto, User> {
@@ -16,8 +14,7 @@ public class UserDtoToUserMapper implements Mapper<UserDto, User> {
                 dto.getEmail(),
                 dto.getLogin(),
                 name,
-                dto.getBirthday(),
-                new LinkedHashSet<>()
+                dto.getBirthday()
         );
     }
 }

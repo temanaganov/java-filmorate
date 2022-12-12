@@ -2,9 +2,10 @@ package ru.yandex.practicum.filmorate.film.dto;
 
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
-import ru.yandex.practicum.filmorate.film.Film;
+import ru.yandex.practicum.filmorate.film.model.Film;
 
-import java.util.LinkedHashSet;
+import java.util.Collections;
+import java.util.Optional;
 
 @Component
 public class FilmDtoToFilmMapper implements Mapper<FilmDto, Film> {
@@ -16,7 +17,8 @@ public class FilmDtoToFilmMapper implements Mapper<FilmDto, Film> {
                 dto.getDescription(),
                 dto.getReleaseDate(),
                 dto.getDuration(),
-                new LinkedHashSet<>()
+                dto.getMpa(),
+                Optional.ofNullable(dto.getGenres()).orElse(Collections.emptyList())
         );
     }
 }
