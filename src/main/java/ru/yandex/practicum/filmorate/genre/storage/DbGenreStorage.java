@@ -18,11 +18,7 @@ public class DbGenreStorage implements GenreStorage {
     @Override
     public List<Genre> getAll() {
         String sql = "SELECT * FROM genre ORDER BY genre_id";
-        try {
-            return jdbcTemplate.query(sql, this::mapRowToGenre);
-        } catch (DataAccessException exception) {
-            return null;
-        }
+        return jdbcTemplate.query(sql, this::mapRowToGenre);
     }
 
     @Override

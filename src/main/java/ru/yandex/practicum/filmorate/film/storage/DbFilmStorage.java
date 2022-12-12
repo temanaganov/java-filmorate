@@ -118,25 +118,27 @@ public class DbFilmStorage implements FilmStorage {
     }
 
     private void updateFilmGenres(List<Genre> genres, int filmId) {
-        if (genres != null) {
-            List<Integer> genreUniqueIds = genres.stream()
-                    .map(Genre::getId)
-                    .distinct()
-                    .collect(Collectors.toList());
-
-            jdbcTemplate.batchUpdate(
-                    FilmQueries.ADD_GENRE,
-                    new BatchPreparedStatementSetter() {
-                        public void setValues(PreparedStatement ps, int i) throws SQLException {
-                            int genreId = genreUniqueIds.get(i);
-                            ps.setInt(1, filmId);
-                            ps.setInt(2, genreId);
-                        }
-
-                        public int getBatchSize() {
-                            return genreUniqueIds.size();
-                        }
-                    });
+        if (genres == null) {
+            return;
         }
+
+        List<Integer> genreUniqueIds = genres.stream()
+                .map(Genre::getId)
+                .distinct()
+                .collect(Collectors.toList());
+
+        jdbcTemplate.batchUpdate(
+                FilmQueries.ADD_GENRE,
+                new BatchPreparedStatementSetter() {
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        int genreId = genreUniqueIds.get(i);
+                        ps.setInt(1, filmId);
+                        ps.setInt(2, genreId);
+                    }
+
+                    public int getBatchSize() {
+                        return genreUniqueIds.size();
+                    }
+                });
     }
 }
