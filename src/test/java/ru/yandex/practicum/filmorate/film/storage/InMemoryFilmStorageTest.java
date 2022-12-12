@@ -22,7 +22,7 @@ public class InMemoryFilmStorageTest extends InMemoryStorageTest<Film> {
                 "Test description",
                 LocalDate.EPOCH,
                 120,
-                new Mpa(1, "test mpa"),
+                new Mpa(1, "G"),
                 Collections.emptyList()
         );
     }
@@ -35,7 +35,7 @@ public class InMemoryFilmStorageTest extends InMemoryStorageTest<Film> {
                 "Test description updated",
                 LocalDate.EPOCH,
                 120,
-                new Mpa(1, "test mpa"),
+                new Mpa(1, "G"),
                 Collections.emptyList()
         );
     }

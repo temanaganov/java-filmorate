@@ -21,7 +21,7 @@ public class FilmDtoToFilmMapperTest {
                 "Test description",
                 LocalDate.EPOCH,
                 120,
-                new Mpa(1, "test mpa"),
+                new Mpa(1, "G"),
                 Collections.emptyList()
         );
 
