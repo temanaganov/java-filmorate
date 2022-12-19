@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.With;
+import ru.yandex.practicum.filmorate.director.model.Director;
 import ru.yandex.practicum.filmorate.genre.model.Genre;
 import ru.yandex.practicum.filmorate.mpa.model.Mpa;
 
@@ -40,4 +41,6 @@ public class FilmDto {
     Mpa mpa;
 
     List<Genre> genres;
+
+    List<Director> directors;
 }
