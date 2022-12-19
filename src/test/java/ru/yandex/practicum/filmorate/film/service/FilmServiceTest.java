@@ -147,6 +147,7 @@ public class FilmServiceTest {
                 LocalDate.EPOCH,
                 120,
                 new Mpa(1, "G"),
+                Collections.emptyList(),
                 Collections.emptyList()
         );
     }
@@ -159,6 +160,7 @@ public class FilmServiceTest {
                 LocalDate.EPOCH,
                 120,
                 new Mpa(1, "G"),
+                Collections.emptyList(),
                 Collections.emptyList()
         );
     }
