@@ -142,4 +142,17 @@ public class FilmServiceImpl implements FilmService {
     public List<Film> getPopularFilms(int count) {
         return filmStorage.getPopularFilms(count);
     }
+
+    @Override
+    public List<Film> getCommonFilms(int userId, int friendId) {
+        if (userStorage.getById(userId) == null) {
+            throw new NotFoundException("user", userId);
+        }
+
+        if (userStorage.getById(friendId) == null) {
+            throw new NotFoundException("user", friendId);
+        }
+
+        return filmStorage.getCommonFilms(userId, friendId);
+    }
 }

@@ -27,4 +27,9 @@ public class InMemoryFilmStorage extends InMemoryStorage<Film> implements FilmSt
     public void deleteLikeFromFilm(int filmId, int userId) {
 
     }
+
+    @Override
+    public List<Film> getCommonFilms(int userId, int friendId) {
+        return null;
+    }
 }

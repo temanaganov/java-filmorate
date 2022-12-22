@@ -105,6 +105,12 @@ public class DbFilmStorage implements FilmStorage {
         jdbcTemplate.update(FilmQueries.DELETE_LIKE_FROM_FILM, filmId, userId);
     }
 
+    @Override
+    public List<Film> getCommonFilms(int userId, int friendId) {
+        return jdbcTemplate.query(FilmQueries.GET_COMMON_FILMS, this::mapRowToFilm, userId, friendId);
+    }
+
+
     private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
         return new Film(
                 resultSet.getInt("film_id"),
