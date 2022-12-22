@@ -21,25 +21,27 @@ public class FilmQueries {
 
     static final String DELETE = "DELETE FROM film WHERE film_id = ?";
 
-    static final String GET_POPULAR_FILMS = "SELECT " +
-            "f.film_id, " +
-            "f.name, " +
-            "f.description, " +
-            "f.release_date, " +
-            "f.duration, " +
-            "m.mpa_id AS mpa_id, " +
-            "m.name AS mpa_name, " +
-            "g.genre_id, " +
-            "g.name AS genre_name, " +
-            "COUNT(l.film_id) AS likes " +
-            "FROM film AS f " +
-            "INNER JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
-            "LEFT JOIN film_genre AS fg ON f.film_id = fg.film_id " +
-            "LEFT JOIN genre AS g ON fg.genre_id = g.genre_id " +
-            "LEFT JOIN likes AS l ON f.film_id = l.film_id " +
-            "GROUP BY f.film_id, f.name, f.description, f.release_date, f.duration, m.mpa_id, m.name, g.genre_id, g.name " +
-            "ORDER BY likes DESC, f.name " +
-            "LIMIT ?";
+    static String GET_POPULAR_FILMS(Integer genreId, Integer year) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT *, ")
+                .append("COUNT(l.film_id) AS likes ")
+                .append("FROM film AS f ")
+                .append("INNER JOIN mpa AS m ON f.mpa_id = m.mpa_id ")
+                .append("LEFT JOIN likes AS l ON f.film_id = l.film_id ");
+
+        if (genreId != null) {
+            sb.append("JOIN film_genre AS fg ON (fg.film_id = f.film_id AND fg.genre_id = ").append(genreId).append(") ");
+        }
+
+        if (year != null) {
+            sb.append("WHERE EXTRACT(YEAR from f.release_date) = ").append(year).append(" ");
+        }
+
+        sb.append("GROUP BY f.film_id, f.name, f.description, f.release_date, f.duration, m.mpa_id, m.name ")
+                .append("ORDER BY likes DESC, f.name LIMIT ?");
+
+        return sb.toString();
+    }
 
     static final String DELETE_FILM_GENRES = "DELETE FROM film_genre WHERE film_id = ?";
 

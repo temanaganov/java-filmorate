@@ -61,8 +61,12 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public List<Film> getPopularFilms(@RequestParam(defaultValue = "10") int count) {
-        return filmService.getPopularFilms(count);
+    public List<Film> getPopularFilms(
+            @RequestParam(defaultValue = "10") int count,
+            @RequestParam(required = false) Integer genreId,
+            @RequestParam(required = false) Integer year
+    ) {
+        return filmService.getPopularFilms(count, genreId, year);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
