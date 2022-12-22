@@ -14,6 +14,11 @@ public class InMemoryFilmStorage extends InMemoryStorage<Film> implements FilmSt
     }
 
     @Override
+    public List<Film> getAllFilmsByDirectorId(int directorId, String sortBy) {
+        return null;
+    }
+
+    @Override
     public List<Film> getPopularFilms(int count, Integer genreId, Integer year) {
         return null;
     }

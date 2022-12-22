@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.core.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
+import ru.yandex.practicum.filmorate.director.model.Director;
+import ru.yandex.practicum.filmorate.director.storage.DirectorStorage;
 import ru.yandex.practicum.filmorate.film.model.Film;
 import ru.yandex.practicum.filmorate.film.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.film.dto.FilmDto;
@@ -21,6 +23,7 @@ public class FilmServiceImpl implements FilmService {
     private final UserStorage userStorage;
     private final MpaStorage mpaStorage;
     private final GenreStorage genreStorage;
+    private final DirectorStorage directorStorage;
     private final Mapper<FilmDto, Film> filmDtoToFilmMapper;
 
     public FilmServiceImpl(
@@ -28,18 +31,31 @@ public class FilmServiceImpl implements FilmService {
             @Qualifier("dbUserStorage") UserStorage userStorage,
             MpaStorage mpaStorage,
             GenreStorage genreStorage,
+            DirectorStorage directorStorage,
             Mapper<FilmDto, Film> filmDtoToFilmMapper
     ) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
         this.mpaStorage = mpaStorage;
         this.genreStorage = genreStorage;
+        this.directorStorage = directorStorage;
         this.filmDtoToFilmMapper = filmDtoToFilmMapper;
     }
 
     @Override
     public List<Film> getAll() {
         return filmStorage.getAll();
+    }
+
+    @Override
+    public List<Film> getAllFilmsByDirectorId(int directorId, String sortBy) {
+        Director director = directorStorage.getById(directorId);
+
+        if (director == null) {
+            throw new NotFoundException("director", directorId);
+        }
+
+        return filmStorage.getAllFilmsByDirectorId(directorId, sortBy);
     }
 
     @Override
@@ -56,18 +72,7 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public Film create(FilmDto dto) {
         Film newFilm = filmDtoToFilmMapper.mapFrom(dto);
-        Mpa mpa = mpaStorage.getById(newFilm.getMpa().getId());
-
-        if (mpa == null) {
-            throw new NotFoundException("mpa", newFilm.getMpa().getId());
-        }
-
-        newFilm.getGenres().forEach(genre -> {
-            if (genreStorage.getById(genre.getId()) == null) {
-                throw new NotFoundException("genre", genre.getId());
-            }
-        });
-
+        checkExistenceOfFilmFields(newFilm);
         return filmStorage.create(newFilm);
     }
 
@@ -81,16 +86,7 @@ public class FilmServiceImpl implements FilmService {
 
         Film film = filmDtoToFilmMapper.mapFrom(dto);
 
-        if (mpaStorage.getById(film.getMpa().getId()) == null) {
-            throw new NotFoundException("mpa", film.getMpa().getId());
-        }
-
-        film.getGenres().forEach(genre -> {
-            if (genreStorage.getById(genre.getId()) == null) {
-                throw new NotFoundException("genre", genre.getId());
-            }
-        });
-
+        checkExistenceOfFilmFields(film);
 
         return filmStorage.update(film.getId(), film);
     }
@@ -141,5 +137,25 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public List<Film> getPopularFilms(int count, Integer genreId, Integer year) {
         return filmStorage.getPopularFilms(count, genreId, year);
+    }
+
+    private void checkExistenceOfFilmFields(Film film) {
+        Mpa mpa = mpaStorage.getById(film.getMpa().getId());
+
+        if (mpa == null) {
+            throw new NotFoundException("mpa", film.getMpa().getId());
+        }
+
+        film.getGenres().forEach(genre -> {
+            if (genreStorage.getById(genre.getId()) == null) {
+                throw new NotFoundException("genre", genre.getId());
+            }
+        });
+
+        film.getDirectors().forEach(director -> {
+            if (directorStorage.getById(director.getId()) == null) {
+                throw new NotFoundException("genre", director.getId());
+            }
+        });
     }
 }
