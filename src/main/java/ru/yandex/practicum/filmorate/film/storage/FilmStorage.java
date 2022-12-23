@@ -5,6 +5,7 @@ import ru.yandex.practicum.filmorate.film.model.Film;
 import java.util.List;
 
 public interface FilmStorage {
+    List<Film>search(String query,String by);
     List<Film> getAll();
     List<Film> getAllFilmsByDirectorId(int directorId, String sortBy);
     Film getById(int id);
