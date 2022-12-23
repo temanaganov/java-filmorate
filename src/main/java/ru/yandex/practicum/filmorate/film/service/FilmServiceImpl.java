@@ -2,13 +2,14 @@ package ru.yandex.practicum.filmorate.film.service;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.core.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.core.util.Guard;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
 import ru.yandex.practicum.filmorate.director.model.Director;
 import ru.yandex.practicum.filmorate.director.storage.DirectorStorage;
 import ru.yandex.practicum.filmorate.film.model.Film;
 import ru.yandex.practicum.filmorate.film.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.film.dto.FilmDto;
+import ru.yandex.practicum.filmorate.genre.model.Genre;
 import ru.yandex.practicum.filmorate.genre.storage.GenreStorage;
 import ru.yandex.practicum.filmorate.mpa.model.Mpa;
 import ru.yandex.practicum.filmorate.mpa.storage.MpaStorage;
@@ -20,11 +21,12 @@ import java.util.List;
 @Service
 public class FilmServiceImpl implements FilmService {
     private final FilmStorage filmStorage;
-    private final UserStorage userStorage;
-    private final MpaStorage mpaStorage;
-    private final GenreStorage genreStorage;
-    private final DirectorStorage directorStorage;
     private final Mapper<FilmDto, Film> filmDtoToFilmMapper;
+    private final Guard<Film> filmGuard;
+    private final Guard<User> userGuard;
+    private final Guard<Mpa> mpaGuard;
+    private final Guard<Genre> genreGuard;
+    private final Guard<Director> directorGuard;
 
     public FilmServiceImpl(
             @Qualifier("dbFilmStorage") FilmStorage filmStorage,
@@ -35,11 +37,12 @@ public class FilmServiceImpl implements FilmService {
             Mapper<FilmDto, Film> filmDtoToFilmMapper
     ) {
         this.filmStorage = filmStorage;
-        this.userStorage = userStorage;
-        this.mpaStorage = mpaStorage;
-        this.genreStorage = genreStorage;
-        this.directorStorage = directorStorage;
         this.filmDtoToFilmMapper = filmDtoToFilmMapper;
+        this.filmGuard = new Guard<>(filmStorage::getById, Film.class);
+        this.userGuard = new Guard<>(userStorage::getById, User.class);
+        this.mpaGuard = new Guard<>(mpaStorage::getById, Mpa.class);
+        this.genreGuard = new Guard<>(genreStorage::getById, Genre.class);
+        this.directorGuard = new Guard<>(directorStorage::getById, Director.class);
     }
 
     @Override
@@ -54,43 +57,28 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public List<Film> getAllFilmsByDirectorId(int directorId, String sortBy) {
-        Director director = directorStorage.getById(directorId);
-
-        if (director == null) {
-            throw new NotFoundException("director", directorId);
-        }
+        directorGuard.checkIfExists(directorId);
 
         return filmStorage.getAllFilmsByDirectorId(directorId, sortBy);
     }
 
     @Override
     public Film getById(int id) {
-        Film film = filmStorage.getById(id);
-
-        if (film == null) {
-            throw new NotFoundException("film", id);
-        }
-
-        return film;
+        return filmGuard.checkIfExists(id);
     }
 
     @Override
     public Film create(FilmDto dto) {
         Film newFilm = filmDtoToFilmMapper.mapFrom(dto);
         checkExistenceOfFilmFields(newFilm);
+
         return filmStorage.create(newFilm);
     }
 
     @Override
     public Film update(FilmDto dto) {
-        Film currentFilm = filmStorage.getById(dto.getId());
-
-        if (currentFilm == null) {
-            throw new NotFoundException("film", dto.getId());
-        }
-
+        filmGuard.checkIfExists(dto.getId());
         Film film = filmDtoToFilmMapper.mapFrom(dto);
-
         checkExistenceOfFilmFields(film);
 
         return filmStorage.update(film.getId(), film);
@@ -98,43 +86,24 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public Film delete(int id) {
-        Film film = filmStorage.delete(id);
-
-        if (film == null) {
-            throw new NotFoundException("film", id);
-        }
+        Film film = filmGuard.checkIfExists(id);
+        filmStorage.delete(id);
 
         return film;
     }
 
     @Override
     public void likeFilm(int filmId, int userId) {
-        Film film = filmStorage.getById(filmId);
-        User user = userStorage.getById(userId);
-
-        if (film == null) {
-            throw new NotFoundException("film", filmId);
-        }
-
-        if (user == null) {
-            throw new NotFoundException("user", userId);
-        }
+        filmGuard.checkIfExists(filmId);
+        userGuard.checkIfExists(userId);
 
         filmStorage.likeFilm(filmId, userId);
     }
 
     @Override
     public void deleteLikeFromFilm(int filmId, int userId) {
-        Film film = filmStorage.getById(filmId);
-        User user = userStorage.getById(userId);
-
-        if (film == null) {
-            throw new NotFoundException("film", filmId);
-        }
-
-        if (user == null) {
-            throw new NotFoundException("user", userId);
-        }
+        filmGuard.checkIfExists(filmId);
+        userGuard.checkIfExists(userId);
 
         filmStorage.deleteLikeFromFilm(filmId, userId);
     }
@@ -146,34 +115,15 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public List<Film> getCommonFilms(int userId, int friendId) {
-        if (userStorage.getById(userId) == null) {
-            throw new NotFoundException("user", userId);
-        }
-
-        if (userStorage.getById(friendId) == null) {
-            throw new NotFoundException("user", friendId);
-        }
+        userGuard.checkIfExists(userId);
+        userGuard.checkIfExists(friendId);
 
         return filmStorage.getCommonFilms(userId, friendId);
     }
 
     private void checkExistenceOfFilmFields(Film film) {
-        Mpa mpa = mpaStorage.getById(film.getMpa().getId());
-
-        if (mpa == null) {
-            throw new NotFoundException("mpa", film.getMpa().getId());
-        }
-
-        film.getGenres().forEach(genre -> {
-            if (genreStorage.getById(genre.getId()) == null) {
-                throw new NotFoundException("genre", genre.getId());
-            }
-        });
-
-        film.getDirectors().forEach(director -> {
-            if (directorStorage.getById(director.getId()) == null) {
-                throw new NotFoundException("genre", director.getId());
-            }
-        });
+        mpaGuard.checkIfExists(film.getMpa().getId());
+        film.getGenres().forEach(genre -> genreGuard.checkIfExists(genre.getId()));
+        film.getDirectors().forEach(director -> directorGuard.checkIfExists(director.getId()));
     }
 }

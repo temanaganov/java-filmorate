@@ -21,6 +21,7 @@ public class DbDirectorStorage implements DirectorStorage {
     @Override
     public List<Director> getAll() {
         String sql = "SELECT * FROM director ORDER BY director_id";
+
         return jdbcTemplate.query(sql, this::mapRowToDirector);
     }
 
@@ -70,17 +71,9 @@ public class DbDirectorStorage implements DirectorStorage {
     }
 
     @Override
-    public Director delete(int id) {
+    public void delete(int id) {
         String sql = "DELETE FROM director WHERE director_id = ?";
-        Director director = getById(id);
-
-        if (director == null) {
-            return null;
-        }
-
         jdbcTemplate.update(sql, id);
-
-        return director;
     }
 
     private Director mapRowToDirector(ResultSet resultSet, int rowNum) throws SQLException {

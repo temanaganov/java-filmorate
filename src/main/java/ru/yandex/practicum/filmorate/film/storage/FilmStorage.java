@@ -11,7 +11,7 @@ public interface FilmStorage {
     Film getById(int id);
     Film create(Film film);
     Film update(int id, Film film);
-    Film delete(int id);
+    void delete(int id);
     List<Film> getPopularFilms(int count, Integer genreId, Integer year);
     void likeFilm(int filmId, int userId);
     void deleteLikeFromFilm(int filmId, int userId);

@@ -90,16 +90,8 @@ public class DbFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film delete(int id) {
-        Film film = getById(id);
-
-        if (film == null) {
-            return null;
-        }
-
+    public void delete(int id) {
         jdbcTemplate.update(FilmQueries.DELETE, id);
-
-        return film;
     }
 
     @Override
