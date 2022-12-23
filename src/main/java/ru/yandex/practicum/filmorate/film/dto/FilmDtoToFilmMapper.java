@@ -18,7 +18,8 @@ public class FilmDtoToFilmMapper implements Mapper<FilmDto, Film> {
                 dto.getReleaseDate(),
                 dto.getDuration(),
                 dto.getMpa(),
-                Optional.ofNullable(dto.getGenres()).orElse(Collections.emptyList())
+                Optional.ofNullable(dto.getGenres()).orElse(Collections.emptyList()),
+                Optional.ofNullable(dto.getDirectors()).orElse(Collections.emptyList())
         );
     }
 }

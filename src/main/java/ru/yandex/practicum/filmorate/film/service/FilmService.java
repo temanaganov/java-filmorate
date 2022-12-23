@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface FilmService {
     List<Film> getAll();
+    List<Film> getAllFilmsByDirectorId(int directorId, String sortBy);
     Film getById(int id);
     Film create(FilmDto dto);
     Film update(FilmDto dto);

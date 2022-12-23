@@ -81,6 +81,7 @@ public class DbFilmStorageTest {
                 LocalDate.EPOCH,
                 120,
                 new Mpa(1, "G"),
+                Collections.emptyList(),
                 Collections.emptyList()
         );
     }

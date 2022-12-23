@@ -93,6 +93,7 @@ public class ExceptionsHandlerTest {
                 LocalDate.parse("2000-01-01"),
                 120,
                 new Mpa(1, "G"),
+                Collections.emptyList(),
                 Collections.emptyList()
         );
     }

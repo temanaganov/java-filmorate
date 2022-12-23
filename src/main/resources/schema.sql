@@ -17,6 +17,11 @@ CREATE TABLE IF NOT EXISTS genre (
     name VARCHAR(30) UNIQUE NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS director (
+    director_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS film (
     film_id INTEGER AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -32,6 +37,13 @@ CREATE TABLE IF NOT EXISTS film_genre (
     genre_id INTEGER NOT NULL,
     FOREIGN KEY (film_id) REFERENCES film (film_id) ON DELETE CASCADE,
     FOREIGN KEY (genre_id) REFERENCES genre (genre_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS film_director (
+    film_id INTEGER NOT NULL,
+    director_id INTEGER NOT NULL,
+    FOREIGN KEY (film_id) REFERENCES film (film_id) ON DELETE CASCADE,
+    FOREIGN KEY (director_id) REFERENCES director (director_id) ON DELETE CASCADE
 );
 
 -- The table name is plural because like is a reserved word
