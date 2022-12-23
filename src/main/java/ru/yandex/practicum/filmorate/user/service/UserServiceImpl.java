@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.core.exception.FieldValidationException;
 import ru.yandex.practicum.filmorate.core.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
+import ru.yandex.practicum.filmorate.events.service.EventService;
+import ru.yandex.practicum.filmorate.events.storage.EventStorage;
 import ru.yandex.practicum.filmorate.user.model.User;
 import ru.yandex.practicum.filmorate.user.storage.UserStorage;
 import ru.yandex.practicum.filmorate.user.dto.UserDto;
@@ -16,12 +18,16 @@ public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
     private final Mapper<UserDto, User> userDtoToUserMapper;
 
+    private final EventService eventService;
+
     public UserServiceImpl(
             @Qualifier("dbUserStorage") UserStorage userStorage,
-            Mapper<UserDto, User> userDtoToUserMapper
-    ) {
+            Mapper<UserDto, User> userDtoToUserMapper,
+            EventService eventService) {
         this.userStorage = userStorage;
         this.userDtoToUserMapper = userDtoToUserMapper;
+        this.eventService = eventService;
+        //this.eventStorage = eventStorage;
     }
 
     @Override
@@ -95,7 +101,7 @@ public class UserServiceImpl implements UserService {
         if (friend == null) {
             throw new NotFoundException("user", friendId);
         }
-
+        eventService.addFriendEvent(userId, friendId);
         userStorage.addFriend(userId, friendId);
     }
 
@@ -111,7 +117,7 @@ public class UserServiceImpl implements UserService {
         if (friend == null) {
             throw new NotFoundException("user", friendId);
         }
-
+        eventService.deleteFriendEvent(userId, friendId);
         userStorage.deleteFriend(userId, friendId);
     }
 

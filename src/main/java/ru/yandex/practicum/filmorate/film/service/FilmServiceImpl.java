@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.core.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
+import ru.yandex.practicum.filmorate.events.service.EventService;
+import ru.yandex.practicum.filmorate.events.storage.EventStorage;
 import ru.yandex.practicum.filmorate.film.model.Film;
 import ru.yandex.practicum.filmorate.film.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.film.dto.FilmDto;
@@ -22,20 +24,24 @@ public class FilmServiceImpl implements FilmService {
     private final MpaStorage mpaStorage;
     private final GenreStorage genreStorage;
     private final Mapper<FilmDto, Film> filmDtoToFilmMapper;
+    private final EventService eventService;
 
     public FilmServiceImpl(
             @Qualifier("dbFilmStorage") FilmStorage filmStorage,
             @Qualifier("dbUserStorage") UserStorage userStorage,
             MpaStorage mpaStorage,
             GenreStorage genreStorage,
-            Mapper<FilmDto, Film> filmDtoToFilmMapper
-    ) {
+            Mapper<FilmDto, Film> filmDtoToFilmMapper,
+            EventService eventService) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
         this.mpaStorage = mpaStorage;
         this.genreStorage = genreStorage;
         this.filmDtoToFilmMapper = filmDtoToFilmMapper;
+        this.eventService = eventService;
     }
+
+
 
     @Override
     public List<Film> getAll() {
@@ -118,7 +124,7 @@ public class FilmServiceImpl implements FilmService {
         if (user == null) {
             throw new NotFoundException("user", userId);
         }
-
+        eventService.addLikeEvent(filmId, userId);
         filmStorage.likeFilm(filmId, userId);
     }
 
@@ -134,7 +140,7 @@ public class FilmServiceImpl implements FilmService {
         if (user == null) {
             throw new NotFoundException("user", userId);
         }
-
+        eventService.deleteLikeEvent(filmId, userId);
         filmStorage.deleteLikeFromFilm(filmId, userId);
     }
 
