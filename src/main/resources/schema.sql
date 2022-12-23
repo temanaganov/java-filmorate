@@ -1,14 +1,4 @@
 -- The table name is plural because user is a reserved word
-drop table if exists friendship;
-drop table if exists likes;
-drop table if exists film_director;
-drop table if exists film_genre;
-drop table if exists genre;
-drop table if exists film;
-drop table if exists mpa;
-drop table if exists director;
-drop table if exists users;
-
 
 CREATE TABLE IF NOT EXISTS users (
     user_id INTEGER AUTO_INCREMENT PRIMARY KEY,
