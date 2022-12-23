@@ -6,6 +6,8 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.director.model.Director;
+import ru.yandex.practicum.filmorate.director.storage.DirectorStorage;
 import ru.yandex.practicum.filmorate.film.model.Film;
 import ru.yandex.practicum.filmorate.genre.model.Genre;
 import ru.yandex.practicum.filmorate.genre.storage.GenreStorage;
@@ -24,10 +26,16 @@ import java.util.stream.Collectors;
 public class DbFilmStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
     private final GenreStorage genreStorage;
+    private final DirectorStorage directorStorage;
 
     @Override
     public List<Film> getAll() {
         return jdbcTemplate.query(FilmQueries.GET_ALL, this::mapRowToFilm);
+    }
+
+    @Override
+    public List<Film> getAllFilmsByDirectorId(int directorId, String sortBy) {
+        return jdbcTemplate.query(FilmQueries.GET_ALL_BY_DIRECTOR_ID(sortBy), this::mapRowToFilm, directorId);
     }
 
     @Override
@@ -55,6 +63,7 @@ public class DbFilmStorage implements FilmStorage {
         int filmId = simpleJdbcInsert.executeAndReturnKey(filmColumns).intValue();
 
         updateFilmGenres(film.getGenres(), filmId);
+        updateFilmDirectors(film.getDirectors(), filmId);
 
         return getById(filmId);
     }
@@ -72,7 +81,10 @@ public class DbFilmStorage implements FilmStorage {
         );
 
         jdbcTemplate.update(FilmQueries.DELETE_FILM_GENRES, film.getId());
+        jdbcTemplate.update(FilmQueries.DELETE_FILM_DIRECTORS, film.getId());
+
         updateFilmGenres(film.getGenres(), id);
+        updateFilmDirectors(film.getDirectors(), id);
 
         return getById(id);
     }
@@ -110,17 +122,23 @@ public class DbFilmStorage implements FilmStorage {
         return jdbcTemplate.query(FilmQueries.GET_COMMON_FILMS, this::mapRowToFilm, userId, friendId);
     }
 
-
-    private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
-        return new Film(
-                resultSet.getInt("film_id"),
-                resultSet.getString("film.name"),
-                resultSet.getString("description"),
-                resultSet.getDate("release_date").toLocalDate(),
-                resultSet.getInt("duration"),
-                new Mpa(resultSet.getInt("mpa.mpa_id"), resultSet.getString("mpa.name")),
-                genreStorage.getAllByFilmId(resultSet.getInt("film_id"))
-        );
+    @Override
+    public List<Film> search(String query, String by) {
+        query = "%" + query.toLowerCase() + "%";
+        String[] byList = by.split(",");
+        if (byList.length != 0) {
+            if (byList.length == 1) {
+                if (byList[0].equals("director")) {
+                    return jdbcTemplate.query(FilmQueries.SEARCH_BY_DIRECTOR, this::mapRowToFilm, query);
+                } else {
+                    return jdbcTemplate.query(FilmQueries.SEARCH_BY_FILM, this::mapRowToFilm, query);
+                }
+            } else {
+                return jdbcTemplate.query(FilmQueries.SEARCH_BY_FILM_OR_DIRECTOR, this::mapRowToFilm, query, query);
+            }
+        } else {
+            return jdbcTemplate.query(FilmQueries.SEARCH_NO_ARGS, this::mapRowToFilm);
+        }
     }
 
     private void updateFilmGenres(List<Genre> genres, int filmId) {
@@ -146,5 +164,44 @@ public class DbFilmStorage implements FilmStorage {
                         return genreUniqueIds.size();
                     }
                 });
+    }
+
+    private void updateFilmDirectors(List<Director> directors, int filmId) {
+        if (directors == null) {
+            return;
+        }
+
+        List<Integer> directorUniqueIds = directors.stream()
+                .map(Director::getId)
+                .distinct()
+                .collect(Collectors.toList());
+
+        jdbcTemplate.batchUpdate(
+                FilmQueries.ADD_DIRECTOR,
+                new BatchPreparedStatementSetter() {
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        int directorId = directorUniqueIds.get(i);
+                        ps.setInt(1, filmId);
+                        ps.setInt(2, directorId);
+                    }
+
+                    public int getBatchSize() {
+                        return directorUniqueIds.size();
+                    }
+                }
+        );
+    }
+
+    private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
+        return new Film(
+                resultSet.getInt("film_id"),
+                resultSet.getString("film.name"),
+                resultSet.getString("description"),
+                resultSet.getDate("release_date").toLocalDate(),
+                resultSet.getInt("duration"),
+                new Mpa(resultSet.getInt("mpa.mpa_id"), resultSet.getString("mpa.name")),
+                genreStorage.getAllByFilmId(resultSet.getInt("film_id")),
+                directorStorage.getAllByFilmId(resultSet.getInt("film_id"))
+        );
     }
 }

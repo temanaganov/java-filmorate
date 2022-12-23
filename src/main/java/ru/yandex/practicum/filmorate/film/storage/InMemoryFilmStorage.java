@@ -9,8 +9,17 @@ import java.util.List;
 @Component("inMemoryFilmStorage")
 public class InMemoryFilmStorage extends InMemoryStorage<Film> implements FilmStorage {
     @Override
+    public List<Film> search(String query,String by){
+        return null;
+    }
+    @Override
     protected Film withId(Film film, int id) {
         return film.withId(id);
+    }
+
+    @Override
+    public List<Film> getAllFilmsByDirectorId(int directorId, String sortBy) {
+        return null;
     }
 
     @Override
