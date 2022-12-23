@@ -103,8 +103,8 @@ public class DbFilmStorage implements FilmStorage {
     }
 
     @Override
-    public List<Film> getPopularFilms(int count) {
-        return jdbcTemplate.query(FilmQueries.GET_POPULAR_FILMS, this::mapRowToFilm, Math.max(count, 0));
+    public List<Film> getPopularFilms(int count, Integer genreId, Integer year) {
+        return jdbcTemplate.query(FilmQueries.GET_POPULAR_FILMS(genreId, year), this::mapRowToFilm, Math.max(count, 0));
     }
 
     @Override
@@ -195,11 +195,11 @@ public class DbFilmStorage implements FilmStorage {
     private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
         return new Film(
                 resultSet.getInt("film_id"),
-                resultSet.getString("film.name"),
+                resultSet.getString("name"),
                 resultSet.getString("description"),
                 resultSet.getDate("release_date").toLocalDate(),
                 resultSet.getInt("duration"),
-                new Mpa(resultSet.getInt("mpa.mpa_id"), resultSet.getString("mpa.name")),
+                new Mpa(resultSet.getInt("mpa_id"), resultSet.getString("mpa.name")),
                 genreStorage.getAllByFilmId(resultSet.getInt("film_id")),
                 directorStorage.getAllByFilmId(resultSet.getInt("film_id"))
         );
