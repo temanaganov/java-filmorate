@@ -23,6 +23,33 @@ public class FilmQueries {
         return sb.toString();
     }
 
+    static final String SEARCH_BY_DIRECTOR = "SELECT * FROM film f " +
+            "JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
+            "LEFT JOIN film_director fd ON f.film_id = fd.film_id " +
+            "LEFT JOIN director d ON fd.director_id = d.director_id " +
+            "LEFT JOIN likes l ON f.film_id = l.film_id " +
+            "WHERE LOWER(d.name) LIKE ? " +
+            "GROUP BY f.film_id order by COUNT(l.film_id) desc";
+
+    static final String SEARCH_BY_FILM = "SELECT * FROM film f " +
+            "JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
+            "LEFT JOIN likes l ON f.film_id = l.film_id " +
+            "WHERE LOWER(f.name) LIKE ? " +
+            "GROUP BY f.film_id ORDER BY COUNT(l.film_id) DESC";
+
+    static final String SEARCH_BY_FILM_OR_DIRECTOR = "SELECT * FROM film f " +
+            "JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
+            "LEFT JOIN film_director fd on f.film_id = fd.film_id " +
+            "LEFT JOIN director d on fd.director_id = d.director_id " +
+            "LEFT JOIN likes l on f.film_id = l.film_id " +
+            "WHERE LOWER(f.name) LIKE ? OR LOWER(d.name) LIKE ?" +
+            "GROUP BY f.film_id ORDER BY COUNT(l.film_id) DESC";
+
+    static final String SEARCH_NO_ARGS = "SELECT * FROM film f " +
+            "JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
+            "LEFT JOIN likes l on f.film_id = l.film_id " +
+            "GROUP BY f.film_id ORDER BY COUNT(l.film_id) DESC";
+
     static final String GET_BY_ID = "SELECT * " +
             "FROM film AS f " +
             "JOIN mpa AS m ON f.mpa_id = m.mpa_id " +

@@ -1,4 +1,5 @@
 -- The table name is plural because user is a reserved word
+
 CREATE TABLE IF NOT EXISTS users (
     user_id INTEGER AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(50) UNIQUE NOT NULL,

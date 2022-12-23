@@ -39,6 +39,12 @@ public class FilmController {
         return filmService.getAllFilmsByDirectorId(directorId, sortBy);
     }
 
+    @GetMapping("/search")
+    public List<Film> search(@RequestParam String query, @RequestParam String by) {
+        log.info("query = " + query + " by = " + by);
+        return filmService.search(query, by);
+    }
+
     @GetMapping("/{id}")
     public Film getFilm(@PathVariable int id) {
         return filmService.getById(id);

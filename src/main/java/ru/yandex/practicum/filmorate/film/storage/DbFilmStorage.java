@@ -117,6 +117,25 @@ public class DbFilmStorage implements FilmStorage {
         jdbcTemplate.update(FilmQueries.DELETE_LIKE_FROM_FILM, filmId, userId);
     }
 
+    @Override
+    public List<Film> search(String query, String by) {
+        query = "%" + query.toLowerCase() + "%";
+        String[] byList = by.split(",");
+        if (byList.length != 0) {
+            if (byList.length == 1) {
+                if (byList[0].equals("director")) {
+                    return jdbcTemplate.query(FilmQueries.SEARCH_BY_DIRECTOR, this::mapRowToFilm, query);
+                } else {
+                    return jdbcTemplate.query(FilmQueries.SEARCH_BY_FILM, this::mapRowToFilm, query);
+                }
+            } else {
+                return jdbcTemplate.query(FilmQueries.SEARCH_BY_FILM_OR_DIRECTOR, this::mapRowToFilm, query, query);
+            }
+        } else {
+            return jdbcTemplate.query(FilmQueries.SEARCH_NO_ARGS, this::mapRowToFilm);
+        }
+    }
+
     private void updateFilmGenres(List<Genre> genres, int filmId) {
         if (genres == null) {
             return;
