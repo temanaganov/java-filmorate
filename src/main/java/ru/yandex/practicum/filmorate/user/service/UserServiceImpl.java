@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.user.service;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.core.exception.FieldValidationException;
-import ru.yandex.practicum.filmorate.core.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.core.util.Guard;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
 import ru.yandex.practicum.filmorate.events.service.EventService;
 import ru.yandex.practicum.filmorate.events.storage.EventStorage;
@@ -17,6 +17,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
     private final Mapper<UserDto, User> userDtoToUserMapper;
+    private final Guard<User> userGuard;
 
     private final EventService eventService;
 
@@ -28,6 +29,7 @@ public class UserServiceImpl implements UserService {
         this.userDtoToUserMapper = userDtoToUserMapper;
         this.eventService = eventService;
         //this.eventStorage = eventStorage;
+        this.userGuard = new Guard<>(userStorage::getById, User.class);
     }
 
     @Override
@@ -37,13 +39,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(int id) {
-        User user = userStorage.getById(id);
-
-        if (user == null) {
-            throw new NotFoundException("user", id);
-        }
-
-        return user;
+        return userGuard.checkIfExists(id);
     }
 
     @Override
@@ -59,12 +55,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(UserDto dto) {
-        User currentUser = userStorage.getById(dto.getId());
-
-        if (currentUser == null) {
-            throw new NotFoundException("user", dto.getId());
-        }
-
+        userGuard.checkIfExists(dto.getId());
         User user = userDtoToUserMapper.mapFrom(dto);
 
         if (emailIsBusy(user.getEmail())) {
@@ -76,11 +67,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User delete(int id) {
-        User user = userStorage.delete(id);
-
-        if (user == null) {
-            throw new NotFoundException("user", id);
-        }
+        User user = userGuard.checkIfExists(id);
+        userStorage.delete(id);
 
         return user;
     }
@@ -91,59 +79,31 @@ public class UserServiceImpl implements UserService {
             throw new FieldValidationException("friendId", "friendId can not be equal to userId");
         }
 
-        User user = userStorage.getById(userId);
-        User friend = userStorage.getById(friendId);
+        userGuard.checkIfExists(userId);
+        userGuard.checkIfExists(friendId);
 
-        if (user == null) {
-            throw new NotFoundException("user", userId);
-        }
-
-        if (friend == null) {
-            throw new NotFoundException("user", friendId);
-        }
-        eventService.addFriendEvent(userId, friendId);
         userStorage.addFriend(userId, friendId);
     }
 
     @Override
     public void deleteFriend(int userId, int friendId) {
-        User user = userStorage.getById(userId);
-        User friend = userStorage.getById(friendId);
+        userGuard.checkIfExists(userId);
+        userGuard.checkIfExists(friendId);
 
-        if (user == null) {
-            throw new NotFoundException("user", userId);
-        }
-
-        if (friend == null) {
-            throw new NotFoundException("user", friendId);
-        }
-        eventService.deleteFriendEvent(userId, friendId);
         userStorage.deleteFriend(userId, friendId);
     }
 
     @Override
     public List<User> getFriends(int id) {
-        User user = userStorage.getById(id);
-
-        if (user == null) {
-            throw new NotFoundException("user", id);
-        }
+        userGuard.checkIfExists(id);
 
         return userStorage.getFriends(id);
     }
 
     @Override
     public List<User> getCommonFriends(int userId, int otherUserId) {
-        User user = userStorage.getById(userId);
-        User otherUser = userStorage.getById(otherUserId);
-
-        if (user == null) {
-            throw new NotFoundException("user", userId);
-        }
-
-        if (otherUser == null) {
-            throw new NotFoundException("user", otherUserId);
-        }
+        userGuard.checkIfExists(userId);
+        userGuard.checkIfExists(otherUserId);
 
         return userStorage.getCommonFriends(userId, otherUserId);
     }

@@ -39,6 +39,12 @@ public class FilmController {
         return filmService.getAllFilmsByDirectorId(directorId, sortBy);
     }
 
+    @GetMapping("/search")
+    public List<Film> search(@RequestParam String query, @RequestParam String by) {
+        log.info("query = " + query + " by = " + by);
+        return filmService.search(query, by);
+    }
+
     @GetMapping("/{id}")
     public Film getFilm(@PathVariable int id) {
         return filmService.getById(id);
@@ -66,20 +72,27 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public List<Film> getPopularFilms(@RequestParam(defaultValue = "10") int count) {
-        return filmService.getPopularFilms(count);
+    public List<Film> getPopularFilms(
+            @RequestParam(defaultValue = "10") int count,
+            @RequestParam(required = false) Integer genreId,
+            @RequestParam(required = false) Integer year
+    ) {
+        return filmService.getPopularFilms(count, genreId, year);
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}/like/{userId}")
     public void likeFilm(@PathVariable int id, @PathVariable int userId) {
         filmService.likeFilm(id, userId);
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}/like/{userId}")
     public void deleteLikeFromFilm(@PathVariable int id, @PathVariable int userId) {
         filmService.deleteLikeFromFilm(id, userId);
+    }
+
+    @GetMapping("/common")
+    public List<Film> getCommonFilms(@RequestParam int userId, @RequestParam int friendId) {
+        return filmService.getCommonFilms(userId, friendId);
     }
 
     private void validateFilmReleaseDate(LocalDate date) {

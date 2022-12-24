@@ -90,21 +90,13 @@ public class DbFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film delete(int id) {
-        Film film = getById(id);
-
-        if (film == null) {
-            return null;
-        }
-
+    public void delete(int id) {
         jdbcTemplate.update(FilmQueries.DELETE, id);
-
-        return film;
     }
 
     @Override
-    public List<Film> getPopularFilms(int count) {
-        return jdbcTemplate.query(FilmQueries.GET_POPULAR_FILMS, this::mapRowToFilm, Math.max(count, 0));
+    public List<Film> getPopularFilms(int count, Integer genreId, Integer year) {
+        return jdbcTemplate.query(FilmQueries.GET_POPULAR_FILMS(genreId, year), this::mapRowToFilm, Math.max(count, 0));
     }
 
     @Override
@@ -115,6 +107,30 @@ public class DbFilmStorage implements FilmStorage {
     @Override
     public void deleteLikeFromFilm(int filmId, int userId) {
         jdbcTemplate.update(FilmQueries.DELETE_LIKE_FROM_FILM, filmId, userId);
+    }
+
+    @Override
+    public List<Film> getCommonFilms(int userId, int friendId) {
+        return jdbcTemplate.query(FilmQueries.GET_COMMON_FILMS, this::mapRowToFilm, userId, friendId);
+    }
+
+    @Override
+    public List<Film> search(String query, String by) {
+        query = "%" + query.toLowerCase() + "%";
+        String[] byList = by.split(",");
+        if (byList.length != 0) {
+            if (byList.length == 1) {
+                if (byList[0].equals("director")) {
+                    return jdbcTemplate.query(FilmQueries.SEARCH_BY_DIRECTOR, this::mapRowToFilm, query);
+                } else {
+                    return jdbcTemplate.query(FilmQueries.SEARCH_BY_FILM, this::mapRowToFilm, query);
+                }
+            } else {
+                return jdbcTemplate.query(FilmQueries.SEARCH_BY_FILM_OR_DIRECTOR, this::mapRowToFilm, query, query);
+            }
+        } else {
+            return jdbcTemplate.query(FilmQueries.SEARCH_NO_ARGS, this::mapRowToFilm);
+        }
     }
 
     private void updateFilmGenres(List<Genre> genres, int filmId) {
@@ -171,11 +187,11 @@ public class DbFilmStorage implements FilmStorage {
     private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
         return new Film(
                 resultSet.getInt("film_id"),
-                resultSet.getString("film.name"),
+                resultSet.getString("name"),
                 resultSet.getString("description"),
                 resultSet.getDate("release_date").toLocalDate(),
                 resultSet.getInt("duration"),
-                new Mpa(resultSet.getInt("mpa.mpa_id"), resultSet.getString("mpa.name")),
+                new Mpa(resultSet.getInt("mpa_id"), resultSet.getString("mpa.name")),
                 genreStorage.getAllByFilmId(resultSet.getInt("film_id")),
                 directorStorage.getAllByFilmId(resultSet.getInt("film_id"))
         );

@@ -33,8 +33,8 @@ public abstract class InMemoryStorage<T> {
         return entity;
     }
 
-    public T delete(int id) {
-        return storage.remove(id);
+    public void delete(int id) {
+        storage.remove(id);
     }
 
     protected int getNextId() {
