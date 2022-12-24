@@ -5,10 +5,14 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.film.model.Film;
+import ru.yandex.practicum.filmorate.film.storage.DbFilmStorage;
+import ru.yandex.practicum.filmorate.genre.storage.GenreStorage;
 import ru.yandex.practicum.filmorate.user.model.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +21,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DbUserStorage implements UserStorage {
     private final JdbcTemplate jdbcTemplate;
+    private final GenreStorage genreStorage;
 
     @Override
     public List<User> getAll() {
@@ -111,6 +116,25 @@ public class DbUserStorage implements UserStorage {
         jdbcTemplate.update(UserQueries.DELETE_FRIEND, userId, friendId);
     }
 
+    @Override
+    public List<Film> getRecommendations(int userId){
+        List<Film> filmListResult = new ArrayList<>();
+        final List<Integer> userIdList = jdbcTemplate.query(UserQueries.GET_USERS_FROM_LIKES,this::mapRowToUserId,userId,userId);
+        if(userIdList.isEmpty()){
+            return filmListResult;
+        }
+        int id = userIdList.get(0);
+        DbFilmStorage filmStorage = new DbFilmStorage(jdbcTemplate, genreStorage);
+        List<Integer> filmsOfOriginalUser = jdbcTemplate.query(UserQueries.GET_FILMS_FROM_LIKES, this::mapRowToFilmId, userId);
+        List<Integer> filmsOfFoundUser = jdbcTemplate.query(UserQueries.GET_FILMS_FROM_LIKES, this::mapRowToFilmId, id);
+        filmsOfFoundUser.removeAll(filmsOfOriginalUser);
+
+        for (int idToFill : filmsOfFoundUser) {
+            filmListResult.add(filmStorage.getById(idToFill));
+        }
+        return filmListResult;
+    }
+
     private User mapRowToUser(ResultSet resultSet, int rowNum) throws SQLException {
         return new User(
                 resultSet.getInt("user_id"),
@@ -119,5 +143,15 @@ public class DbUserStorage implements UserStorage {
                 resultSet.getString("name"),
                 resultSet.getDate("birthday").toLocalDate()
         );
+    }
+
+    private int mapRowToUserId(ResultSet rs,int rowNum)throws SQLException{
+        return rs.getInt("user_id");
+
+    }
+
+    private Integer mapRowToFilmId(ResultSet rs,int rowNum)throws SQLException{
+        return rs.getInt("film_id");
+
     }
 }

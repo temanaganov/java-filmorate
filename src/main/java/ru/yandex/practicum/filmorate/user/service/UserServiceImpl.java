@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.core.exception.FieldValidationException;
 import ru.yandex.practicum.filmorate.core.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
+import ru.yandex.practicum.filmorate.film.model.Film;
 import ru.yandex.practicum.filmorate.user.model.User;
 import ru.yandex.practicum.filmorate.user.storage.UserStorage;
 import ru.yandex.practicum.filmorate.user.dto.UserDto;
@@ -140,6 +141,15 @@ public class UserServiceImpl implements UserService {
         }
 
         return userStorage.getCommonFriends(userId, otherUserId);
+    }
+
+    public List<Film> getRecommendations(int userId){
+        User user = userStorage.getById(userId);
+
+        if (user == null) {
+            throw new NotFoundException("user", userId);
+        }
+        return userStorage.getRecommendations(userId);
     }
 
     private boolean emailIsBusy(String email) {

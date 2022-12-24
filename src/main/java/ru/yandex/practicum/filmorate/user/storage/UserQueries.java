@@ -45,4 +45,18 @@ public class UserQueries {
             "FROM friendship " +
             "WHERE " +
             "user_id = ? AND friend_id = ? ";
+
+    static final String GET_USERS_FROM_LIKES = "SELECT l.user_id " +
+            "FROM likes l " +
+            "WHERE l.film_id IN " +
+            "                     (SELECT film_id " +
+            "                      FROM likes l1 " +
+            "                      WHERE user_id = ?) and l.USER_ID <> ?" +
+            "GROUP BY l.user_id " +
+            "ORDER BY COUNT(l.film_id) " +
+            "limit 1";
+
+    static final String GET_FILMS_FROM_LIKES = "SELECT film_id " +
+            "FROM likes " +
+            "WHERE user_id = ?";;
 }
