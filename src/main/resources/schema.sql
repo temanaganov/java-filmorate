@@ -1,5 +1,4 @@
 -- The table name is plural because user is a reserved word
-
 CREATE TABLE IF NOT EXISTS users (
     user_id INTEGER AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(50) UNIQUE NOT NULL,
@@ -55,9 +54,28 @@ CREATE TABLE IF NOT EXISTS likes (
     FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS friendship(
+CREATE TABLE IF NOT EXISTS friendship (
     user_id   INTEGER NOT NULL,
     friend_id INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
     FOREIGN KEY (friend_id) REFERENCES users (user_id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS review (
+    review_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    content VARCHAR(256) NOT NULL,
+    is_positive BOOLEAN NOT NULL,
+    user_id INTEGER NOT NULL,
+    film_id INTEGER NOT NULL,
+    useful INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
+    FOREIGN KEY (film_id) REFERENCES film (film_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS review_user (
+    review_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    is_like BOOLEAN NOT NULL,
+    FOREIGN KEY (review_id) REFERENCES review (review_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
+)
