@@ -6,10 +6,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.yandex.practicum.filmorate.core.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.director.storage.DirectorStorage;
 import ru.yandex.practicum.filmorate.film.model.Film;
 import ru.yandex.practicum.filmorate.film.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.film.dto.FilmDto;
 import ru.yandex.practicum.filmorate.film.dto.FilmDtoToFilmMapper;
+import ru.yandex.practicum.filmorate.genre.storage.GenreStorage;
 import ru.yandex.practicum.filmorate.mpa.model.Mpa;
 import ru.yandex.practicum.filmorate.mpa.storage.MpaStorage;
 import ru.yandex.practicum.filmorate.user.model.User;
@@ -34,6 +36,12 @@ public class FilmServiceTest {
 
     @Mock
     private MpaStorage mpaStorage;
+
+    @Mock
+    private GenreStorage genreStorage;
+
+    @Mock
+    private DirectorStorage directorStorage;
 
     @Mock
     private FilmDtoToFilmMapper filmDtoToFilmMapper;
@@ -75,7 +83,7 @@ public class FilmServiceTest {
         when(filmStorage.getById(id)).thenReturn(null);
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> filmService.getById(id));
-        assertThat(exception.getMessage()).isEqualTo("film with id=" + id + " not found");
+        assertThat(exception.getMessage()).isEqualTo(Film.class.getName() + " with id=" + id + " not found");
     }
 
     @Test()
@@ -116,7 +124,7 @@ public class FilmServiceTest {
         when(filmStorage.getById(id)).thenReturn(null);
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> filmService.update(dto));
-        assertThat(exception.getMessage()).isEqualTo("film with id=" + id + " not found");
+        assertThat(exception.getMessage()).isEqualTo(Film.class.getName() + " with id=" + id + " not found");
     }
 
     @Test()
@@ -124,7 +132,7 @@ public class FilmServiceTest {
         int id = 1;
         Film film = getFilm(id);
 
-        when(filmStorage.delete(id)).thenReturn(film);
+        when(filmStorage.getById(id)).thenReturn(film);
 
         assertThat(filmService.delete(id)).isEqualTo(film);
     }
@@ -133,10 +141,8 @@ public class FilmServiceTest {
     void delete_shouldThrowNotFoundException_ifStorageHasNoFilm() {
         int id = 1;
 
-        when(filmStorage.delete(id)).thenReturn(null);
-
         NotFoundException exception = assertThrows(NotFoundException.class, () -> filmService.delete(id));
-        assertThat(exception.getMessage()).isEqualTo("film with id=" + id + " not found");
+        assertThat(exception.getMessage()).isEqualTo(Film.class.getName() + " with id=" + id + " not found");
     }
 
     private Film getFilm(int id) {

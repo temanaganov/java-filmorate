@@ -73,16 +73,8 @@ public class DbUserStorage implements UserStorage {
     }
 
     @Override
-    public User delete(int id) {
-        User user = getById(id);
-
-        if (user == null) {
-            return null;
-        }
-
+    public void delete(int id) {
         jdbcTemplate.update(UserQueries.DELETE, id);
-
-        return user;
     }
 
     @Override

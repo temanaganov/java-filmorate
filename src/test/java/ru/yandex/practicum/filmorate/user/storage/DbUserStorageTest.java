@@ -79,7 +79,7 @@ public class DbUserStorageTest {
         User user = userStorage.create(getUser(0, "test"));
 
         assertThat(userStorage.getAll()).hasSize(1);
-        assertThat(userStorage.delete(user.getId())).isEqualTo(user);
+        userStorage.delete(user.getId());
         assertThat(userStorage.getAll()).isEmpty();
     }
 

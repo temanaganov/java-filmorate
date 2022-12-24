@@ -90,16 +90,8 @@ public class DbFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film delete(int id) {
-        Film film = getById(id);
-
-        if (film == null) {
-            return null;
-        }
-
+    public void delete(int id) {
         jdbcTemplate.update(FilmQueries.DELETE, id);
-
-        return film;
     }
 
     @Override
@@ -115,6 +107,11 @@ public class DbFilmStorage implements FilmStorage {
     @Override
     public void deleteLikeFromFilm(int filmId, int userId) {
         jdbcTemplate.update(FilmQueries.DELETE_LIKE_FROM_FILM, filmId, userId);
+    }
+
+    @Override
+    public List<Film> getCommonFilms(int userId, int friendId) {
+        return jdbcTemplate.query(FilmQueries.GET_COMMON_FILMS, this::mapRowToFilm, userId, friendId);
     }
 
     @Override

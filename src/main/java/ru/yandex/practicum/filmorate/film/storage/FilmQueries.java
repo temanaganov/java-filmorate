@@ -99,4 +99,14 @@ public class FilmQueries {
     static final String ADD_GENRE = "INSERT INTO film_genre VALUES(?, ?)";
 
     static final String ADD_DIRECTOR = "INSERT INTO film_director VALUES(?, ?)";
+
+    static final String GET_COMMON_FILMS = "SELECT * " +
+            "FROM film AS f " +
+            "JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
+            "JOIN likes AS l1 ON (l1.film_id = f.film_id AND l1.user_id = ?) " +
+            "JOIN likes AS l2 ON (l2.film_id = f.film_id AND l2.user_id = ?) " +
+            "JOIN (SELECT film_id, COUNT(user_id) AS rate " +
+            "FROM likes " +
+            "GROUP BY film_id) AS fl ON (fl.film_id = f.film_id) " +
+            "ORDER BY fl.rate DESC";
 }
