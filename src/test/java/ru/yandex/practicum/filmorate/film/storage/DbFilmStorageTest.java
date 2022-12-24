@@ -69,7 +69,7 @@ public class DbFilmStorageTest {
         Film film = filmStorage.create(getFilm(1));
 
         assertThat(filmStorage.getAll()).hasSize(1);
-        assertThat(filmStorage.delete(film.getId())).isEqualTo(film);
+        filmStorage.delete(film.getId());
         assertThat(filmStorage.getAll()).isEmpty();
     }
 
@@ -81,6 +81,7 @@ public class DbFilmStorageTest {
                 LocalDate.EPOCH,
                 120,
                 new Mpa(1, "G"),
+                Collections.emptyList(),
                 Collections.emptyList()
         );
     }

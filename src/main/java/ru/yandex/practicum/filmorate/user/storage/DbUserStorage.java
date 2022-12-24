@@ -5,6 +5,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.director.storage.DirectorStorage;
 import ru.yandex.practicum.filmorate.film.model.Film;
 import ru.yandex.practicum.filmorate.film.storage.DbFilmStorage;
 import ru.yandex.practicum.filmorate.genre.storage.GenreStorage;
@@ -22,6 +23,7 @@ import java.util.Map;
 public class DbUserStorage implements UserStorage {
     private final JdbcTemplate jdbcTemplate;
     private final GenreStorage genreStorage;
+    private final DirectorStorage directorStorage;
 
     @Override
     public List<User> getAll() {
@@ -78,16 +80,8 @@ public class DbUserStorage implements UserStorage {
     }
 
     @Override
-    public User delete(int id) {
-        User user = getById(id);
-
-        if (user == null) {
-            return null;
-        }
-
+    public void delete(int id) {
         jdbcTemplate.update(UserQueries.DELETE, id);
-
-        return user;
     }
 
     @Override
@@ -124,7 +118,7 @@ public class DbUserStorage implements UserStorage {
             return filmListResult;
         }
         int id = userIdList.get(0);
-        DbFilmStorage filmStorage = new DbFilmStorage(jdbcTemplate, genreStorage);
+        DbFilmStorage filmStorage = new DbFilmStorage(jdbcTemplate, genreStorage, directorStorage);
         List<Integer> filmsOfOriginalUser = jdbcTemplate.query(UserQueries.GET_FILMS_FROM_LIKES, this::mapRowToFilmId, userId);
         List<Integer> filmsOfFoundUser = jdbcTemplate.query(UserQueries.GET_FILMS_FROM_LIKES, this::mapRowToFilmId, id);
         filmsOfFoundUser.removeAll(filmsOfOriginalUser);

@@ -88,14 +88,9 @@ public abstract class InMemoryStorageTest<T> {
 
         assertAll(() -> {
             assertThat(storage.getAll().size()).isEqualTo(1);
-            assertThat(storage.delete(id)).isEqualTo(entity);
+            storage.delete(id);
             assertThat(storage.getAll().size()).isEqualTo(0);
         });
-    }
-
-    @Test
-    void delete_shouldReturnNull_ifStorageHasNoEntityWithGivenId() {
-        assertThat(storage.delete(1)).isNull();
     }
 
     protected abstract T getEntity(int id);

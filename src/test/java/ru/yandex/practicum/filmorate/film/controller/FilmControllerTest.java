@@ -132,8 +132,8 @@ public class FilmControllerTest {
         List<Film> films = List.of(getFilm(1), getFilm(2), getFilm(3));
         List<Film> limitFilms = films.stream().limit(count).collect(Collectors.toList());
 
-        when(filmService.getPopularFilms(10)).thenReturn(films);
-        when(filmService.getPopularFilms(count)).thenReturn(limitFilms);
+        when(filmService.getPopularFilms(10, null, null)).thenReturn(films);
+        when(filmService.getPopularFilms(count, null, null)).thenReturn(limitFilms);
 
         mockMvc.perform(get("/films/popular"))
                 .andExpect(status().isOk())
@@ -152,6 +152,7 @@ public class FilmControllerTest {
                 LocalDate.parse("2000-01-01"),
                 120,
                 new Mpa(1, "G"),
+                Collections.emptyList(),
                 Collections.emptyList()
         );
     }
@@ -164,6 +165,7 @@ public class FilmControllerTest {
                 LocalDate.parse("2000-01-01"),
                 120,
                 new Mpa(1, "G"),
+                Collections.emptyList(),
                 Collections.emptyList()
         );
     }

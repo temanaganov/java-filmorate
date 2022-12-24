@@ -9,12 +9,21 @@ import java.util.List;
 @Component("inMemoryFilmStorage")
 public class InMemoryFilmStorage extends InMemoryStorage<Film> implements FilmStorage {
     @Override
+    public List<Film> search(String query,String by){
+        return null;
+    }
+    @Override
     protected Film withId(Film film, int id) {
         return film.withId(id);
     }
 
     @Override
-    public List<Film> getPopularFilms(int count) {
+    public List<Film> getAllFilmsByDirectorId(int directorId, String sortBy) {
+        return null;
+    }
+
+    @Override
+    public List<Film> getPopularFilms(int count, Integer genreId, Integer year) {
         return null;
     }
 
@@ -26,5 +35,10 @@ public class InMemoryFilmStorage extends InMemoryStorage<Film> implements FilmSt
     @Override
     public void deleteLikeFromFilm(int filmId, int userId) {
 
+    }
+
+    @Override
+    public List<Film> getCommonFilms(int userId, int friendId) {
+        return null;
     }
 }

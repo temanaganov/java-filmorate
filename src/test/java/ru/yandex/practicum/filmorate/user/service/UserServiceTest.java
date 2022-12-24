@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.yandex.practicum.filmorate.core.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.core.util.Guard;
 import ru.yandex.practicum.filmorate.user.model.User;
 import ru.yandex.practicum.filmorate.user.storage.UserStorage;
 import ru.yandex.practicum.filmorate.user.dto.UserDto;
@@ -65,7 +66,7 @@ public class UserServiceTest {
         when(userStorage.getById(id)).thenReturn(null);
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> userService.getById(id));
-        assertThat(exception.getMessage()).isEqualTo("user with id=" + id + " not found");
+        assertThat(exception.getMessage()).isEqualTo(User.class.getName() + " with id=" + id + " not found");
     }
 
     @Test()
@@ -104,7 +105,7 @@ public class UserServiceTest {
         when(userStorage.getById(id)).thenReturn(null);
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> userService.update(dto));
-        assertThat(exception.getMessage()).isEqualTo("user with id=" + id + " not found");
+        assertThat(exception.getMessage()).isEqualTo(User.class.getName() + " with id=" + id + " not found");
     }
 
     @Test()
@@ -112,7 +113,7 @@ public class UserServiceTest {
         int id = 1;
         User user = getUser(id);
 
-        when(userStorage.delete(id)).thenReturn(user);
+        when(userStorage.getById(id)).thenReturn(user);
 
         assertThat(userService.delete(id)).isEqualTo(user);
     }
@@ -121,10 +122,8 @@ public class UserServiceTest {
     void delete_shouldThrowNotFoundException_ifStorageHasNoUser() {
         int id = 1;
 
-        when(userStorage.delete(id)).thenReturn(null);
-
         NotFoundException exception = assertThrows(NotFoundException.class, () -> userService.delete(id));
-        assertThat(exception.getMessage()).isEqualTo("user with id=" + id + " not found");
+        assertThat(exception.getMessage()).isEqualTo(User.class.getName() + " with id=" + id + " not found");
     }
 
     private User getUser(int id) {
