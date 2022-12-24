@@ -105,11 +105,8 @@ public class UserServiceImpl implements UserService {
     }
 
     public List<Film> getRecommendations(int userId){
-        User user = userStorage.getById(userId);
+        userGuard.checkIfExists(userId);
 
-        if (user == null) {
-            throw new NotFoundException("user", userId);
-        }
         return userStorage.getRecommendations(userId);
     }
 

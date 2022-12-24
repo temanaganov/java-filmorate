@@ -56,7 +56,9 @@ public class UserQueries {
             "ORDER BY COUNT(l.film_id) " +
             "limit 1";
 
-    static final String GET_FILMS_FROM_LIKES = "SELECT film_id " +
-            "FROM likes " +
+    static final String GET_FILMS_FROM_LIKES = "SELECT * " +
+            "FROM film as f " +
+            "JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
+            "JOIN likes AS l ON f.film_id = l.film_id " +
             "WHERE user_id = ?";;
 }
