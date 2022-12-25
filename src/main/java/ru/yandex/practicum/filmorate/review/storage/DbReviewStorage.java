@@ -80,15 +80,6 @@ public class DbReviewStorage implements ReviewStorage {
                 resultSet.getInt("user_id"),
                 resultSet.getInt("film_id"),
                 resultSet.getInt("useful")
-//                getReviewUseful(resultSet.getInt("review_id"))
         );
-    }
-
-    private int getReviewUseful(int id) {
-        try {
-            return jdbcTemplate.queryForObject(ReviewQueries.GET_REVIEW_USEFUL, (rs, rowNum) -> rs.getInt(1), id, id);
-        } catch (DataAccessException exception) {
-            return 0;
-        }
     }
 }

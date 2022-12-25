@@ -20,11 +20,4 @@ public class ReviewQueries {
             "WHERE review_id = ?";
 
     static final String DELETE = "DELETE FROM review WHERE review_id = ?";
-
-    static final String GET_REVIEW_USEFUL = "SELECT COUNT(*) - " +
-            "(SELECT COUNT(*)" +
-            "FROM review_useful" +
-            "WHERE review_id = ? AND is_like = FALSE) AS useful" +
-            "FROM review_useful" +
-            "WHERE review_id = ? AND is_like = TRUE";
 }

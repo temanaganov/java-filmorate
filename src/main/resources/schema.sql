@@ -71,11 +71,3 @@ CREATE TABLE IF NOT EXISTS review (
     FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
     FOREIGN KEY (film_id) REFERENCES film (film_id) ON DELETE CASCADE
 );
-
-CREATE TABLE IF NOT EXISTS review_user (
-    review_id INTEGER NOT NULL,
-    user_id INTEGER NOT NULL,
-    is_like BOOLEAN NOT NULL,
-    FOREIGN KEY (review_id) REFERENCES review (review_id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
-)
