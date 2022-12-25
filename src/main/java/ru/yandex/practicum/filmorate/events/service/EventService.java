@@ -15,9 +15,7 @@ import java.util.List;
 @Service
 public class EventService {
     private final EventStorage eventStorage;
-
     private final Guard<User> userGuard;
-
     private final UserStorage userStorage;
 
 
@@ -32,8 +30,6 @@ public class EventService {
         return eventStorage.getFeed(userId);
     }
 
-
-
     public void addLikeEvent(int filmId, int userId) {
         Event event = getBaseEvent(userId, filmId);
         event.setEventType(EventType.LIKE);
@@ -41,7 +37,6 @@ public class EventService {
 
         eventStorage.create(event);
     }
-
 
     public void deleteLikeEvent(int filmId, int userId) {
         Event event = getBaseEvent(userId, filmId);
@@ -59,7 +54,6 @@ public class EventService {
         eventStorage.create(event);
     }
 
-
     public void deleteFriendEvent(int id, int friendId){
         Event event = getBaseEvent(id, friendId);
         event.setEventType(EventType.FRIEND);
@@ -67,7 +61,6 @@ public class EventService {
 
         eventStorage.create(event);
     }
-
 
     public void addReviewEvent(int userId, int reviewId){
         Event event = getBaseEvent(userId, reviewId);

@@ -55,13 +55,13 @@ CREATE TABLE IF NOT EXISTS likes (
     FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS friendship(
+CREATE TABLE IF NOT EXISTS friendship (
     user_id   INTEGER NOT NULL,
     friend_id INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
     FOREIGN KEY (friend_id) REFERENCES users (user_id) ON DELETE CASCADE
 );
-CREATE TABLE IF NOT EXISTS feed(
+CREATE TABLE IF NOT EXISTS events (
     event_id   int PRIMARY KEY AUTO_INCREMENT,
     timestamp  long NOT NULL,
     user_id    int NOT NULL,

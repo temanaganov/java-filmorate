@@ -24,7 +24,8 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(
             @Qualifier("dbUserStorage") UserStorage userStorage,
             Mapper<UserDto, User> userDtoToUserMapper,
-            EventService eventService) {
+            EventService eventService
+    ) {
         this.userStorage = userStorage;
         this.userDtoToUserMapper = userDtoToUserMapper;
         this.eventService = eventService;
