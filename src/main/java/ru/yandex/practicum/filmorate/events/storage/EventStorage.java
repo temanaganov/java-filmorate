@@ -11,18 +11,4 @@ public interface EventStorage {
 
     Event create(Event event);
 
-//    void addFriendEvent(int id, int friendId);
-//
-//    void deleteFriendEvent(int id, int friendId);
-//
-//    void addLikeEvent(int id, int userId);
-//
-//    void deleteLikeEvent(int id, int userId);
 }
-
-//    void addReviewEvent(Review reviewAnswer);
-//
-//    void updateReviewEvent(Review reviewAnswer);
-//
-//    void deleteReviewEvent(Review review);
-//}

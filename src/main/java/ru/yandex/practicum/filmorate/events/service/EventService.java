@@ -1,21 +1,34 @@
 package ru.yandex.practicum.filmorate.events.service;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.core.util.Guard;
 import ru.yandex.practicum.filmorate.events.model.Event;
 import ru.yandex.practicum.filmorate.events.model.EventOperation;
 import ru.yandex.practicum.filmorate.events.model.EventType;
 import ru.yandex.practicum.filmorate.events.storage.EventStorage;
-
+import ru.yandex.practicum.filmorate.user.model.User;
+import ru.yandex.practicum.filmorate.user.storage.UserStorage;
 import java.time.Instant;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class EventService {
     private final EventStorage eventStorage;
 
+    private final Guard<User> userGuard;
+
+    private final UserStorage userStorage;
+
+
+    public EventService(EventStorage eventStorage, @Qualifier("dbUserStorage") UserStorage userStorage) {
+        this.eventStorage = eventStorage;
+        this.userStorage = userStorage;
+        this.userGuard = new Guard<>(userStorage::getById, User.class);
+    }
+
     public List<Event> getFeed(int userId) {
+        userGuard.checkIfExists(userId);
         return eventStorage.getFeed(userId);
     }
 
@@ -55,7 +68,32 @@ public class EventService {
         eventStorage.create(event);
     }
 
-    private Event getBaseEvent(int userId, int entityId) {
+
+    public void addReviewEvent(int userId, int reviewId){
+        Event event = getBaseEvent(userId, reviewId);
+        event.setEventType(EventType.REVIEW);
+        event.setOperation(EventOperation.ADD);
+
+        eventStorage.create(event);
+    }
+
+    public void deleteReviewEvent(int userId, int reviewId){
+        Event event = getBaseEvent(userId, reviewId);
+        event.setEventType(EventType.REVIEW);
+        event.setOperation(EventOperation.REMOVE);
+
+        eventStorage.create(event);
+    }
+
+    public void updateReviewEvent(int userId, int reviewId){
+        Event event = getBaseEvent(userId, reviewId);
+        event.setEventType(EventType.REVIEW);
+        event.setOperation(EventOperation.UPDATE);
+
+        eventStorage.create(event);
+    }
+
+    private Event getBaseEvent(int userId, int entityId){
         Event event = new Event();
         event.setTimestamp(Instant.now().toEpochMilli());
         event.setUserId(userId);
@@ -63,5 +101,6 @@ public class EventService {
 
         return event;
     }
+
 }
 

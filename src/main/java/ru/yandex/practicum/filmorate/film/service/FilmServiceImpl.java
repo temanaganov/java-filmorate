@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.core.util.Guard;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
 import ru.yandex.practicum.filmorate.events.service.EventService;
-import ru.yandex.practicum.filmorate.events.storage.EventStorage;
 import ru.yandex.practicum.filmorate.director.model.Director;
 import ru.yandex.practicum.filmorate.director.storage.DirectorStorage;
 import ru.yandex.practicum.filmorate.film.model.Film;
@@ -30,6 +29,8 @@ public class FilmServiceImpl implements FilmService {
     private final Guard<Genre> genreGuard;
     private final Guard<Director> directorGuard;
 
+    private final EventService eventService;
+
     public FilmServiceImpl(
             @Qualifier("dbFilmStorage") FilmStorage filmStorage,
             @Qualifier("dbUserStorage") UserStorage userStorage,
@@ -40,21 +41,20 @@ public class FilmServiceImpl implements FilmService {
             Mapper<FilmDto, Film> filmDtoToFilmMapper
     ) {
         this.filmStorage = filmStorage;
+        this.eventService = eventService;
         this.filmDtoToFilmMapper = filmDtoToFilmMapper;
         this.filmGuard = new Guard<>(filmStorage::getById, Film.class);
         this.userGuard = new Guard<>(userStorage::getById, User.class);
         this.mpaGuard = new Guard<>(mpaStorage::getById, Mpa.class);
         this.genreGuard = new Guard<>(genreStorage::getById, Genre.class);
         this.directorGuard = new Guard<>(directorStorage::getById, Director.class);
+
     }
 
     @Override
     public List<Film> search(String query, String by) {
         return filmStorage.search(query, by);
-        this.eventService = eventService;
     }
-
-
 
     @Override
     public List<Film> getAll() {
@@ -104,6 +104,7 @@ public class FilmServiceImpl implements FilmService {
         userGuard.checkIfExists(userId);
 
         filmStorage.likeFilm(filmId, userId);
+        eventService.addLikeEvent(filmId, userId);
     }
 
     @Override
@@ -111,6 +112,7 @@ public class FilmServiceImpl implements FilmService {
         filmGuard.checkIfExists(filmId);
         userGuard.checkIfExists(userId);
 
+        eventService.deleteLikeEvent(filmId, userId);
         filmStorage.deleteLikeFromFilm(filmId, userId);
     }
 
