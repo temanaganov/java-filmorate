@@ -14,7 +14,7 @@ public class MpaServiceImpl implements MpaService {
 
     public MpaServiceImpl(MpaStorage mpaStorage) {
         this.mpaStorage = mpaStorage;
-        this.mpaGuard = new Guard<>(mpaStorage::getById, Mpa.class);;
+        this.mpaGuard = new Guard<>(mpaStorage::getById, Mpa.class);
     }
 
     @Override

@@ -71,3 +71,14 @@ CREATE TABLE IF NOT EXISTS events(
     FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
 );
 
+
+CREATE TABLE IF NOT EXISTS review (
+    review_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    content VARCHAR(256) NOT NULL,
+    is_positive BOOLEAN NOT NULL,
+    user_id INTEGER NOT NULL,
+    film_id INTEGER NOT NULL,
+    useful INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
+    FOREIGN KEY (film_id) REFERENCES film (film_id) ON DELETE CASCADE
+);
