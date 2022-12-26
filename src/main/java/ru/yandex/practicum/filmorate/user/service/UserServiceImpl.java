@@ -1,35 +1,27 @@
 package ru.yandex.practicum.filmorate.user.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.core.exception.FieldValidationException;
-import ru.yandex.practicum.filmorate.core.util.Guard;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
 import ru.yandex.practicum.filmorate.event.service.EventService;
 import ru.yandex.practicum.filmorate.film.model.Film;
 import ru.yandex.practicum.filmorate.user.model.User;
 import ru.yandex.practicum.filmorate.user.storage.UserStorage;
 import ru.yandex.practicum.filmorate.user.dto.UserDto;
+import ru.yandex.practicum.filmorate.user.util.UserGuard;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    @Qualifier("dbUserStorage")
     private final UserStorage userStorage;
     private final Mapper<UserDto, User> userDtoToUserMapper;
-    private final Guard<User> userGuard;
     private final EventService eventService;
-
-    public UserServiceImpl(
-            @Qualifier("dbUserStorage") UserStorage userStorage,
-            Mapper<UserDto, User> userDtoToUserMapper,
-            EventService eventService
-    ) {
-        this.userStorage = userStorage;
-        this.userDtoToUserMapper = userDtoToUserMapper;
-        this.eventService = eventService;
-        this.userGuard = new Guard<>(userStorage::getById, User.class);
-    }
+    private final UserGuard userGuard;
 
     @Override
     public List<User> getAll() {
@@ -80,6 +72,7 @@ public class UserServiceImpl implements UserService {
 
         userGuard.checkIfExists(userId);
         userGuard.checkIfExists(friendId);
+
         userStorage.addFriend(userId, friendId);
         eventService.addFriendEvent(userId, friendId);
     }
@@ -88,6 +81,7 @@ public class UserServiceImpl implements UserService {
     public void deleteFriend(int userId, int friendId) {
         userGuard.checkIfExists(userId);
         userGuard.checkIfExists(friendId);
+
         eventService.deleteFriendEvent(userId, friendId);
         userStorage.deleteFriend(userId, friendId);
     }

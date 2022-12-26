@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.user.model.User;
 import ru.yandex.practicum.filmorate.user.storage.UserStorage;
 import ru.yandex.practicum.filmorate.user.dto.UserDto;
 import ru.yandex.practicum.filmorate.user.dto.UserDtoToUserMapper;
+import ru.yandex.practicum.filmorate.user.util.UserGuard;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
@@ -24,6 +25,9 @@ import java.util.List;
 public class UserServiceTest {
     @Mock
     private UserStorage userStorage;
+
+    @Mock
+    private UserGuard userGuard;
 
     @Mock
     private UserDtoToUserMapper userDtoToUserMapper;
@@ -51,21 +55,21 @@ public class UserServiceTest {
         int id = 1;
         User user = getUser(id);
 
-        when(userStorage.getById(id)).thenReturn(user);
+        when(userGuard.checkIfExists(id)).thenReturn(user);
 
         User resultUser = userService.getById(id);
 
         assertThat(resultUser).isEqualTo(user);
-        verify(userStorage).getById(id);
+        verify(userGuard).checkIfExists(id);
     }
 
     @Test()
     void getById_shouldThrowNotFoundException_ifStorageHasNoUser() {
         int id = 1;
-        when(userStorage.getById(id)).thenReturn(null);
+        when(userGuard.checkIfExists(id)).thenThrow(new NotFoundException("User", id));
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> userService.getById(id));
-        assertThat(exception.getMessage()).isEqualTo(User.class.getName() + " with id=" + id + " not found");
+        assertThat(exception.getMessage()).isEqualTo("User with id=" + id + " not found");
     }
 
     @Test()
@@ -89,7 +93,7 @@ public class UserServiceTest {
         User oldUser = getUser(id);
         User newUser = oldUser.withName(newName);
 
-        when(userStorage.getById(id)).thenReturn(oldUser);
+        when(userGuard.checkIfExists(id)).thenReturn(oldUser);
         when(userDtoToUserMapper.mapFrom(dto)).thenReturn(newUser);
         when(userStorage.update(id, newUser)).thenReturn(newUser);
 
@@ -101,10 +105,10 @@ public class UserServiceTest {
         int id = 1;
         UserDto dto = getUserDto(id);
 
-        when(userStorage.getById(id)).thenReturn(null);
+        when(userGuard.checkIfExists(id)).thenThrow(new NotFoundException("User", id));
 
         NotFoundException exception = assertThrows(NotFoundException.class, () -> userService.update(dto));
-        assertThat(exception.getMessage()).isEqualTo(User.class.getName() + " with id=" + id + " not found");
+        assertThat(exception.getMessage()).isEqualTo("User with id=" + id + " not found");
     }
 
     @Test()
@@ -112,7 +116,7 @@ public class UserServiceTest {
         int id = 1;
         User user = getUser(id);
 
-        when(userStorage.getById(id)).thenReturn(user);
+        when(userGuard.checkIfExists(id)).thenReturn(user);
 
         assertThat(userService.delete(id)).isEqualTo(user);
     }
@@ -121,8 +125,10 @@ public class UserServiceTest {
     void delete_shouldThrowNotFoundException_ifStorageHasNoUser() {
         int id = 1;
 
+        when(userGuard.checkIfExists(id)).thenThrow(new NotFoundException("User", id));
+
         NotFoundException exception = assertThrows(NotFoundException.class, () -> userService.delete(id));
-        assertThat(exception.getMessage()).isEqualTo(User.class.getName() + " with id=" + id + " not found");
+        assertThat(exception.getMessage()).isEqualTo("User with id=" + id + " not found");
     }
 
     private User getUser(int id) {

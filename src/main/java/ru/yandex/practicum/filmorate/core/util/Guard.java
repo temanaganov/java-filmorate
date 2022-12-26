@@ -6,15 +6,15 @@ import ru.yandex.practicum.filmorate.core.exception.NotFoundException;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
-public class Guard<T> {
-    private final Function<Integer, T> checkMethod;
-    private final Class<T> tClass;
+public abstract class Guard<T> {
+    protected abstract String getGuardClass();
+    protected abstract T checkMethod(int id);
 
     public T checkIfExists(int id) {
-        T entity = checkMethod.apply(id);
+        T entity = checkMethod(id);
 
         if (entity == null){
-            throw new NotFoundException(tClass.getName(), id);
+            throw new NotFoundException(getGuardClass(), id);
         }
 
         return entity;

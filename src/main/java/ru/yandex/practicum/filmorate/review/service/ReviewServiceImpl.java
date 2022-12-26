@@ -1,43 +1,27 @@
 package ru.yandex.practicum.filmorate.review.service;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.core.util.Guard;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
 import ru.yandex.practicum.filmorate.event.service.EventService;
-import ru.yandex.practicum.filmorate.film.model.Film;
-import ru.yandex.practicum.filmorate.film.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.film.util.FilmGuard;
 import ru.yandex.practicum.filmorate.review.dto.ReviewDto;
 import ru.yandex.practicum.filmorate.review.model.Review;
 import ru.yandex.practicum.filmorate.review.storage.ReviewStorage;
-import ru.yandex.practicum.filmorate.user.model.User;
-import ru.yandex.practicum.filmorate.user.storage.UserStorage;
+import ru.yandex.practicum.filmorate.review.util.ReviewGuard;
+import ru.yandex.practicum.filmorate.user.util.UserGuard;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewStorage reviewStorage;
-    private final EventService eventService;
-    private final Guard<Review> reviewGuard;
-    private final Guard<User> userGuard;
-    private final Guard<Film> filmGuard;
     private final Mapper<ReviewDto, Review> reviewDtoToReviewMapper;
-
-    public ReviewServiceImpl(
-            ReviewStorage reviewStorage,
-            EventService eventService,
-            @Qualifier("dbUserStorage") UserStorage userStorage,
-            @Qualifier("dbFilmStorage") FilmStorage filmStorage,
-            Mapper<ReviewDto, Review> reviewDtoToReviewMapper
-    ) {
-        this.reviewStorage = reviewStorage;
-        this.eventService = eventService;
-        this.reviewGuard = new Guard<>(reviewStorage::getById, Review.class);
-        this.userGuard = new Guard<>(userStorage::getById, User.class);
-        this.filmGuard = new Guard<>(filmStorage::getById, Film.class);
-        this.reviewDtoToReviewMapper = reviewDtoToReviewMapper;
-    }
+    private final EventService eventService;
+    private final ReviewGuard reviewGuard;
+    private final UserGuard userGuard;
+    private final FilmGuard filmGuard;
 
     @Override
     public List<Review> getAll(Integer filmId, int count) {
@@ -59,7 +43,6 @@ public class ReviewServiceImpl implements ReviewService {
         eventService.addReviewEvent(eventReview.getUserId(), eventReview.getReviewId());
 
         return eventReview;
-
     }
 
     @Override

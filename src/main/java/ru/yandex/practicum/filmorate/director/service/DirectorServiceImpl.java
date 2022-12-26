@@ -1,28 +1,21 @@
 package ru.yandex.practicum.filmorate.director.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.core.util.Guard;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
 import ru.yandex.practicum.filmorate.director.dto.DirectorDto;
 import ru.yandex.practicum.filmorate.director.model.Director;
 import ru.yandex.practicum.filmorate.director.storage.DirectorStorage;
+import ru.yandex.practicum.filmorate.director.util.DirectorGuard;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class DirectorServiceImpl implements DirectorService {
     private final DirectorStorage directorStorage;
     private final Mapper<DirectorDto, Director> directorDtoToDirectorMapper;
-    private final Guard<Director> directorGuard;
-
-    public DirectorServiceImpl(
-            DirectorStorage directorStorage,
-            Mapper<DirectorDto, Director> directorDtoToDirectorMapper
-    ) {
-        this.directorStorage = directorStorage;
-        this.directorDtoToDirectorMapper = directorDtoToDirectorMapper;
-        this.directorGuard  = new Guard<>(directorStorage::getById, Director.class);
-    }
+    private final DirectorGuard directorGuard;
 
     @Override
     public List<Director> getAll() {

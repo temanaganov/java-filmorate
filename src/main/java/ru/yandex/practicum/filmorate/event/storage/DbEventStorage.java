@@ -8,7 +8,6 @@ import ru.yandex.practicum.filmorate.event.model.Event;
 import ru.yandex.practicum.filmorate.event.model.EventOperation;
 import ru.yandex.practicum.filmorate.event.model.EventType;
 
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -18,7 +17,6 @@ import java.util.Map;
 @Repository
 @RequiredArgsConstructor
 public class DbEventStorage implements EventStorage {
-
     private final JdbcTemplate jdbcTemplate;
 
     @Override
