@@ -1,21 +1,18 @@
 package ru.yandex.practicum.filmorate.mpa.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.core.util.Guard;
 import ru.yandex.practicum.filmorate.mpa.model.Mpa;
 import ru.yandex.practicum.filmorate.mpa.storage.MpaStorage;
+import ru.yandex.practicum.filmorate.mpa.util.MpaGuard;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MpaServiceImpl implements MpaService {
     private final MpaStorage mpaStorage;
-    private final Guard<Mpa> mpaGuard;
-
-    public MpaServiceImpl(MpaStorage mpaStorage) {
-        this.mpaStorage = mpaStorage;
-        this.mpaGuard = new Guard<>(mpaStorage::getById, Mpa.class);
-    }
+    private final MpaGuard mpaGuard;
 
     @Override
     public List<Mpa> getAll() {

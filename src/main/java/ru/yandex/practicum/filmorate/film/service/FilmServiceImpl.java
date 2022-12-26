@@ -1,49 +1,31 @@
 package ru.yandex.practicum.filmorate.film.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.core.util.Guard;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
-import ru.yandex.practicum.filmorate.director.model.Director;
-import ru.yandex.practicum.filmorate.director.storage.DirectorStorage;
+import ru.yandex.practicum.filmorate.director.util.DirectorGuard;
 import ru.yandex.practicum.filmorate.film.model.Film;
 import ru.yandex.practicum.filmorate.film.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.film.dto.FilmDto;
-import ru.yandex.practicum.filmorate.genre.model.Genre;
-import ru.yandex.practicum.filmorate.genre.storage.GenreStorage;
-import ru.yandex.practicum.filmorate.mpa.model.Mpa;
-import ru.yandex.practicum.filmorate.mpa.storage.MpaStorage;
-import ru.yandex.practicum.filmorate.user.model.User;
-import ru.yandex.practicum.filmorate.user.storage.UserStorage;
+import ru.yandex.practicum.filmorate.film.util.FilmGuard;
+import ru.yandex.practicum.filmorate.genre.util.GenreGuard;
+import ru.yandex.practicum.filmorate.mpa.util.MpaGuard;
+import ru.yandex.practicum.filmorate.user.util.UserGuard;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class FilmServiceImpl implements FilmService {
+    @Qualifier("dbFilmStorage")
     private final FilmStorage filmStorage;
     private final Mapper<FilmDto, Film> filmDtoToFilmMapper;
-    private final Guard<Film> filmGuard;
-    private final Guard<User> userGuard;
-    private final Guard<Mpa> mpaGuard;
-    private final Guard<Genre> genreGuard;
-    private final Guard<Director> directorGuard;
-
-    public FilmServiceImpl(
-            @Qualifier("dbFilmStorage") FilmStorage filmStorage,
-            @Qualifier("dbUserStorage") UserStorage userStorage,
-            MpaStorage mpaStorage,
-            GenreStorage genreStorage,
-            DirectorStorage directorStorage,
-            Mapper<FilmDto, Film> filmDtoToFilmMapper
-    ) {
-        this.filmStorage = filmStorage;
-        this.filmDtoToFilmMapper = filmDtoToFilmMapper;
-        this.filmGuard = new Guard<>(filmStorage::getById, Film.class);
-        this.userGuard = new Guard<>(userStorage::getById, User.class);
-        this.mpaGuard = new Guard<>(mpaStorage::getById, Mpa.class);
-        this.genreGuard = new Guard<>(genreStorage::getById, Genre.class);
-        this.directorGuard = new Guard<>(directorStorage::getById, Director.class);
-    }
+    private final FilmGuard filmGuard;
+    private final UserGuard userGuard;
+    private final MpaGuard mpaGuard;
+    private final GenreGuard genreGuard;
+    private final DirectorGuard directorGuard;
 
     @Override
     public List<Film> search(String query, String by) {
