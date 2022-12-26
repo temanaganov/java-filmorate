@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.core.exception.FieldValidationException;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
+import ru.yandex.practicum.filmorate.film.model.Film;
 import ru.yandex.practicum.filmorate.user.model.User;
 import ru.yandex.practicum.filmorate.user.storage.UserStorage;
 import ru.yandex.practicum.filmorate.user.dto.UserDto;
@@ -94,6 +95,12 @@ public class UserServiceImpl implements UserService {
         userGuard.checkIfExists(otherUserId);
 
         return userStorage.getCommonFriends(userId, otherUserId);
+    }
+
+    public List<Film> getRecommendations(int userId){
+        userGuard.checkIfExists(userId);
+
+        return userStorage.getRecommendations(userId);
     }
 
     private boolean emailIsBusy(String email) {
