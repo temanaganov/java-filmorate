@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.core.util.Guard;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
+import ru.yandex.practicum.filmorate.event.service.EventService;
 import ru.yandex.practicum.filmorate.film.model.Film;
 import ru.yandex.practicum.filmorate.film.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.review.dto.ReviewDto;
@@ -17,6 +18,7 @@ import java.util.List;
 @Service
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewStorage reviewStorage;
+    private final EventService eventService;
     private final Guard<Review> reviewGuard;
     private final Guard<User> userGuard;
     private final Guard<Film> filmGuard;
@@ -24,11 +26,13 @@ public class ReviewServiceImpl implements ReviewService {
 
     public ReviewServiceImpl(
             ReviewStorage reviewStorage,
+            EventService eventService,
             @Qualifier("dbUserStorage") UserStorage userStorage,
             @Qualifier("dbFilmStorage") FilmStorage filmStorage,
             Mapper<ReviewDto, Review> reviewDtoToReviewMapper
     ) {
         this.reviewStorage = reviewStorage;
+        this.eventService = eventService;
         this.reviewGuard = new Guard<>(reviewStorage::getById, Review.class);
         this.userGuard = new Guard<>(userStorage::getById, User.class);
         this.filmGuard = new Guard<>(filmStorage::getById, Film.class);
@@ -51,7 +55,11 @@ public class ReviewServiceImpl implements ReviewService {
         userGuard.checkIfExists(review.getUserId());
         filmGuard.checkIfExists(review.getFilmId());
 
-        return reviewStorage.create(review);
+        Review eventReview = reviewStorage.create(review);
+        eventService.addReviewEvent(eventReview.getUserId(), eventReview.getReviewId());
+
+        return eventReview;
+
     }
 
     @Override
@@ -63,13 +71,17 @@ public class ReviewServiceImpl implements ReviewService {
         filmGuard.checkIfExists(review.getFilmId());
 
         review.setUseful(currentReview.getUseful());
+        Review eventReview = reviewStorage.update(review);
 
-        return reviewStorage.update(review);
+        eventService.updateReviewEvent(eventReview.getUserId(), eventReview.getReviewId());
+
+        return eventReview;
     }
 
     @Override
     public Review delete(int id) {
         Review review = reviewGuard.checkIfExists(id);
+        eventService.deleteReviewEvent(review.getUserId(), review.getReviewId());
         reviewStorage.delete(id);
 
         return review;

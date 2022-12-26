@@ -1,4 +1,5 @@
 -- The table name is plural because user is a reserved word
+
 CREATE TABLE IF NOT EXISTS users (
     user_id INTEGER AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(50) UNIQUE NOT NULL,
@@ -59,6 +60,16 @@ CREATE TABLE IF NOT EXISTS friendship (
     friend_id INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
     FOREIGN KEY (friend_id) REFERENCES users (user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS event (
+    event_id   int PRIMARY KEY AUTO_INCREMENT,
+    timestamp  long NOT NULL,
+    user_id    int NOT NULL,
+    event_type ENUM('LIKE', 'REVIEW', 'FRIEND') NOT NULL,
+    operation ENUM('REMOVE', 'ADD', 'UPDATE')   NOT NULL,
+    entity_id  int NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS review (
