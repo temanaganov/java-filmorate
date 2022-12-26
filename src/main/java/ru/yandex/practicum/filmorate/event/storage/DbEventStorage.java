@@ -1,12 +1,12 @@
-package ru.yandex.practicum.filmorate.events.storage;
+package ru.yandex.practicum.filmorate.event.storage;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.events.model.Event;
-import ru.yandex.practicum.filmorate.events.model.EventOperation;
-import ru.yandex.practicum.filmorate.events.model.EventType;
+import ru.yandex.practicum.filmorate.event.model.Event;
+import ru.yandex.practicum.filmorate.event.model.EventOperation;
+import ru.yandex.practicum.filmorate.event.model.EventType;
 
 
 import java.sql.ResultSet;
@@ -23,7 +23,7 @@ public class DbEventStorage implements EventStorage {
 
     @Override
     public List<Event> getFeed(int userId) {
-        String sqlQuery = "SELECT * FROM events WHERE user_id = ?";
+        String sqlQuery = "SELECT * FROM event WHERE user_id = ?";
 
         return jdbcTemplate.query(sqlQuery, this::mapRowToEvent, userId);
     }
@@ -31,7 +31,7 @@ public class DbEventStorage implements EventStorage {
     @Override
     public Event create(Event event) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("events")
+                .withTableName("event")
                 .usingGeneratedKeyColumns("event_id");
 
         Map<String, Object> values = new HashMap<>();

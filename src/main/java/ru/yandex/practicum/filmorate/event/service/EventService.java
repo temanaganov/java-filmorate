@@ -1,12 +1,12 @@
-package ru.yandex.practicum.filmorate.events.service;
+package ru.yandex.practicum.filmorate.event.service;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.core.util.Guard;
-import ru.yandex.practicum.filmorate.events.model.Event;
-import ru.yandex.practicum.filmorate.events.model.EventOperation;
-import ru.yandex.practicum.filmorate.events.model.EventType;
-import ru.yandex.practicum.filmorate.events.storage.EventStorage;
+import ru.yandex.practicum.filmorate.event.model.Event;
+import ru.yandex.practicum.filmorate.event.model.EventOperation;
+import ru.yandex.practicum.filmorate.event.model.EventType;
+import ru.yandex.practicum.filmorate.event.storage.EventStorage;
 import ru.yandex.practicum.filmorate.user.model.User;
 import ru.yandex.practicum.filmorate.user.storage.UserStorage;
 import java.time.Instant;

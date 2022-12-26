@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.events.model;
+package ru.yandex.practicum.filmorate.event.model;
 
 
 public enum EventOperation {

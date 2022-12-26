@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.core.util.Guard;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
-import ru.yandex.practicum.filmorate.events.service.EventService;
+import ru.yandex.practicum.filmorate.event.service.EventService;
 import ru.yandex.practicum.filmorate.director.model.Director;
 import ru.yandex.practicum.filmorate.director.storage.DirectorStorage;
 import ru.yandex.practicum.filmorate.film.model.Film;

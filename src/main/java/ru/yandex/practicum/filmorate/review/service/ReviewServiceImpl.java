@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.core.util.Guard;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
-import ru.yandex.practicum.filmorate.events.service.EventService;
+import ru.yandex.practicum.filmorate.event.service.EventService;
 import ru.yandex.practicum.filmorate.film.model.Film;
 import ru.yandex.practicum.filmorate.film.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.review.dto.ReviewDto;
@@ -18,7 +18,6 @@ import java.util.List;
 @Service
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewStorage reviewStorage;
-
     private final EventService eventService;
     private final Guard<Review> reviewGuard;
     private final Guard<User> userGuard;
@@ -27,7 +26,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     public ReviewServiceImpl(
             ReviewStorage reviewStorage,
-            EventService eventService, @Qualifier("dbUserStorage") UserStorage userStorage,
+            EventService eventService,
+            @Qualifier("dbUserStorage") UserStorage userStorage,
             @Qualifier("dbFilmStorage") FilmStorage filmStorage,
             Mapper<ReviewDto, Review> reviewDtoToReviewMapper
     ) {
