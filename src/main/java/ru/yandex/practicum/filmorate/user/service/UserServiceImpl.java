@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.core.exception.FieldValidationException;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
+import ru.yandex.practicum.filmorate.event.service.EventService;
 import ru.yandex.practicum.filmorate.film.model.Film;
 import ru.yandex.practicum.filmorate.user.model.User;
 import ru.yandex.practicum.filmorate.user.storage.UserStorage;
@@ -19,6 +20,7 @@ public class UserServiceImpl implements UserService {
     @Qualifier("dbUserStorage")
     private final UserStorage userStorage;
     private final Mapper<UserDto, User> userDtoToUserMapper;
+    private final EventService eventService;
     private final UserGuard userGuard;
 
     @Override
@@ -72,6 +74,7 @@ public class UserServiceImpl implements UserService {
         userGuard.checkIfExists(friendId);
 
         userStorage.addFriend(userId, friendId);
+        eventService.addFriendEvent(userId, friendId);
     }
 
     @Override
@@ -79,6 +82,7 @@ public class UserServiceImpl implements UserService {
         userGuard.checkIfExists(userId);
         userGuard.checkIfExists(friendId);
 
+        eventService.deleteFriendEvent(userId, friendId);
         userStorage.deleteFriend(userId, friendId);
     }
 
@@ -97,7 +101,7 @@ public class UserServiceImpl implements UserService {
         return userStorage.getCommonFriends(userId, otherUserId);
     }
 
-    public List<Film> getRecommendations(int userId){
+    public List<Film> getRecommendations(int userId) {
         userGuard.checkIfExists(userId);
 
         return userStorage.getRecommendations(userId);

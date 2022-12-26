@@ -61,6 +61,16 @@ CREATE TABLE IF NOT EXISTS friendship (
     FOREIGN KEY (friend_id) REFERENCES users (user_id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS event (
+    event_id   INTEGER PRIMARY KEY AUTO_INCREMENT,
+    timestamp  LONG NOT NULL,
+    user_id    INTEGER NOT NULL,
+    event_type ENUM('LIKE', 'REVIEW', 'FRIEND') NOT NULL,
+    operation  ENUM('REMOVE', 'ADD', 'UPDATE')  NOT NULL,
+    entity_id  INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS review (
     review_id INTEGER AUTO_INCREMENT PRIMARY KEY,
     content VARCHAR(256) NOT NULL,

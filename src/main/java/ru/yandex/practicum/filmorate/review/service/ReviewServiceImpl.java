@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.review.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
+import ru.yandex.practicum.filmorate.event.service.EventService;
 import ru.yandex.practicum.filmorate.film.util.FilmGuard;
 import ru.yandex.practicum.filmorate.review.dto.ReviewDto;
 import ru.yandex.practicum.filmorate.review.model.Review;
@@ -17,6 +18,7 @@ import java.util.List;
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewStorage reviewStorage;
     private final Mapper<ReviewDto, Review> reviewDtoToReviewMapper;
+    private final EventService eventService;
     private final ReviewGuard reviewGuard;
     private final UserGuard userGuard;
     private final FilmGuard filmGuard;
@@ -37,7 +39,10 @@ public class ReviewServiceImpl implements ReviewService {
         userGuard.checkIfExists(review.getUserId());
         filmGuard.checkIfExists(review.getFilmId());
 
-        return reviewStorage.create(review);
+        Review eventReview = reviewStorage.create(review);
+        eventService.addReviewEvent(eventReview.getUserId(), eventReview.getReviewId());
+
+        return eventReview;
     }
 
     @Override
@@ -49,13 +54,17 @@ public class ReviewServiceImpl implements ReviewService {
         filmGuard.checkIfExists(review.getFilmId());
 
         review.setUseful(currentReview.getUseful());
+        Review eventReview = reviewStorage.update(review);
 
-        return reviewStorage.update(review);
+        eventService.updateReviewEvent(eventReview.getUserId(), eventReview.getReviewId());
+
+        return eventReview;
     }
 
     @Override
     public Review delete(int id) {
         Review review = reviewGuard.checkIfExists(id);
+        eventService.deleteReviewEvent(review.getUserId(), review.getReviewId());
         reviewStorage.delete(id);
 
         return review;

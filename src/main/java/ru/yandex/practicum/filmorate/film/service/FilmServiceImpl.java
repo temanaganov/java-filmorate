@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.core.util.Mapper;
+import ru.yandex.practicum.filmorate.event.service.EventService;
 import ru.yandex.practicum.filmorate.director.util.DirectorGuard;
 import ru.yandex.practicum.filmorate.film.model.Film;
 import ru.yandex.practicum.filmorate.film.storage.FilmStorage;
@@ -21,6 +22,7 @@ public class FilmServiceImpl implements FilmService {
     @Qualifier("dbFilmStorage")
     private final FilmStorage filmStorage;
     private final Mapper<FilmDto, Film> filmDtoToFilmMapper;
+    private final EventService eventService;
     private final FilmGuard filmGuard;
     private final UserGuard userGuard;
     private final MpaGuard mpaGuard;
@@ -80,6 +82,7 @@ public class FilmServiceImpl implements FilmService {
         userGuard.checkIfExists(userId);
 
         filmStorage.likeFilm(filmId, userId);
+        eventService.addLikeEvent(filmId, userId);
     }
 
     @Override
@@ -87,6 +90,7 @@ public class FilmServiceImpl implements FilmService {
         filmGuard.checkIfExists(filmId);
         userGuard.checkIfExists(userId);
 
+        eventService.deleteLikeEvent(filmId, userId);
         filmStorage.deleteLikeFromFilm(filmId, userId);
     }
 

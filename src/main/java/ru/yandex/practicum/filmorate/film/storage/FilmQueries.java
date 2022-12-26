@@ -82,7 +82,7 @@ public class FilmQueries {
             sb.append("WHERE EXTRACT(YEAR from f.release_date) = ").append(year).append(" ");
         }
 
-        sb.append("GROUP BY f.film_id, f.name, f.description, f.release_date, f.duration, m.mpa_id, m.name ")
+        sb.append("GROUP BY f.film_id, f.name, f.description, f.release_date, f.duration, l.user_id, m.mpa_id, m.name ")
                 .append("ORDER BY likes DESC, f.name LIMIT ?");
 
         return sb.toString();
