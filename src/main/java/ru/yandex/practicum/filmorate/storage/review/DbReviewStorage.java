@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.storage.review;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -63,7 +62,6 @@ public class DbReviewStorage implements ReviewStorage {
                 ReviewQueries.UPDATE,
                 review.getContent(),
                 review.isPositive(),
-                review.getUseful(),
                 review.getReviewId()
         );
 
@@ -75,6 +73,24 @@ public class DbReviewStorage implements ReviewStorage {
         jdbcTemplate.update(ReviewQueries.DELETE, id);
     }
 
+    @Override
+    public void estimate(int id, int userId, boolean isLike) {
+        jdbcTemplate.update(ReviewQueries.LIKE, id, userId, isLike);
+    }
+
+    @Override
+    public void deleteEstimation(int id, int userId, boolean isLike) {
+        jdbcTemplate.update(ReviewQueries.DELETE_USER_LIKE, id, userId, isLike);
+    }
+
+    private int getUseful(int id) {
+        try {
+            return jdbcTemplate.queryForObject(ReviewQueries.GET_USEFUL, (ResultSet resultSet, int rowNum) -> resultSet.getInt("useful"), id, id);
+        } catch (DataAccessException exception) {
+            return 0;
+        }
+    }
+
     private Review mapRowToReview(ResultSet resultSet, int i) throws SQLException {
         return new Review(
                 resultSet.getInt("review_id"),
@@ -82,7 +98,7 @@ public class DbReviewStorage implements ReviewStorage {
                 resultSet.getBoolean("is_positive"),
                 resultSet.getInt("user_id"),
                 resultSet.getInt("film_id"),
-                resultSet.getInt("useful")
+                getUseful(resultSet.getInt("review_id"))
         );
     }
 }
