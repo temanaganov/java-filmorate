@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,12 +20,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Repository("dbFilmStorage")
-@RequiredArgsConstructor
+@Repository
 public class DbFilmStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
     private final GenreStorage genreStorage;
     private final DirectorStorage directorStorage;
+    private final SimpleJdbcInsert simpleJdbcInsert;
+
+    public DbFilmStorage(JdbcTemplate jdbcTemplate, GenreStorage genreStorage, DirectorStorage directorStorage) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.genreStorage = genreStorage;
+        this.directorStorage = directorStorage;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("film")
+                .usingGeneratedKeyColumns("film_id");
+    }
 
     @Override
     public List<Film> getAll() {
@@ -34,8 +42,8 @@ public class DbFilmStorage implements FilmStorage {
     }
 
     @Override
-    public List<Film> getAllFilmsByDirectorId(int directorId, String sortBy) {
-        return jdbcTemplate.query(FilmQueries.GET_ALL_BY_DIRECTOR_ID(sortBy), this::mapRowToFilm, directorId);
+    public List<Film> getFilmsByDirectorId(int directorId, String sortBy) {
+        return jdbcTemplate.query(FilmQueries.getAllByDirectorId(sortBy), this::mapRowToFilm, directorId);
     }
 
     @Override
@@ -49,10 +57,6 @@ public class DbFilmStorage implements FilmStorage {
 
     @Override
     public Film create(Film film) {
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("film")
-                .usingGeneratedKeyColumns("film_id");
-
         Map<String, Object> filmColumns = new HashMap<>();
         filmColumns.put("name", film.getName());
         filmColumns.put("description", film.getDescription());
@@ -96,7 +100,7 @@ public class DbFilmStorage implements FilmStorage {
 
     @Override
     public List<Film> getPopularFilms(int count, Integer genreId, Integer year) {
-        return jdbcTemplate.query(FilmQueries.GET_POPULAR_FILMS(genreId, year), this::mapRowToFilm, Math.max(count, 0));
+        return jdbcTemplate.query(FilmQueries.getPopularFilms(genreId, year), this::mapRowToFilm, Math.max(count, 0));
     }
 
     @Override
@@ -185,15 +189,15 @@ public class DbFilmStorage implements FilmStorage {
     }
 
     private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
-        return new Film(
-                resultSet.getInt("film_id"),
-                resultSet.getString("name"),
-                resultSet.getString("description"),
-                resultSet.getDate("release_date").toLocalDate(),
-                resultSet.getInt("duration"),
-                new Mpa(resultSet.getInt("mpa_id"), resultSet.getString("mpa.name")),
-                genreStorage.getAllByFilmId(resultSet.getInt("film_id")),
-                directorStorage.getAllByFilmId(resultSet.getInt("film_id"))
-        );
+        return Film.builder()
+                .id(resultSet.getInt("film_id"))
+                .name(resultSet.getString("name"))
+                .description(resultSet.getString("description"))
+                .releaseDate(resultSet.getDate("release_date").toLocalDate())
+                .duration(resultSet.getInt("duration"))
+                .mpa(new Mpa(resultSet.getInt("mpa_id"), resultSet.getString("mpa.name")))
+                .genres(genreStorage.getAllByFilmId(resultSet.getInt("film_id")))
+                .directors(directorStorage.getAllByFilmId(resultSet.getInt("film_id")))
+                .build();
     }
 }

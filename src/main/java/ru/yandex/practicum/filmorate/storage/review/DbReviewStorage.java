@@ -14,9 +14,16 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-@RequiredArgsConstructor
 public class DbReviewStorage implements ReviewStorage {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
+
+    public DbReviewStorage(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("review")
+                .usingGeneratedKeyColumns("review_id");
+    }
 
     @Override
     public List<Review> getAll(Integer filmId, int count) {
@@ -38,10 +45,6 @@ public class DbReviewStorage implements ReviewStorage {
 
     @Override
     public Review create(Review review) {
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("review")
-                .usingGeneratedKeyColumns("review_id");
-
         Map<String, Object> reviewColumns = new HashMap<>();
         reviewColumns.put("content", review.getContent());
         reviewColumns.put("is_positive", review.isPositive());

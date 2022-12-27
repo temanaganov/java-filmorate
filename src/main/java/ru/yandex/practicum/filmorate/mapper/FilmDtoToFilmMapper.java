@@ -11,15 +11,15 @@ import java.util.Optional;
 public class FilmDtoToFilmMapper implements Mapper<FilmDto, Film> {
     @Override
     public Film mapFrom(FilmDto dto) {
-        return new Film(
-                dto.getId(),
-                dto.getName(),
-                dto.getDescription(),
-                dto.getReleaseDate(),
-                dto.getDuration(),
-                dto.getMpa(),
-                Optional.ofNullable(dto.getGenres()).orElse(Collections.emptyList()),
-                Optional.ofNullable(dto.getDirectors()).orElse(Collections.emptyList())
-        );
+        return Film.builder()
+                .id(dto.getId())
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .releaseDate(dto.getReleaseDate())
+                .duration(dto.getDuration())
+                .mpa(dto.getMpa())
+                .genres(Optional.ofNullable(dto.getGenres()).orElse(Collections.emptyList()))
+                .directors(Optional.ofNullable(dto.getDirectors()).orElse(Collections.emptyList()))
+                .build();
     }
 }

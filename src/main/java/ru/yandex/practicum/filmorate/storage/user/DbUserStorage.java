@@ -15,7 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-@Repository("dbUserStorage")
+@Repository
 @RequiredArgsConstructor
 public class DbUserStorage implements UserStorage {
     private final JdbcTemplate jdbcTemplate;
@@ -109,11 +109,13 @@ public class DbUserStorage implements UserStorage {
 
     @Override
     public List<Film> getRecommendations(int userId) {
-        final List<Integer> userIdList = jdbcTemplate.query(UserQueries.GET_USERS_FROM_LIKES, this::mapRowToUserId, userId, userId);
-        if(userIdList.isEmpty()){
+        final List<Integer> userIds = jdbcTemplate.query(UserQueries.GET_USERS_FROM_LIKES, this::mapRowToUserId, userId, userId);
+
+        if (userIds.isEmpty()) {
             return Collections.emptyList();
         }
-        int id = userIdList.get(0);
+
+        int id = userIds.get(0);
         List<Film> filmsOfOriginalUser = jdbcTemplate.query(UserQueries.GET_FILMS_FROM_LIKES, this::mapRowToFilm, userId);
         List<Film> filmsOfFoundUser = jdbcTemplate.query(UserQueries.GET_FILMS_FROM_LIKES, this::mapRowToFilm, id);
         filmsOfFoundUser.removeAll(filmsOfOriginalUser);
@@ -122,30 +124,29 @@ public class DbUserStorage implements UserStorage {
     }
 
     private User mapRowToUser(ResultSet resultSet, int rowNum) throws SQLException {
-        return new User(
-                resultSet.getInt("user_id"),
-                resultSet.getString("email"),
-                resultSet.getString("login"),
-                resultSet.getString("name"),
-                resultSet.getDate("birthday").toLocalDate()
-        );
+        return User.builder()
+                .id(resultSet.getInt("user_id"))
+                .email(resultSet.getString("email"))
+                .login(resultSet.getString("login"))
+                .name(resultSet.getString("name"))
+                .birthday(resultSet.getDate("birthday").toLocalDate())
+                .build();
     }
 
     private int mapRowToUserId(ResultSet rs,int rowNum) throws SQLException {
         return rs.getInt("user_id");
-
     }
 
     private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
-        return new Film(
-                resultSet.getInt("film_id"),
-                resultSet.getString("name"),
-                resultSet.getString("description"),
-                resultSet.getDate("release_date").toLocalDate(),
-                resultSet.getInt("duration"),
-                new Mpa(resultSet.getInt("mpa_id"), resultSet.getString("mpa.name")),
-                genreStorage.getAllByFilmId(resultSet.getInt("film_id")),
-                directorStorage.getAllByFilmId(resultSet.getInt("film_id"))
-        );
+        return Film.builder()
+                .id(resultSet.getInt("film_id"))
+                .name(resultSet.getString("name"))
+                .description(resultSet.getString("description"))
+                .releaseDate(resultSet.getDate("release_date").toLocalDate())
+                .duration(resultSet.getInt("duration"))
+                .mpa(new Mpa(resultSet.getInt("mpa_id"), resultSet.getString("mpa.name")))
+                .genres(genreStorage.getAllByFilmId(resultSet.getInt("film_id")))
+                .directors(directorStorage.getAllByFilmId(resultSet.getInt("film_id")))
+                .build();
     }
 }

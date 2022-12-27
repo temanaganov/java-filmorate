@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.service.user;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.FieldValidationException;
 import ru.yandex.practicum.filmorate.mapper.Mapper;
@@ -17,7 +16,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    @Qualifier("dbUserStorage")
     private final UserStorage userStorage;
     private final Mapper<UserDto, User> userDtoToUserMapper;
     private final EventService eventService;

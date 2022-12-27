@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model.film;
 
+import lombok.Builder;
 import lombok.Value;
 import lombok.With;
 import ru.yandex.practicum.filmorate.model.director.Director;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @With
 @Value
+@Builder
 public class Film {
     int id;
     String name;
