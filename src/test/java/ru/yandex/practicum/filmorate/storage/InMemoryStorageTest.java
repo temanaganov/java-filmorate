@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.core.storage;
+package ru.yandex.practicum.filmorate.storage;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.storage.InMemoryStorage;

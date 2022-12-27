@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.film.dto;
+package ru.yandex.practicum.filmorate.mapper;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.mapper.FilmDtoToFilmMapper;

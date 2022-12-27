@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.user.service;
+package ru.yandex.practicum.filmorate.service.user;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

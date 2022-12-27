@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.core.exception;
+package ru.yandex.practicum.filmorate.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;

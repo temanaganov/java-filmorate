@@ -1,7 +1,7 @@
-package ru.yandex.practicum.filmorate.film.storage;
+package ru.yandex.practicum.filmorate.storage.film;
 
 import org.junit.jupiter.api.BeforeEach;
-import ru.yandex.practicum.filmorate.core.storage.InMemoryStorageTest;
+import ru.yandex.practicum.filmorate.storage.InMemoryStorageTest;
 import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.model.mpa.Mpa;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
