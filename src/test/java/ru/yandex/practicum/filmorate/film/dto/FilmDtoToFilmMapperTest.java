@@ -1,8 +1,10 @@
 package ru.yandex.practicum.filmorate.film.dto;
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.film.model.Film;
-import ru.yandex.practicum.filmorate.mpa.model.Mpa;
+import ru.yandex.practicum.filmorate.mapper.FilmDtoToFilmMapper;
+import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.model.film.FilmDto;
+import ru.yandex.practicum.filmorate.model.mpa.Mpa;
 
 import java.time.LocalDate;
 import java.util.Collections;

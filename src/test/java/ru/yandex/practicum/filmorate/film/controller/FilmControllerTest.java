@@ -12,10 +12,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ru.yandex.practicum.filmorate.film.model.Film;
-import ru.yandex.practicum.filmorate.film.service.FilmService;
-import ru.yandex.practicum.filmorate.film.dto.FilmDto;
-import ru.yandex.practicum.filmorate.mpa.model.Mpa;
+import ru.yandex.practicum.filmorate.controller.FilmController;
+import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.service.film.FilmService;
+import ru.yandex.practicum.filmorate.model.film.FilmDto;
+import ru.yandex.practicum.filmorate.model.mpa.Mpa;
 
 import java.time.LocalDate;
 import java.util.Collections;

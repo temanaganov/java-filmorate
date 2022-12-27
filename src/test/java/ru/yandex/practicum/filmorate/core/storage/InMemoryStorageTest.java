@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.core.storage;
 
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.storage.InMemoryStorage;
 
 import java.util.Collections;
 import java.util.List;
