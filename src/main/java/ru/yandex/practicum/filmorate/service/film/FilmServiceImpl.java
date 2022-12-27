@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.mapper.Mapper;
 import ru.yandex.practicum.filmorate.service.event.EventService;
+import ru.yandex.practicum.filmorate.service.event.EventServiceImpl;
 import ru.yandex.practicum.filmorate.guard.DirectorGuard;
 import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
@@ -82,6 +83,7 @@ public class FilmServiceImpl implements FilmService {
         userGuard.checkIfExists(userId);
 
         filmStorage.likeFilm(filmId, userId);
+        eventService.addLikeEvent(filmId, userId);
     }
 
     @Override
@@ -89,6 +91,7 @@ public class FilmServiceImpl implements FilmService {
         filmGuard.checkIfExists(filmId);
         userGuard.checkIfExists(userId);
 
+        eventService.deleteLikeEvent(filmId, userId);
         filmStorage.deleteLikeFromFilm(filmId, userId);
     }
 
