@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.mapper;
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.mapper.FilmDtoToFilmMapper;
 import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.model.film.FilmDto;
 import ru.yandex.practicum.filmorate.model.mpa.Mpa;
@@ -17,16 +16,16 @@ public class FilmDtoToFilmMapperTest {
 
     @Test
     void mapFrom_shouldCreateFilmWithSameFields() {
-        FilmDto filmDto = new FilmDto(
-                1,
-                "Test film",
-                "Test description",
-                LocalDate.EPOCH,
-                120,
-                new Mpa(1, "G"),
-                Collections.emptyList(),
-                Collections.emptyList()
-        );
+        FilmDto filmDto = FilmDto.builder()
+                .id(1)
+                .name("Test film")
+                .description("Test description")
+                .releaseDate(LocalDate.EPOCH)
+                .duration(120)
+                .mpa(new Mpa(1, "G"))
+                .genres(Collections.emptyList())
+                .directors(Collections.emptyList())
+                .build();
 
         Film film = filmDtoToFilmMapper.mapFrom(filmDto);
 

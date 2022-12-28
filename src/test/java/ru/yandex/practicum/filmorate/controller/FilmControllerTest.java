@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
 import ru.yandex.practicum.filmorate.model.film.FilmDto;
@@ -146,29 +145,29 @@ public class FilmControllerTest {
     }
 
     private static Film getFilm(int id) {
-        return new Film(
-                id,
-                "Test film",
-                "Test description",
-                LocalDate.parse("2000-01-01"),
-                120,
-                new Mpa(1, "G"),
-                Collections.emptyList(),
-                Collections.emptyList()
-        );
+        return Film.builder()
+                .id(id)
+                .name("Test film")
+                .description("Test description")
+                .releaseDate(LocalDate.parse("2000-01-01"))
+                .duration(120)
+                .mpa(new Mpa(1, "G"))
+                .genres(Collections.emptyList())
+                .directors(Collections.emptyList())
+                .build();
     }
 
     private static FilmDto getFilmDto(int id) {
-        return new FilmDto(
-                id,
-                "Test film",
-                "Test description",
-                LocalDate.parse("2000-01-01"),
-                120,
-                new Mpa(1, "G"),
-                Collections.emptyList(),
-                Collections.emptyList()
-        );
+        return FilmDto.builder()
+                .id(id)
+                .name("Test film")
+                .description("Test description")
+                .releaseDate(LocalDate.parse("2000-01-01"))
+                .duration(120)
+                .mpa(new Mpa(1, "G"))
+                .genres(Collections.emptyList())
+                .directors(Collections.emptyList())
+                .build();
     }
 
     private static Stream<FilmDto> filmInvalidArgumentsProvider() {

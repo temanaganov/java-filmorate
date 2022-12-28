@@ -30,7 +30,7 @@ public class DbReviewStorage implements ReviewStorage {
             return jdbcTemplate.query(ReviewQueries.GET_ALL, this::mapRowToReview, count);
         }
 
-        return jdbcTemplate.query(ReviewQueries.GET_ALL_BY_FILM_ID, this::mapRowToReview, filmId, count);
+        return jdbcTemplate.query(ReviewQueries.GET_BY_FILM_ID, this::mapRowToReview, filmId, count);
     }
 
     @Override
@@ -83,22 +83,14 @@ public class DbReviewStorage implements ReviewStorage {
         jdbcTemplate.update(ReviewQueries.DELETE_USER_LIKE, id, userId, isLike);
     }
 
-    private int getUseful(int id) {
-        try {
-            return jdbcTemplate.queryForObject(ReviewQueries.GET_USEFUL, (ResultSet resultSet, int rowNum) -> resultSet.getInt("useful"), id, id);
-        } catch (DataAccessException exception) {
-            return 0;
-        }
-    }
-
     private Review mapRowToReview(ResultSet resultSet, int i) throws SQLException {
-        return new Review(
-                resultSet.getInt("review_id"),
-                resultSet.getString("content"),
-                resultSet.getBoolean("is_positive"),
-                resultSet.getInt("user_id"),
-                resultSet.getInt("film_id"),
-                getUseful(resultSet.getInt("review_id"))
-        );
+        return Review.builder()
+                .reviewId(resultSet.getInt("review_id"))
+                .content(resultSet.getString("content"))
+                .isPositive(resultSet.getBoolean("is_positive"))
+                .userId(resultSet.getInt("user_id"))
+                .filmId(resultSet.getInt("film_id"))
+                .useful(resultSet.getInt("useful"))
+                .build();
     }
 }

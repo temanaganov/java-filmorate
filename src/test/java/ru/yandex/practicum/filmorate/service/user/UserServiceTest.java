@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.user.User;
-import ru.yandex.practicum.filmorate.service.user.UserServiceImpl;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import ru.yandex.practicum.filmorate.model.user.UserDto;
 import ru.yandex.practicum.filmorate.mapper.UserDtoToUserMapper;
@@ -133,22 +132,22 @@ public class UserServiceTest {
     }
 
     private User getUser(int id) {
-        return new User(
-                id,
-                "test@test.test",
-                "Test login",
-                "Test name",
-                LocalDate.EPOCH
-        );
+        return User.builder()
+                .id(id)
+                .email("test@test.test")
+                .login("Test login")
+                .name("Test name")
+                .birthday(LocalDate.EPOCH)
+                .build();
     }
 
     private UserDto getUserDto(int id) {
-        return new UserDto(
-                id,
-                "test@test.test",
-                "test_login",
-                "Test name",
-                LocalDate.EPOCH
-        );
+        return UserDto.builder()
+                .id(id)
+                .email("test@test.test")
+                .login("test_login")
+                .name("Test name")
+                .birthday(LocalDate.EPOCH)
+                .build();
     }
 }

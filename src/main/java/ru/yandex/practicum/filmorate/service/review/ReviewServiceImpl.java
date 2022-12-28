@@ -12,7 +12,6 @@ import ru.yandex.practicum.filmorate.guard.ReviewGuard;
 import ru.yandex.practicum.filmorate.guard.UserGuard;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,10 +25,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<Review> getAll(Integer filmId, int count) {
-        return reviewStorage.getAll(filmId, count)
-                .stream()
-                .sorted((review1, review2) -> Integer.compare(review2.getUseful(), review1.getUseful()))
-                .collect(Collectors.toList());
+        return reviewStorage.getAll(filmId, count);
     }
 
     @Override
