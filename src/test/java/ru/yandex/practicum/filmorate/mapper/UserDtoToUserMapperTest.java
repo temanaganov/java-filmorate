@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.mapper;
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.mapper.UserDtoToUserMapper;
 import ru.yandex.practicum.filmorate.model.user.UserDto;
 import ru.yandex.practicum.filmorate.model.user.User;
 
@@ -15,13 +14,13 @@ public class UserDtoToUserMapperTest {
 
     @Test
     void mapFrom_shouldCreateUserWithSameFields() {
-        UserDto userDto = new UserDto(
-                1,
-                "test@test.test",
-                "test_login",
-                "Test name",
-                LocalDate.EPOCH
-        );
+        UserDto userDto = UserDto.builder()
+                .id(1)
+                .email("test@test.test")
+                .login("test_login")
+                .name("Test name")
+                .birthday(LocalDate.EPOCH)
+                .build();
 
         User user = userDtoToUserMapper.mapFrom(userDto);
 
@@ -36,13 +35,13 @@ public class UserDtoToUserMapperTest {
 
     @Test
     void mapFrom_shouldCreateUserWithNameEqualsLogin_ifNameIsNotGiven() {
-        UserDto userDto = new UserDto(
-                1,
-                "test@test.test",
-                "test_login",
-                null,
-                LocalDate.EPOCH
-        );
+        UserDto userDto = UserDto.builder()
+                .id(1)
+                .email("test@test.test")
+                .login("test_login")
+                .name(null)
+                .birthday(LocalDate.EPOCH)
+                .build();
 
         User user = userDtoToUserMapper.mapFrom(userDto);
 

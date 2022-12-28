@@ -47,13 +47,12 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Review update(ReviewDto dto) {
-        Review currentReview = reviewGuard.checkIfExists(dto.getReviewId());
+        reviewGuard.checkIfExists(dto.getReviewId());
         Review review = reviewDtoToReviewMapper.mapFrom(dto);
 
         userGuard.checkIfExists(review.getUserId());
         filmGuard.checkIfExists(review.getFilmId());
 
-        review.setUseful(currentReview.getUseful());
         Review eventReview = reviewStorage.update(review);
 
         eventService.updateReviewEvent(eventReview.getUserId(), eventReview.getReviewId());
@@ -72,33 +71,39 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void like(int id, int userId) {
-        Review review = reviewGuard.checkIfExists(id);
-        review.setUseful(review.getUseful() + 1);
+        reviewGuard.checkIfExists(id);
+        userGuard.checkIfExists(userId);
 
-        reviewStorage.update(review);
+        reviewStorage.deleteEstimation(id, userId, true);
+        reviewStorage.deleteEstimation(id, userId, false);
+        reviewStorage.estimate(id, userId, true);
     }
 
     @Override
     public void dislike(int id, int userId) {
-        Review review = reviewGuard.checkIfExists(id);
-        review.setUseful(review.getUseful() - 1);
+        reviewGuard.checkIfExists(id);
+        userGuard.checkIfExists(userId);
 
-        reviewStorage.update(review);
+        reviewStorage.deleteEstimation(id, userId, true);
+        reviewStorage.deleteEstimation(id, userId, false);
+        reviewStorage.estimate(id, userId, false);
     }
 
     @Override
     public void deleteLike(int id, int userId) {
-        Review review = reviewGuard.checkIfExists(id);
-        review.setUseful(review.getUseful() - 1);
+        reviewGuard.checkIfExists(id);
+        userGuard.checkIfExists(userId);
 
-        reviewStorage.update(review);
+        reviewStorage.deleteEstimation(id, userId, true);
+        reviewStorage.estimate(id, userId, true);
     }
 
     @Override
     public void deleteDislike(int id, int userId) {
-        Review review = reviewGuard.checkIfExists(id);
-        review.setUseful(review.getUseful() + 1);
+        reviewGuard.checkIfExists(id);
+        userGuard.checkIfExists(userId);
 
-        reviewStorage.update(review);
+        reviewStorage.deleteEstimation(id, userId, false);
+        reviewStorage.estimate(id, userId, false);
     }
 }

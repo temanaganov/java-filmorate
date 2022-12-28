@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.service.film;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.mapper.Mapper;
 import ru.yandex.practicum.filmorate.service.event.EventService;
@@ -19,7 +18,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class FilmServiceImpl implements FilmService {
-    @Qualifier("dbFilmStorage")
     private final FilmStorage filmStorage;
     private final Mapper<FilmDto, Film> filmDtoToFilmMapper;
     private final EventService eventService;
@@ -40,10 +38,10 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public List<Film> getAllFilmsByDirectorId(int directorId, String sortBy) {
+    public List<Film> getFilmsByDirectorId(int directorId, String sortBy) {
         directorGuard.checkIfExists(directorId);
 
-        return filmStorage.getAllFilmsByDirectorId(directorId, sortBy);
+        return filmStorage.getFilmsByDirectorId(directorId, sortBy);
     }
 
     @Override

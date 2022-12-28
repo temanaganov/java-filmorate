@@ -13,7 +13,6 @@ import ru.yandex.practicum.filmorate.mapper.FilmDtoToFilmMapper;
 import ru.yandex.practicum.filmorate.guard.FilmGuard;
 import ru.yandex.practicum.filmorate.model.mpa.Mpa;
 import ru.yandex.practicum.filmorate.guard.MpaGuard;
-import ru.yandex.practicum.filmorate.service.film.FilmServiceImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
@@ -140,28 +139,28 @@ public class FilmServiceTest {
     }
 
     private Film getFilm(int id) {
-        return new Film(
-                id,
-                "Test film",
-                "Test description",
-                LocalDate.EPOCH,
-                120,
-                new Mpa(1, "G"),
-                Collections.emptyList(),
-                Collections.emptyList()
-        );
+        return Film.builder()
+                .id(id)
+                .name("Test film")
+                .description("Test description")
+                .releaseDate(LocalDate.EPOCH)
+                .duration(120)
+                .mpa(new Mpa(1, "G"))
+                .genres(Collections.emptyList())
+                .directors(Collections.emptyList())
+                .build();
     }
 
     private FilmDto getFilmDto(int id) {
-        return new FilmDto(
-                id,
-                "Test film",
-                "Test description",
-                LocalDate.EPOCH,
-                120,
-                new Mpa(1, "G"),
-                Collections.emptyList(),
-                Collections.emptyList()
-        );
+        return FilmDto.builder()
+                .id(id)
+                .name("Test film")
+                .description("Test description")
+                .releaseDate(LocalDate.EPOCH)
+                .duration(120)
+                .mpa(new Mpa(1, "G"))
+                .genres(Collections.emptyList())
+                .directors(Collections.emptyList())
+                .build();
     }
 }

@@ -10,4 +10,6 @@ public interface ReviewStorage {
     Review create(Review review);
     Review update(Review review);
     void delete(int id);
+    void estimate(int id, int userId, boolean isLike);
+    void deleteEstimation(int id, int userId, boolean isLike);
 }

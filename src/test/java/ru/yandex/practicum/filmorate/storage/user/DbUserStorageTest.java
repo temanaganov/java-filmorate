@@ -7,7 +7,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import ru.yandex.practicum.filmorate.model.user.User;
-import ru.yandex.practicum.filmorate.storage.user.DbUserStorage;
 
 import java.time.LocalDate;
 
@@ -85,12 +84,12 @@ public class DbUserStorageTest {
     }
 
     private User getUser(int id, String email) {
-        return new User(
-                id,
-                email,
-                "Test login",
-                "Test name",
-                LocalDate.EPOCH
-        );
+        return User.builder()
+                .id(id)
+                .email(email)
+                .login("Test login")
+                .name("Test name")
+                .birthday(LocalDate.EPOCH)
+                .build();
     }
 }

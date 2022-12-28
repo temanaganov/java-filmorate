@@ -8,13 +8,13 @@ import ru.yandex.practicum.filmorate.model.review.Review;
 public class ReviewDtoToReviewMapper implements Mapper<ReviewDto, Review> {
     @Override
     public Review mapFrom(ReviewDto dto) {
-        return new Review(
-                dto.getReviewId(),
-                dto.getContent(),
-                dto.getIsPositive(),
-                dto.getUserId(),
-                dto.getFilmId(),
-                0
-        );
+        return Review.builder()
+                .reviewId(dto.getReviewId())
+                .content(dto.getContent())
+                .isPositive(dto.getIsPositive())
+                .userId(dto.getUserId())
+                .filmId(dto.getFilmId())
+                .useful(0)
+                .build();
     }
 }
