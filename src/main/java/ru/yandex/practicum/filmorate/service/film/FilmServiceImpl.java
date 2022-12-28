@@ -3,6 +3,8 @@ package ru.yandex.practicum.filmorate.service.film;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.mapper.Mapper;
+import ru.yandex.practicum.filmorate.model.event.EventOperation;
+import ru.yandex.practicum.filmorate.model.event.EventType;
 import ru.yandex.practicum.filmorate.service.event.EventService;
 import ru.yandex.practicum.filmorate.guard.DirectorGuard;
 import ru.yandex.practicum.filmorate.model.film.Film;
@@ -80,7 +82,8 @@ public class FilmServiceImpl implements FilmService {
         userGuard.checkIfExists(userId);
 
         filmStorage.likeFilm(filmId, userId);
-        eventService.addLikeEvent(filmId, userId);
+
+        eventService.createEvent(userId, EventType.LIKE, EventOperation.ADD, filmId);
     }
 
     @Override
@@ -88,7 +91,7 @@ public class FilmServiceImpl implements FilmService {
         filmGuard.checkIfExists(filmId);
         userGuard.checkIfExists(userId);
 
-        eventService.deleteLikeEvent(filmId, userId);
+        eventService.createEvent(userId, EventType.LIKE, EventOperation.REMOVE, filmId);
         filmStorage.deleteLikeFromFilm(filmId, userId);
     }
 

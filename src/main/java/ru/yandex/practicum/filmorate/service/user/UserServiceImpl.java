@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.FieldValidationException;
 import ru.yandex.practicum.filmorate.mapper.Mapper;
+import ru.yandex.practicum.filmorate.model.event.EventOperation;
+import ru.yandex.practicum.filmorate.model.event.EventType;
 import ru.yandex.practicum.filmorate.service.event.EventService;
 import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.model.user.User;
@@ -72,7 +74,7 @@ public class UserServiceImpl implements UserService {
         userGuard.checkIfExists(friendId);
 
         userStorage.addFriend(userId, friendId);
-        eventService.addFriendEvent(userId, friendId);
+        eventService.createEvent(userId, EventType.FRIEND, EventOperation.ADD, friendId);
     }
 
     @Override
@@ -80,7 +82,7 @@ public class UserServiceImpl implements UserService {
         userGuard.checkIfExists(userId);
         userGuard.checkIfExists(friendId);
 
-        eventService.deleteFriendEvent(userId, friendId);
+        eventService.createEvent(userId, EventType.FRIEND, EventOperation.REMOVE, friendId);
         userStorage.deleteFriend(userId, friendId);
     }
 

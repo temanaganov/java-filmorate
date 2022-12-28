@@ -33,7 +33,7 @@ public class DbEventStorage implements EventStorage {
     }
 
     @Override
-    public Event create(Event event) {
+    public void create(Event event) {
         Map<String, Object> values = new HashMap<>();
         values.put("timestamp", event.getTimestamp());
         values.put("user_id", event.getUserId());
@@ -41,19 +41,17 @@ public class DbEventStorage implements EventStorage {
         values.put("operation", event.getOperation().toString());
         values.put("entity_id", event.getEntityId());
 
-        event.setEventId(simpleJdbcInsert.executeAndReturnKey(values).intValue());
-        return event;
+        simpleJdbcInsert.executeAndReturnKey(values).intValue();
     }
 
     private Event mapRowToEvent(ResultSet resultSet, int num) throws SQLException {
-        Event event = new Event();
-        event.setEventId(resultSet.getInt("event_id"));
-        event.setTimestamp(resultSet.getLong("timestamp"));
-        event.setUserId(resultSet.getInt("user_id"));
-        event.setEventType(EventType.valueOf(resultSet.getString("event_type")));
-        event.setOperation(EventOperation.valueOf(resultSet.getString("operation")));
-        event.setEntityId(resultSet.getInt("entity_id"));
-
-        return event;
+        return Event.builder()
+                .eventId(resultSet.getInt("event_id"))
+                .timestamp(resultSet.getLong("timestamp"))
+                .userId(resultSet.getInt("user_id"))
+                .eventType(EventType.valueOf(resultSet.getString("event_type")))
+                .operation(EventOperation.valueOf(resultSet.getString("operation")))
+                .entityId(resultSet.getInt("entity_id"))
+                .build();
     }
 }
