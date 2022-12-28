@@ -9,5 +9,4 @@ import java.util.List;
 public interface EventService {
     List<Event> getFeed(int userId);
     void createEvent(int userId, EventType eventTYpe, EventOperation eventOperation, int entityId);
-
 }
