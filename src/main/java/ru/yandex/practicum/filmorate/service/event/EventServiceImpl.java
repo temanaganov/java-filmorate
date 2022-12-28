@@ -16,92 +16,24 @@ import java.util.List;
 public class EventServiceImpl implements EventService {
     private final EventStorage eventStorage;
     private final UserGuard userGuard;
+
     @Override
     public List<Event> getFeed(int userId) {
         userGuard.checkIfExists(userId);
         return eventStorage.getFeed(userId);
     }
-    @Override
-    public Event createEvent(int userId, EventType eventTYpe, EventOperation eventOperation, int entityId){
-        Event event = new Event();
-        event.setTimestamp(Instant.now().toEpochMilli());
-        event.setUserId(userId);
-        event.setEntityId(entityId);
-        event.setEventType(eventTYpe);
-        event.setOperation(eventOperation);
-        return eventStorage.create(event);
-    }
-    @Override
-    public void addLikeEvent(int filmId, int userId) {
-        createEvent(userId, EventType.LIKE,EventOperation.ADD, filmId);
-//        Event event = getBaseEvent(userId, filmId);
-//        event.setEventType(EventType.LIKE);
-//        event.setOperation(EventOperation.ADD);
-//
-//        eventStorage.create(event);
-    }
-    @Override
-    public void deleteLikeEvent(int filmId, int userId) {
-        createEvent(userId, EventType.LIKE, EventOperation.REMOVE, filmId);
-//        Event event = getBaseEvent(userId, filmId);
-//        event.setEventType(EventType.LIKE);
-//        event.setOperation(EventOperation.REMOVE);
-//
-//        eventStorage.create(event);
-    }
-    @Override
-    public void addFriendEvent(int id, int friendId) {
-        createEvent(id, EventType.FRIEND, EventOperation.ADD, friendId);
-//        Event event = getBaseEvent(id, friendId);
-//        event.setEventType(EventType.FRIEND);
-//        event.setOperation(EventOperation.ADD);
-//
-//        eventStorage.create(event);
-    }
-    @Override
-    public void deleteFriendEvent(int id, int friendId) {
-        createEvent(id, EventType.FRIEND, EventOperation.REMOVE, friendId);
-//        Event event = getBaseEvent(id, friendId);
-//        event.setEventType(EventType.FRIEND);
-//        event.setOperation(EventOperation.REMOVE);
-//
-//        eventStorage.create(event);
-    }
-    @Override
-    public void addReviewEvent(int userId, int reviewId) {
-        createEvent(userId, EventType.REVIEW, EventOperation.ADD, reviewId);
-//        Event event = getBaseEvent(userId, reviewId);
-//        event.setEventType(EventType.REVIEW);
-//        event.setOperation(EventOperation.ADD);
-//
-//        eventStorage.create(event);
-    }
-    @Override
-    public void deleteReviewEvent(int userId, int reviewId) {
-        createEvent(userId, EventType.REVIEW, EventOperation.REMOVE, reviewId);
-//        Event event = getBaseEvent(userId, reviewId);
-//        event.setEventType(EventType.REVIEW);
-//        event.setOperation(EventOperation.REMOVE);
-//
-//        eventStorage.create(event);
-    }
-    @Override
-    public void updateReviewEvent(int userId, int reviewId) {
-        createEvent(userId, EventType.REVIEW, EventOperation.UPDATE, reviewId);
-//        Event event = getBaseEvent(userId, reviewId);
-//        event.setEventType(EventType.REVIEW);
-//        event.setOperation(EventOperation.UPDATE);
-//
-//        eventStorage.create(event);
-    }
 
-//    private Event getBaseEvent(int userId, int entityId) {
-//        Event event = new Event();
-//        event.setTimestamp(Instant.now().toEpochMilli());
-//        event.setUserId(userId);
-//        event.setEntityId(entityId);
-//
-//        return event;
-//    }
+    @Override
+    public void createEvent(int userId, EventType eventType, EventOperation eventOperation, int entityId){
+        Event event = Event.builder()
+                .timestamp(Instant.now().toEpochMilli())
+                .userId(userId)
+                .eventType(eventType)
+                .operation(eventOperation)
+                .entityId(entityId)
+                .build();
+
+         eventStorage.create(event);
+    }
 }
 

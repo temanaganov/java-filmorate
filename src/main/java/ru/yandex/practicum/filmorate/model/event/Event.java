@@ -1,13 +1,17 @@
 package ru.yandex.practicum.filmorate.model.event;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Value;
+import lombok.With;
 
-@Data
+@With
+@Value
+@Builder
 public class Event {
-    private int eventId;
-    private long timestamp;
-    private int userId;
-    private EventType eventType;
-    private EventOperation operation;
-    private int entityId;
+    int eventId;
+    long timestamp;
+    int userId;
+    EventType eventType;
+    EventOperation operation;
+    int entityId;
 }

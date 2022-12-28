@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface EventStorage {
     List<Event> getFeed(int userId);
-    Event create(Event event);
+    void create(Event event);
 }
