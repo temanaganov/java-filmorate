@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.model.mpa.Mpa;
-import ru.yandex.practicum.filmorate.storage.film.DbFilmStorage;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -75,15 +74,15 @@ public class DbFilmStorageTest {
     }
 
     private Film getFilm(int id) {
-        return new Film(
-                id,
-                "Test film",
-                "Test description",
-                LocalDate.EPOCH,
-                120,
-                new Mpa(1, "G"),
-                Collections.emptyList(),
-                Collections.emptyList()
-        );
+        return Film.builder()
+                .id(id)
+                .name("Test film")
+                .description("Test description")
+                .releaseDate(LocalDate.EPOCH)
+                .duration(120)
+                .mpa(new Mpa(1, "G"))
+                .genres(Collections.emptyList())
+                .directors(Collections.emptyList())
+                .build();
     }
 }

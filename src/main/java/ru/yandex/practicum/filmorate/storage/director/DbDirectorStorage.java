@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.storage.director;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -14,9 +13,16 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-@RequiredArgsConstructor
 public class DbDirectorStorage implements DirectorStorage {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
+
+    public DbDirectorStorage(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("director")
+                .usingGeneratedKeyColumns("director_id");
+    }
 
     @Override
     public List<Director> getAll() {
@@ -50,10 +56,6 @@ public class DbDirectorStorage implements DirectorStorage {
 
     @Override
     public Director create(Director director) {
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("director")
-                .usingGeneratedKeyColumns("director_id");
-
         Map<String, Object> directorColumns = new HashMap<>();
         directorColumns.put("name", director.getName());
 

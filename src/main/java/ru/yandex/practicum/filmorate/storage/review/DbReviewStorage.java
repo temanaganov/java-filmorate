@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.storage.review;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -14,9 +13,16 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-@RequiredArgsConstructor
 public class DbReviewStorage implements ReviewStorage {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
+
+    public DbReviewStorage(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("review")
+                .usingGeneratedKeyColumns("review_id");
+    }
 
     @Override
     public List<Review> getAll(Integer filmId, int count) {
@@ -24,7 +30,7 @@ public class DbReviewStorage implements ReviewStorage {
             return jdbcTemplate.query(ReviewQueries.GET_ALL, this::mapRowToReview, count);
         }
 
-        return jdbcTemplate.query(ReviewQueries.GET_ALL_BY_FILM_ID, this::mapRowToReview, filmId, count);
+        return jdbcTemplate.query(ReviewQueries.GET_BY_FILM_ID, this::mapRowToReview, filmId, count);
     }
 
     @Override
@@ -38,10 +44,6 @@ public class DbReviewStorage implements ReviewStorage {
 
     @Override
     public Review create(Review review) {
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("review")
-                .usingGeneratedKeyColumns("review_id");
-
         Map<String, Object> reviewColumns = new HashMap<>();
         reviewColumns.put("content", review.getContent());
         reviewColumns.put("is_positive", review.isPositive());
@@ -60,7 +62,6 @@ public class DbReviewStorage implements ReviewStorage {
                 ReviewQueries.UPDATE,
                 review.getContent(),
                 review.isPositive(),
-                review.getUseful(),
                 review.getReviewId()
         );
 
@@ -72,14 +73,24 @@ public class DbReviewStorage implements ReviewStorage {
         jdbcTemplate.update(ReviewQueries.DELETE, id);
     }
 
+    @Override
+    public void estimate(int id, int userId, boolean isLike) {
+        jdbcTemplate.update(ReviewQueries.LIKE, id, userId, isLike);
+    }
+
+    @Override
+    public void deleteEstimation(int id, int userId, boolean isLike) {
+        jdbcTemplate.update(ReviewQueries.DELETE_USER_LIKE, id, userId, isLike);
+    }
+
     private Review mapRowToReview(ResultSet resultSet, int i) throws SQLException {
-        return new Review(
-                resultSet.getInt("review_id"),
-                resultSet.getString("content"),
-                resultSet.getBoolean("is_positive"),
-                resultSet.getInt("user_id"),
-                resultSet.getInt("film_id"),
-                resultSet.getInt("useful")
-        );
+        return Review.builder()
+                .reviewId(resultSet.getInt("review_id"))
+                .content(resultSet.getString("content"))
+                .isPositive(resultSet.getBoolean("is_positive"))
+                .userId(resultSet.getInt("user_id"))
+                .filmId(resultSet.getInt("film_id"))
+                .useful(resultSet.getInt("useful"))
+                .build();
     }
 }

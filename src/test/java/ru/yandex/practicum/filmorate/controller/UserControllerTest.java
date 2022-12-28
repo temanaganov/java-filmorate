@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 import ru.yandex.practicum.filmorate.model.user.UserDto;
@@ -148,23 +147,23 @@ public class UserControllerTest {
     }
 
     private static User getUser(int id) {
-        return new User(
-                id,
-                "test@test.test",
-                "test_login",
-                "Test name",
-                LocalDate.EPOCH
-        );
+        return User.builder()
+                .id(id)
+                .email("test@test.test")
+                .login("test_login")
+                .name("Test name")
+                .birthday(LocalDate.EPOCH)
+                .build();
     }
 
     private static UserDto getUserDto(int id) {
-        return new UserDto(
-                id,
-                "test@test.test",
-                "test_login",
-                "Test name",
-                LocalDate.EPOCH
-        );
+        return UserDto.builder()
+                .id(id)
+                .email("test@test.test")
+                .login("test_login")
+                .name("Test name")
+                .birthday(LocalDate.EPOCH)
+                .build();
     }
 
     private static Stream<UserDto> userInvalidArgumentsProvider() {

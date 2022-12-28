@@ -8,8 +8,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.yandex.practicum.filmorate.exception.FieldError;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
 import ru.yandex.practicum.filmorate.model.film.FilmDto;
 import ru.yandex.practicum.filmorate.model.mpa.Mpa;
@@ -88,15 +86,15 @@ public class ExceptionsHandlerTest {
     }
 
     private static FilmDto getFilmDto(int id) {
-        return new FilmDto(
-                id,
-                "Test film",
-                "Test description",
-                LocalDate.parse("2000-01-01"),
-                120,
-                new Mpa(1, "G"),
-                Collections.emptyList(),
-                Collections.emptyList()
-        );
+        return FilmDto.builder()
+                .id(id)
+                .name("Test film")
+                .description("Test description")
+                .releaseDate(LocalDate.parse("2000-01-01"))
+                .duration(120)
+                .mpa(new Mpa(1, "G"))
+                .genres(Collections.emptyList())
+                .directors(Collections.emptyList())
+                .build();
     }
 }

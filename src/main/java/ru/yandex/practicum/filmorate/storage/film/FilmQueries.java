@@ -5,19 +5,19 @@ public class FilmQueries {
             "FROM film AS f " +
             "JOIN mpa AS m ON f.mpa_id = m.mpa_id";
 
-    static String GET_ALL_BY_DIRECTOR_ID(String orderBy) {
-        boolean isOrderByIsYearOrLikes = orderBy.equals("year") || orderBy.equals("likes");
-        StringBuilder sb = new StringBuilder();
-        sb.append("SELECT *, COUNT(*) AS likes ")
-                .append("FROM film AS f ")
-                .append("JOIN film_director AS fd ON f.film_id = fd.film_id ")
-                .append("JOIN mpa AS m ON f.mpa_id = m.mpa_id ")
-                .append("LEFT JOIN likes AS l ON f.film_id = l.film_id ")
-                .append("WHERE fd.director_id = ? ")
-                .append("GROUP BY f.film_id ");
+    static String getAllByDirectorId(String sortBy) {
+        boolean isOrderByIsYearOrLikes = sortBy.equals("year") || sortBy.equals("likes");
+        StringBuilder sb = new StringBuilder("SELECT *, COUNT(*) AS likes " +
+                "FROM film AS f " +
+                "JOIN film_director AS fd ON f.film_id = fd.film_id " +
+                "JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
+                "LEFT JOIN likes AS l ON f.film_id = l.film_id " +
+                "WHERE fd.director_id = ? " +
+                "GROUP BY f.film_id "
+        );
 
         if (isOrderByIsYearOrLikes) {
-            sb.append("ORDER BY ").append(orderBy.equals("year") ? "f.release_date" : "likes");
+            sb.append("ORDER BY ").append(sortBy.equals("year") ? "f.release_date" : "likes");
         }
 
         return sb.toString();
@@ -66,7 +66,7 @@ public class FilmQueries {
 
     static final String DELETE = "DELETE FROM film WHERE film_id = ?";
 
-    static String GET_POPULAR_FILMS(Integer genreId, Integer year) {
+    static String getPopularFilms(Integer genreId, Integer year) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT *, ")
                 .append("COUNT(l.film_id) AS likes ")

@@ -7,7 +7,7 @@ import java.util.List;
 public interface FilmStorage {
     List<Film> search(String query, String by);
     List<Film> getAll();
-    List<Film> getAllFilmsByDirectorId(int directorId, String sortBy);
+    List<Film> getFilmsByDirectorId(int directorId, String sortBy);
     Film getById(int id);
     Film create(Film film);
     Film update(int id, Film film);
