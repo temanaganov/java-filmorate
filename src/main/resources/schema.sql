@@ -17,6 +17,11 @@ CREATE TABLE IF NOT EXISTS genre (
     name VARCHAR(30) UNIQUE NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS director (
+    director_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS film (
     film_id INTEGER AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -34,6 +39,13 @@ CREATE TABLE IF NOT EXISTS film_genre (
     FOREIGN KEY (genre_id) REFERENCES genre (genre_id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS film_director (
+    film_id INTEGER NOT NULL,
+    director_id INTEGER NOT NULL,
+    FOREIGN KEY (film_id) REFERENCES film (film_id) ON DELETE CASCADE,
+    FOREIGN KEY (director_id) REFERENCES director (director_id) ON DELETE CASCADE
+);
+
 -- The table name is plural because like is a reserved word
 CREATE TABLE IF NOT EXISTS likes (
     film_id INTEGER NOT NULL,
@@ -42,9 +54,37 @@ CREATE TABLE IF NOT EXISTS likes (
     FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS friendship(
+CREATE TABLE IF NOT EXISTS friendship (
     user_id   INTEGER NOT NULL,
     friend_id INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
     FOREIGN KEY (friend_id) REFERENCES users (user_id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS event (
+    event_id   INTEGER PRIMARY KEY AUTO_INCREMENT,
+    timestamp  LONG NOT NULL,
+    user_id    INTEGER NOT NULL,
+    event_type ENUM('LIKE', 'REVIEW', 'FRIEND') NOT NULL,
+    operation  ENUM('REMOVE', 'ADD', 'UPDATE')  NOT NULL,
+    entity_id  INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS review (
+    review_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    content VARCHAR(256) NOT NULL,
+    is_positive BOOLEAN NOT NULL,
+    user_id INTEGER NOT NULL,
+    film_id INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
+    FOREIGN KEY (film_id) REFERENCES film (film_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS review_user (
+    review_id INTEGER NOT NULL,
+    user_id   INTEGER NOT NULL,
+    is_like   BOOLEAN NOT NULL,
+    FOREIGN KEY (review_id) REFERENCES review (review_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
+)
