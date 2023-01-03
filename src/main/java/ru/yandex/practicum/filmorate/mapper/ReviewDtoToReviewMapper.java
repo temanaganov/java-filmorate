@@ -1,8 +1,8 @@
 package ru.yandex.practicum.filmorate.mapper;
 
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.model.review.ReviewDto;
-import ru.yandex.practicum.filmorate.model.review.Review;
+import ru.yandex.practicum.filmorate.dto.ReviewDto;
+import ru.yandex.practicum.filmorate.model.Review;
 
 @Component
 public class ReviewDtoToReviewMapper implements Mapper<ReviewDto, Review> {

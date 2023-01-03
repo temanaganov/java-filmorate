@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.service.event;
+package ru.yandex.practicum.filmorate.service;
 
 import ru.yandex.practicum.filmorate.model.event.Event;
 import ru.yandex.practicum.filmorate.model.event.EventOperation;

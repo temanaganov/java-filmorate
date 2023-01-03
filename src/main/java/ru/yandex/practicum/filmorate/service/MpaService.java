@@ -1,6 +1,6 @@
-package ru.yandex.practicum.filmorate.service.mpa;
+package ru.yandex.practicum.filmorate.service;
 
-import ru.yandex.practicum.filmorate.model.mpa.Mpa;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.util.List;
 

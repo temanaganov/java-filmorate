@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import ru.yandex.practicum.filmorate.model.film.Film;
-import ru.yandex.practicum.filmorate.model.mpa.Mpa;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -48,20 +48,20 @@ public class DbFilmStorageTest {
 
     @Test
     void update_shouldReturnNull_IfFilmIsNotExists() {
-        assertThat(filmStorage.update(1, getFilm(1))).isNull();
+        assertThat(filmStorage.update(getFilm(1))).isNull();
     }
 
     @Test
     void update_shouldUpdateFilm() {
         Film film = filmStorage.create(getFilm(1));
 
-        assertThat(filmStorage.update(film.getId(), film.withName("new name")))
+        assertThat(filmStorage.update(film.withName("new name")))
                 .hasFieldOrPropertyWithValue("name", "new name");
     }
 
     @Test
     void delete_shouldReturnNull_IfFilmIsNotExists() {
-        assertThat(filmStorage.update(1, getFilm(1))).isNull();
+        assertThat(filmStorage.update(getFilm(1))).isNull();
     }
 
     @Test

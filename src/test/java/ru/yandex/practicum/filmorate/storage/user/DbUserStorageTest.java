@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import ru.yandex.practicum.filmorate.model.user.User;
+import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 
@@ -58,20 +58,20 @@ public class DbUserStorageTest {
 
     @Test
     void update_shouldReturnNull_IfUserIsNotExists() {
-        assertThat(userStorage.update(1, getUser(1, "test"))).isNull();
+        assertThat(userStorage.update(getUser(1, "test"))).isNull();
     }
 
     @Test
     void update_shouldUpdateUser() {
         User user = userStorage.create(getUser(0, "test"));
 
-        assertThat(userStorage.update(user.getId(), user.withName("new name")))
+        assertThat(userStorage.update(user.withName("new name")))
                 .hasFieldOrPropertyWithValue("name", "new name");
     }
 
     @Test
     void delete_shouldReturnNull_IfUserIsNotExists() {
-        assertThat(userStorage.update(1, getUser(1, "test"))).isNull();
+        assertThat(userStorage.update(getUser(1, "test"))).isNull();
     }
 
     @Test

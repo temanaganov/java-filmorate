@@ -6,12 +6,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.impl.FilmServiceImpl;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.model.film.FilmDto;
+import ru.yandex.practicum.filmorate.dto.FilmDto;
 import ru.yandex.practicum.filmorate.mapper.FilmDtoToFilmMapper;
 import ru.yandex.practicum.filmorate.guard.FilmGuard;
-import ru.yandex.practicum.filmorate.model.mpa.Mpa;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.guard.MpaGuard;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -102,7 +103,7 @@ public class FilmServiceTest {
         when(filmGuard.checkIfExists(id)).thenReturn(oldFilm);
         when(mpaGuard.checkIfExists(dto.getMpa().getId())).thenReturn(dto.getMpa());
         when(filmDtoToFilmMapper.mapFrom(dto)).thenReturn(newFilm);
-        when(filmStorage.update(id, newFilm)).thenReturn(newFilm);
+        when(filmStorage.update(newFilm)).thenReturn(newFilm);
 
         assertThat(filmService.update(dto)).isEqualTo(newFilm);
     }

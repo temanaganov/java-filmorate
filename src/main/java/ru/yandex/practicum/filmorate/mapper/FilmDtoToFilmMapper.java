@@ -1,8 +1,8 @@
 package ru.yandex.practicum.filmorate.mapper;
 
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.model.film.FilmDto;
-import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.dto.FilmDto;
+import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.Collections;
 import java.util.Optional;

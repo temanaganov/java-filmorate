@@ -1,7 +1,7 @@
-package ru.yandex.practicum.filmorate.service.director;
+package ru.yandex.practicum.filmorate.service;
 
-import ru.yandex.practicum.filmorate.model.director.DirectorDto;
-import ru.yandex.practicum.filmorate.model.director.Director;
+import ru.yandex.practicum.filmorate.dto.DirectorDto;
+import ru.yandex.practicum.filmorate.model.Director;
 
 import java.util.List;
 

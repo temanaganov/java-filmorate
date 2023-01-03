@@ -1,7 +1,7 @@
-package ru.yandex.practicum.filmorate.service.review;
+package ru.yandex.practicum.filmorate.service;
 
-import ru.yandex.practicum.filmorate.model.review.ReviewDto;
-import ru.yandex.practicum.filmorate.model.review.Review;
+import ru.yandex.practicum.filmorate.dto.ReviewDto;
+import ru.yandex.practicum.filmorate.model.Review;
 
 import java.util.List;
 

@@ -6,9 +6,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.model.user.User;
+import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.impl.UserServiceImpl;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
-import ru.yandex.practicum.filmorate.model.user.UserDto;
+import ru.yandex.practicum.filmorate.dto.UserDto;
 import ru.yandex.practicum.filmorate.mapper.UserDtoToUserMapper;
 import ru.yandex.practicum.filmorate.guard.UserGuard;
 
@@ -95,7 +96,7 @@ public class UserServiceTest {
 
         when(userGuard.checkIfExists(id)).thenReturn(oldUser);
         when(userDtoToUserMapper.mapFrom(dto)).thenReturn(newUser);
-        when(userStorage.update(id, newUser)).thenReturn(newUser);
+        when(userStorage.update(newUser)).thenReturn(newUser);
 
         assertThat(userService.update(dto)).isEqualTo(newUser);
     }

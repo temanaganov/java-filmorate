@@ -1,10 +1,11 @@
-package ru.yandex.practicum.filmorate.service.director;
+package ru.yandex.practicum.filmorate.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.mapper.Mapper;
-import ru.yandex.practicum.filmorate.model.director.DirectorDto;
-import ru.yandex.practicum.filmorate.model.director.Director;
+import ru.yandex.practicum.filmorate.dto.DirectorDto;
+import ru.yandex.practicum.filmorate.model.Director;
+import ru.yandex.practicum.filmorate.service.DirectorService;
 import ru.yandex.practicum.filmorate.storage.director.DirectorStorage;
 import ru.yandex.practicum.filmorate.guard.DirectorGuard;
 
