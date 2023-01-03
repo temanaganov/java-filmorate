@@ -1,10 +1,12 @@
-package ru.yandex.practicum.filmorate.storage.director;
+package ru.yandex.practicum.filmorate.repository.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Director;
+import ru.yandex.practicum.filmorate.repository.DirectorRepository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,16 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class DbDirectorStorage implements DirectorStorage {
+@RequiredArgsConstructor
+public class DirectorRepositoryImpl implements DirectorRepository {
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
-
-    public DbDirectorStorage(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("director")
-                .usingGeneratedKeyColumns("director_id");
-    }
 
     @Override
     public List<Director> getAll() {
@@ -56,6 +51,9 @@ public class DbDirectorStorage implements DirectorStorage {
 
     @Override
     public Director create(Director director) {
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("director")
+                .usingGeneratedKeyColumns("director_id");
         Map<String, Object> directorColumns = new HashMap<>();
         directorColumns.put("name", director.getName());
 

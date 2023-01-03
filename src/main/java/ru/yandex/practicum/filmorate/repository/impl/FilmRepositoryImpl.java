@@ -1,15 +1,17 @@
-package ru.yandex.practicum.filmorate.storage.film;
+package ru.yandex.practicum.filmorate.repository.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Director;
-import ru.yandex.practicum.filmorate.storage.director.DirectorStorage;
+import ru.yandex.practicum.filmorate.repository.DirectorRepository;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
+import ru.yandex.practicum.filmorate.repository.FilmRepository;
+import ru.yandex.practicum.filmorate.repository.GenreRepository;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.sql.PreparedStatement;
@@ -21,20 +23,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
-public class DbFilmStorage implements FilmStorage {
+@RequiredArgsConstructor
+public class FilmRepositoryImpl implements FilmRepository {
     private final JdbcTemplate jdbcTemplate;
-    private final GenreStorage genreStorage;
-    private final DirectorStorage directorStorage;
-    private final SimpleJdbcInsert simpleJdbcInsert;
-
-    public DbFilmStorage(JdbcTemplate jdbcTemplate, GenreStorage genreStorage, DirectorStorage directorStorage) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.genreStorage = genreStorage;
-        this.directorStorage = directorStorage;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("film")
-                .usingGeneratedKeyColumns("film_id");
-    }
+    private final GenreRepository genreRepository;
+    private final DirectorRepository directorRepository;
 
     @Override
     public List<Film> getAll() {
@@ -57,6 +50,10 @@ public class DbFilmStorage implements FilmStorage {
 
     @Override
     public Film create(Film film) {
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("film")
+                .usingGeneratedKeyColumns("film_id");
+
         Map<String, Object> filmColumns = new HashMap<>();
         filmColumns.put("name", film.getName());
         filmColumns.put("description", film.getDescription());
@@ -196,8 +193,8 @@ public class DbFilmStorage implements FilmStorage {
                 .releaseDate(resultSet.getDate("release_date").toLocalDate())
                 .duration(resultSet.getInt("duration"))
                 .mpa(new Mpa(resultSet.getInt("mpa_id"), resultSet.getString("mpa.name")))
-                .genres(genreStorage.getAllByFilmId(resultSet.getInt("film_id")))
-                .directors(directorStorage.getAllByFilmId(resultSet.getInt("film_id")))
+                .genres(genreRepository.getAllByFilmId(resultSet.getInt("film_id")))
+                .directors(directorRepository.getAllByFilmId(resultSet.getInt("film_id")))
                 .build();
     }
 }

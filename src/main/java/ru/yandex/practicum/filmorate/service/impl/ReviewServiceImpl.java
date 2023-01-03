@@ -10,7 +10,7 @@ import ru.yandex.practicum.filmorate.guard.FilmGuard;
 import ru.yandex.practicum.filmorate.dto.ReviewDto;
 import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.service.ReviewService;
-import ru.yandex.practicum.filmorate.storage.review.ReviewStorage;
+import ru.yandex.practicum.filmorate.repository.ReviewRepository;
 import ru.yandex.practicum.filmorate.guard.ReviewGuard;
 import ru.yandex.practicum.filmorate.guard.UserGuard;
 
@@ -19,7 +19,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
-    private final ReviewStorage reviewStorage;
+    private final ReviewRepository reviewRepository;
     private final Mapper<ReviewDto, Review> reviewDtoToReviewMapper;
     private final EventService eventService;
     private final ReviewGuard reviewGuard;
@@ -28,7 +28,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public List<Review> getAll(Integer filmId, int count) {
-        return reviewStorage.getAll(filmId, count);
+        return reviewRepository.getAll(filmId, count);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ReviewServiceImpl implements ReviewService {
         userGuard.checkIfExists(review.getUserId());
         filmGuard.checkIfExists(review.getFilmId());
 
-        Review eventReview = reviewStorage.create(review);
+        Review eventReview = reviewRepository.create(review);
         eventService.createEvent(eventReview.getUserId(), EventType.REVIEW, EventOperation.ADD, eventReview.getReviewId());
 
         return eventReview;
@@ -56,7 +56,7 @@ public class ReviewServiceImpl implements ReviewService {
         userGuard.checkIfExists(review.getUserId());
         filmGuard.checkIfExists(review.getFilmId());
 
-        Review eventReview = reviewStorage.update(review);
+        Review eventReview = reviewRepository.update(review);
 
         eventService.createEvent(eventReview.getUserId(), EventType.REVIEW, EventOperation.UPDATE, eventReview.getReviewId());
 
@@ -67,7 +67,7 @@ public class ReviewServiceImpl implements ReviewService {
     public Review delete(int id) {
         Review review = reviewGuard.checkIfExists(id);
         eventService.createEvent(review.getUserId(), EventType.REVIEW, EventOperation.REMOVE, review.getReviewId());
-        reviewStorage.delete(id);
+        reviewRepository.delete(id);
 
         return review;
     }
@@ -77,9 +77,9 @@ public class ReviewServiceImpl implements ReviewService {
         reviewGuard.checkIfExists(id);
         userGuard.checkIfExists(userId);
 
-        reviewStorage.deleteEstimation(id, userId, true);
-        reviewStorage.deleteEstimation(id, userId, false);
-        reviewStorage.estimate(id, userId, true);
+        reviewRepository.deleteEstimation(id, userId, true);
+        reviewRepository.deleteEstimation(id, userId, false);
+        reviewRepository.estimate(id, userId, true);
     }
 
     @Override
@@ -87,9 +87,9 @@ public class ReviewServiceImpl implements ReviewService {
         reviewGuard.checkIfExists(id);
         userGuard.checkIfExists(userId);
 
-        reviewStorage.deleteEstimation(id, userId, true);
-        reviewStorage.deleteEstimation(id, userId, false);
-        reviewStorage.estimate(id, userId, false);
+        reviewRepository.deleteEstimation(id, userId, true);
+        reviewRepository.deleteEstimation(id, userId, false);
+        reviewRepository.estimate(id, userId, false);
     }
 
     @Override
@@ -97,8 +97,8 @@ public class ReviewServiceImpl implements ReviewService {
         reviewGuard.checkIfExists(id);
         userGuard.checkIfExists(userId);
 
-        reviewStorage.deleteEstimation(id, userId, true);
-        reviewStorage.estimate(id, userId, true);
+        reviewRepository.deleteEstimation(id, userId, true);
+        reviewRepository.estimate(id, userId, true);
     }
 
     @Override
@@ -106,7 +106,7 @@ public class ReviewServiceImpl implements ReviewService {
         reviewGuard.checkIfExists(id);
         userGuard.checkIfExists(userId);
 
-        reviewStorage.deleteEstimation(id, userId, false);
-        reviewStorage.estimate(id, userId, false);
+        reviewRepository.deleteEstimation(id, userId, false);
+        reviewRepository.estimate(id, userId, false);
     }
 }

@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.film;
+package ru.yandex.practicum.filmorate.repository.impl;
 
 public class FilmQueries {
     static final String GET_ALL = "SELECT * " +

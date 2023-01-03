@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.service.user;
+package ru.yandex.practicum.filmorate.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,7 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.impl.UserServiceImpl;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.repository.UserRepository;
 import ru.yandex.practicum.filmorate.dto.UserDto;
 import ru.yandex.practicum.filmorate.mapper.UserDtoToUserMapper;
 import ru.yandex.practicum.filmorate.guard.UserGuard;
@@ -25,7 +25,7 @@ import java.util.List;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
     @Mock
-    private UserStorage userStorage;
+    private UserRepository userRepository;
 
     @Mock
     private UserGuard userGuard;
@@ -38,7 +38,7 @@ public class UserServiceTest {
 
     @Test
     void getAll_shouldReturnEmptyList_ifStorageIsEmpty() {
-        when(userStorage.getAll()).thenReturn(Collections.emptyList());
+        when(userRepository.getAll()).thenReturn(Collections.emptyList());
         assertThat(userService.getAll()).isEqualTo(Collections.emptyList());
     }
 
@@ -46,7 +46,7 @@ public class UserServiceTest {
     void getAll_shouldReturnThreeUsers_ifStorageHasThreeUsers() {
         List<User> users = List.of(getUser(1), getUser(2), getUser(3));
 
-        when(userStorage.getAll()).thenReturn(users);
+        when(userRepository.getAll()).thenReturn(users);
 
         assertThat(userService.getAll()).isEqualTo(users);
     }
@@ -80,10 +80,10 @@ public class UserServiceTest {
         User resultUser = getUser(1);
 
         when(userDtoToUserMapper.mapFrom(dto)).thenReturn(user);
-        when(userStorage.create(user)).thenReturn(resultUser);
+        when(userRepository.create(user)).thenReturn(resultUser);
 
         assertThat(userService.create(dto)).isEqualTo(resultUser);
-        verify(userStorage).create(user);
+        verify(userRepository).create(user);
     }
 
     @Test()
@@ -96,7 +96,7 @@ public class UserServiceTest {
 
         when(userGuard.checkIfExists(id)).thenReturn(oldUser);
         when(userDtoToUserMapper.mapFrom(dto)).thenReturn(newUser);
-        when(userStorage.update(newUser)).thenReturn(newUser);
+        when(userRepository.update(newUser)).thenReturn(newUser);
 
         assertThat(userService.update(dto)).isEqualTo(newUser);
     }

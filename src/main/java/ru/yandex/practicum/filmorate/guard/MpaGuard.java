@@ -3,12 +3,12 @@ package ru.yandex.practicum.filmorate.guard;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Mpa;
-import ru.yandex.practicum.filmorate.storage.mpa.MpaStorage;
+import ru.yandex.practicum.filmorate.repository.MpaRepository;
 
 @Component
 @RequiredArgsConstructor
 public class MpaGuard extends Guard<Mpa> {
-    private final MpaStorage mpaStorage;
+    private final MpaRepository mpaRepository;
 
     @Override
     protected String getGuardClass() {
@@ -17,6 +17,6 @@ public class MpaGuard extends Guard<Mpa> {
 
     @Override
     protected Mpa checkMethod(int id) {
-        return mpaStorage.getById(id);
+        return mpaRepository.getById(id);
     }
 }

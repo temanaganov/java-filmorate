@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.film;
+package ru.yandex.practicum.filmorate.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -18,59 +18,59 @@ import static org.assertj.core.api.Assertions.*;
 @AutoConfigureTestDatabase
 @Sql(statements = "DELETE FROM film")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class DbFilmStorageTest {
-    private final DbFilmStorage filmStorage;
+public class FilmRepositoryTest {
+    private final FilmRepository filmRepository;
 
     @Test
     void getAll_shouldReturnEmptyList() {
-        assertThat(filmStorage.getAll()).isEmpty();
+        assertThat(filmRepository.getAll()).isEmpty();
     }
 
     @Test
     void getAll_shouldReturnListOfTwoFilms() {
-        filmStorage.create(getFilm(1));
-        filmStorage.create(getFilm(2));
+        filmRepository.create(getFilm(1));
+        filmRepository.create(getFilm(2));
 
-        assertThat(filmStorage.getAll()).hasSize(2);
+        assertThat(filmRepository.getAll()).hasSize(2);
     }
 
     @Test
     void getById_shouldReturnNull_IfFilmIsNotExists() {
-        assertThat(filmStorage.getById(1)).isNull();
+        assertThat(filmRepository.getById(1)).isNull();
     }
 
     @Test
     void getById_shouldReturnFilm() {
-        Film film = filmStorage.create(getFilm(1));
+        Film film = filmRepository.create(getFilm(1));
 
-        assertThat(filmStorage.getById(film.getId())).isEqualTo(getFilm(film.getId()));
+        assertThat(filmRepository.getById(film.getId())).isEqualTo(getFilm(film.getId()));
     }
 
     @Test
     void update_shouldReturnNull_IfFilmIsNotExists() {
-        assertThat(filmStorage.update(getFilm(1))).isNull();
+        assertThat(filmRepository.update(getFilm(1))).isNull();
     }
 
     @Test
     void update_shouldUpdateFilm() {
-        Film film = filmStorage.create(getFilm(1));
+        Film film = filmRepository.create(getFilm(1));
 
-        assertThat(filmStorage.update(film.withName("new name")))
+        assertThat(filmRepository.update(film.withName("new name")))
                 .hasFieldOrPropertyWithValue("name", "new name");
     }
 
     @Test
     void delete_shouldReturnNull_IfFilmIsNotExists() {
-        assertThat(filmStorage.update(getFilm(1))).isNull();
+        assertThat(filmRepository.update(getFilm(1))).isNull();
     }
 
     @Test
     void delete_shouldDeleteFilm() {
-        Film film = filmStorage.create(getFilm(1));
+        Film film = filmRepository.create(getFilm(1));
 
-        assertThat(filmStorage.getAll()).hasSize(1);
-        filmStorage.delete(film.getId());
-        assertThat(filmStorage.getAll()).isEmpty();
+        assertThat(filmRepository.getAll()).hasSize(1);
+        filmRepository.delete(film.getId());
+        assertThat(filmRepository.getAll()).isEmpty();
     }
 
     private Film getFilm(int id) {

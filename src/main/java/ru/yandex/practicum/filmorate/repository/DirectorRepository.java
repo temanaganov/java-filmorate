@@ -1,10 +1,10 @@
-package ru.yandex.practicum.filmorate.storage.director;
+package ru.yandex.practicum.filmorate.repository;
 
 import ru.yandex.practicum.filmorate.model.Director;
 
 import java.util.List;
 
-public interface DirectorStorage {
+public interface DirectorRepository {
     List<Director> getAll();
     List<Director> getAllByFilmId(int filmId);
     Director getById(int id);

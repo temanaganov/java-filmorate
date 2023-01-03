@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.review;
+package ru.yandex.practicum.filmorate.repository.impl;
 
 public class ReviewQueries {
     static final String GET_ALL = "SELECT r.*, " +

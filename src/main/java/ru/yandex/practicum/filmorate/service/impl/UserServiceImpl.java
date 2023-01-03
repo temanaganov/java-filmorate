@@ -10,7 +10,7 @@ import ru.yandex.practicum.filmorate.service.EventService;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.repository.UserRepository;
 import ru.yandex.practicum.filmorate.dto.UserDto;
 import ru.yandex.practicum.filmorate.guard.UserGuard;
 
@@ -19,14 +19,14 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserStorage userStorage;
+    private final UserRepository userRepository;
     private final Mapper<UserDto, User> userDtoToUserMapper;
     private final EventService eventService;
     private final UserGuard userGuard;
 
     @Override
     public List<User> getAll() {
-        return userStorage.getAll();
+        return userRepository.getAll();
     }
 
     @Override
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
             throw new FieldValidationException("email", "User with this email is already exists");
         }
 
-        return userStorage.create(newUser);
+        return userRepository.create(newUser);
     }
 
     @Override
@@ -54,13 +54,13 @@ public class UserServiceImpl implements UserService {
             throw new FieldValidationException("email", "User with this email is already exists");
         }
 
-        return userStorage.update(user);
+        return userRepository.update(user);
     }
 
     @Override
     public User delete(int id) {
         User user = userGuard.checkIfExists(id);
-        userStorage.delete(id);
+        userRepository.delete(id);
 
         return user;
     }
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
         userGuard.checkIfExists(userId);
         userGuard.checkIfExists(friendId);
 
-        userStorage.addFriend(userId, friendId);
+        userRepository.addFriend(userId, friendId);
         eventService.createEvent(userId, EventType.FRIEND, EventOperation.ADD, friendId);
     }
 
@@ -84,14 +84,14 @@ public class UserServiceImpl implements UserService {
         userGuard.checkIfExists(friendId);
 
         eventService.createEvent(userId, EventType.FRIEND, EventOperation.REMOVE, friendId);
-        userStorage.deleteFriend(userId, friendId);
+        userRepository.deleteFriend(userId, friendId);
     }
 
     @Override
     public List<User> getFriends(int id) {
         userGuard.checkIfExists(id);
 
-        return userStorage.getFriends(id);
+        return userRepository.getFriends(id);
     }
 
     @Override
@@ -99,16 +99,16 @@ public class UserServiceImpl implements UserService {
         userGuard.checkIfExists(userId);
         userGuard.checkIfExists(otherUserId);
 
-        return userStorage.getCommonFriends(userId, otherUserId);
+        return userRepository.getCommonFriends(userId, otherUserId);
     }
 
     public List<Film> getRecommendations(int userId) {
         userGuard.checkIfExists(userId);
 
-        return userStorage.getRecommendations(userId);
+        return userRepository.getRecommendations(userId);
     }
 
     private boolean emailIsBusy(String email) {
-        return userStorage.getByEmail(email) != null;
+        return userRepository.getByEmail(email) != null;
     }
 }

@@ -1,10 +1,10 @@
-package ru.yandex.practicum.filmorate.storage.review;
+package ru.yandex.practicum.filmorate.repository;
 
 import ru.yandex.practicum.filmorate.model.Review;
 
 import java.util.List;
 
-public interface ReviewStorage {
+public interface ReviewRepository {
     List<Review> getAll(Integer filmId, int count);
     Review getById(int id);
     Review create(Review review);

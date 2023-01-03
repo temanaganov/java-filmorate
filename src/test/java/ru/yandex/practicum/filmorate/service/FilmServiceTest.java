@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.service.film;
+package ru.yandex.practicum.filmorate.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,7 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.impl.FilmServiceImpl;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.repository.FilmRepository;
 import ru.yandex.practicum.filmorate.dto.FilmDto;
 import ru.yandex.practicum.filmorate.mapper.FilmDtoToFilmMapper;
 import ru.yandex.practicum.filmorate.guard.FilmGuard;
@@ -27,7 +27,7 @@ import java.util.List;
 @ExtendWith(MockitoExtension.class)
 public class FilmServiceTest {
     @Mock
-    private FilmStorage filmStorage;
+    private FilmRepository filmRepository;
 
     @Mock
     FilmGuard filmGuard;
@@ -43,7 +43,7 @@ public class FilmServiceTest {
 
     @Test
     void getAll_shouldReturnEmptyList_ifStorageIsEmpty() {
-        when(filmStorage.getAll()).thenReturn(Collections.emptyList());
+        when(filmRepository.getAll()).thenReturn(Collections.emptyList());
         assertThat(filmService.getAll()).isEqualTo(Collections.emptyList());
     }
 
@@ -51,7 +51,7 @@ public class FilmServiceTest {
     void getAll_shouldReturnThreeFilms_ifStorageHasThreeFilms() {
         List<Film> films = List.of(getFilm(1), getFilm(2), getFilm(3));
 
-        when(filmStorage.getAll()).thenReturn(films);
+        when(filmRepository.getAll()).thenReturn(films);
 
         assertThat(filmService.getAll()).isEqualTo(films);
     }
@@ -86,10 +86,10 @@ public class FilmServiceTest {
 
         when(filmDtoToFilmMapper.mapFrom(dto)).thenReturn(film);
         when(mpaGuard.checkIfExists(dto.getMpa().getId())).thenReturn(dto.getMpa());
-        when(filmStorage.create(film)).thenReturn(resultFilm);
+        when(filmRepository.create(film)).thenReturn(resultFilm);
 
         assertThat(filmService.create(dto)).isEqualTo(resultFilm);
-        verify(filmStorage).create(film);
+        verify(filmRepository).create(film);
     }
 
     @Test()
@@ -103,7 +103,7 @@ public class FilmServiceTest {
         when(filmGuard.checkIfExists(id)).thenReturn(oldFilm);
         when(mpaGuard.checkIfExists(dto.getMpa().getId())).thenReturn(dto.getMpa());
         when(filmDtoToFilmMapper.mapFrom(dto)).thenReturn(newFilm);
-        when(filmStorage.update(newFilm)).thenReturn(newFilm);
+        when(filmRepository.update(newFilm)).thenReturn(newFilm);
 
         assertThat(filmService.update(dto)).isEqualTo(newFilm);
     }

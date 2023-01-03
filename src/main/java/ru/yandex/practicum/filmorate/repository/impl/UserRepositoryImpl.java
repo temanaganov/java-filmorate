@@ -1,15 +1,16 @@
-package ru.yandex.practicum.filmorate.storage.user;
+package ru.yandex.practicum.filmorate.repository.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.storage.director.DirectorStorage;
+import ru.yandex.practicum.filmorate.repository.DirectorRepository;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
+import ru.yandex.practicum.filmorate.repository.GenreRepository;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.repository.UserRepository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,10 +18,10 @@ import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
-public class DbUserStorage implements UserStorage {
+public class UserRepositoryImpl implements UserRepository {
     private final JdbcTemplate jdbcTemplate;
-    private final GenreStorage genreStorage;
-    private final DirectorStorage directorStorage;
+    private final GenreRepository genreRepository;
+    private final DirectorRepository directorRepository;
 
     @Override
     public List<User> getAll() {
@@ -145,8 +146,8 @@ public class DbUserStorage implements UserStorage {
                 .releaseDate(resultSet.getDate("release_date").toLocalDate())
                 .duration(resultSet.getInt("duration"))
                 .mpa(new Mpa(resultSet.getInt("mpa_id"), resultSet.getString("mpa.name")))
-                .genres(genreStorage.getAllByFilmId(resultSet.getInt("film_id")))
-                .directors(directorStorage.getAllByFilmId(resultSet.getInt("film_id")))
+                .genres(genreRepository.getAllByFilmId(resultSet.getInt("film_id")))
+                .directors(directorRepository.getAllByFilmId(resultSet.getInt("film_id")))
                 .build();
     }
 }

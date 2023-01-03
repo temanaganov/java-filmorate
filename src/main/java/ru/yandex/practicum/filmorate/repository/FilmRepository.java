@@ -1,10 +1,10 @@
-package ru.yandex.practicum.filmorate.storage.film;
+package ru.yandex.practicum.filmorate.repository;
 
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.List;
 
-public interface FilmStorage {
+public interface FilmRepository {
     List<Film> search(String query, String by);
     List<Film> getAll();
     List<Film> getFilmsByDirectorId(int directorId, String sortBy);

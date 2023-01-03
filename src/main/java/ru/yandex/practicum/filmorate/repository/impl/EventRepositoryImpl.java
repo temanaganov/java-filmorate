@@ -1,11 +1,13 @@
-package ru.yandex.practicum.filmorate.storage.event;
+package ru.yandex.practicum.filmorate.repository.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.event.Event;
 import ru.yandex.practicum.filmorate.model.event.EventOperation;
 import ru.yandex.practicum.filmorate.model.event.EventType;
+import ru.yandex.practicum.filmorate.repository.EventRepository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,16 +16,9 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class DbEventStorage implements EventStorage {
+@RequiredArgsConstructor
+public class EventRepositoryImpl implements EventRepository {
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
-
-    public DbEventStorage(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("event")
-                .usingGeneratedKeyColumns("event_id");
-    }
 
     @Override
     public List<Event> getFeed(int userId) {
@@ -34,6 +29,10 @@ public class DbEventStorage implements EventStorage {
 
     @Override
     public void create(Event event) {
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("event")
+                .usingGeneratedKeyColumns("event_id");
+
         Map<String, Object> values = new HashMap<>();
         values.put("timestamp", event.getTimestamp());
         values.put("user_id", event.getUserId());

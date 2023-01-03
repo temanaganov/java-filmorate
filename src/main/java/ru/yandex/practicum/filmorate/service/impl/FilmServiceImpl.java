@@ -9,7 +9,7 @@ import ru.yandex.practicum.filmorate.service.EventService;
 import ru.yandex.practicum.filmorate.guard.DirectorGuard;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.repository.FilmRepository;
 import ru.yandex.practicum.filmorate.dto.FilmDto;
 import ru.yandex.practicum.filmorate.guard.FilmGuard;
 import ru.yandex.practicum.filmorate.guard.GenreGuard;
@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class FilmServiceImpl implements FilmService {
-    private final FilmStorage filmStorage;
+    private final FilmRepository filmRepository;
     private final Mapper<FilmDto, Film> filmDtoToFilmMapper;
     private final EventService eventService;
     private final FilmGuard filmGuard;
@@ -32,19 +32,19 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public List<Film> search(String query, String by) {
-        return filmStorage.search(query, by);
+        return filmRepository.search(query, by);
     }
 
     @Override
     public List<Film> getAll() {
-        return filmStorage.getAll();
+        return filmRepository.getAll();
     }
 
     @Override
     public List<Film> getFilmsByDirectorId(int directorId, String sortBy) {
         directorGuard.checkIfExists(directorId);
 
-        return filmStorage.getFilmsByDirectorId(directorId, sortBy);
+        return filmRepository.getFilmsByDirectorId(directorId, sortBy);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class FilmServiceImpl implements FilmService {
         Film newFilm = filmDtoToFilmMapper.mapFrom(dto);
         checkExistenceOfFilmFields(newFilm);
 
-        return filmStorage.create(newFilm);
+        return filmRepository.create(newFilm);
     }
 
     @Override
@@ -66,13 +66,13 @@ public class FilmServiceImpl implements FilmService {
         Film film = filmDtoToFilmMapper.mapFrom(dto);
         checkExistenceOfFilmFields(film);
 
-        return filmStorage.update(film);
+        return filmRepository.update(film);
     }
 
     @Override
     public Film delete(int id) {
         Film film = filmGuard.checkIfExists(id);
-        filmStorage.delete(id);
+        filmRepository.delete(id);
 
         return film;
     }
@@ -82,7 +82,7 @@ public class FilmServiceImpl implements FilmService {
         filmGuard.checkIfExists(filmId);
         userGuard.checkIfExists(userId);
 
-        filmStorage.likeFilm(filmId, userId);
+        filmRepository.likeFilm(filmId, userId);
 
         eventService.createEvent(userId, EventType.LIKE, EventOperation.ADD, filmId);
     }
@@ -93,12 +93,12 @@ public class FilmServiceImpl implements FilmService {
         userGuard.checkIfExists(userId);
 
         eventService.createEvent(userId, EventType.LIKE, EventOperation.REMOVE, filmId);
-        filmStorage.deleteLikeFromFilm(filmId, userId);
+        filmRepository.deleteLikeFromFilm(filmId, userId);
     }
 
     @Override
     public List<Film> getPopularFilms(int count, Integer genreId, Integer year) {
-        return filmStorage.getPopularFilms(count, genreId, year);
+        return filmRepository.getPopularFilms(count, genreId, year);
     }
 
     @Override
@@ -106,7 +106,7 @@ public class FilmServiceImpl implements FilmService {
         userGuard.checkIfExists(userId);
         userGuard.checkIfExists(friendId);
 
-        return filmStorage.getCommonFilms(userId, friendId);
+        return filmRepository.getCommonFilms(userId, friendId);
     }
 
     private void checkExistenceOfFilmFields(Film film) {

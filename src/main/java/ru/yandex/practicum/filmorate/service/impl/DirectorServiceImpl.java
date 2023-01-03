@@ -6,7 +6,7 @@ import ru.yandex.practicum.filmorate.mapper.Mapper;
 import ru.yandex.practicum.filmorate.dto.DirectorDto;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.service.DirectorService;
-import ru.yandex.practicum.filmorate.storage.director.DirectorStorage;
+import ru.yandex.practicum.filmorate.repository.DirectorRepository;
 import ru.yandex.practicum.filmorate.guard.DirectorGuard;
 
 import java.util.List;
@@ -14,13 +14,13 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class DirectorServiceImpl implements DirectorService {
-    private final DirectorStorage directorStorage;
+    private final DirectorRepository directorRepository;
     private final Mapper<DirectorDto, Director> directorDtoToDirectorMapper;
     private final DirectorGuard directorGuard;
 
     @Override
     public List<Director> getAll() {
-        return directorStorage.getAll();
+        return directorRepository.getAll();
     }
 
     @Override
@@ -32,7 +32,7 @@ public class DirectorServiceImpl implements DirectorService {
     public Director create(DirectorDto dto) {
         Director director = directorDtoToDirectorMapper.mapFrom(dto);
 
-        return directorStorage.create(director);
+        return directorRepository.create(director);
     }
 
     @Override
@@ -40,13 +40,13 @@ public class DirectorServiceImpl implements DirectorService {
         directorGuard.checkIfExists(dto.getId());
         Director director = directorDtoToDirectorMapper.mapFrom(dto);
 
-        return directorStorage.update(director);
+        return directorRepository.update(director);
     }
 
     @Override
     public Director delete(int id) {
         Director director = directorGuard.checkIfExists(id);
-        directorStorage.delete(id);
+        directorRepository.delete(id);
 
         return director;
     }

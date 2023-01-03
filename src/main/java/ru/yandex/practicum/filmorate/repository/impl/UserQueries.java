@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.user;
+package ru.yandex.practicum.filmorate.repository.impl;
 
 public class UserQueries {
     static final String GET_ALL = "SELECT * FROM users";
@@ -60,5 +60,5 @@ public class UserQueries {
             "FROM film as f " +
             "JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
             "JOIN likes AS l ON f.film_id = l.film_id " +
-            "WHERE user_id = ?";;
+            "WHERE user_id = ?";
 }

@@ -1,10 +1,11 @@
-package ru.yandex.practicum.filmorate.storage.mpa;
+package ru.yandex.practicum.filmorate.repository.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.repository.MpaRepository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class DbMpaStorage implements MpaStorage {
+public class MpaRepositoryImpl implements MpaRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Override

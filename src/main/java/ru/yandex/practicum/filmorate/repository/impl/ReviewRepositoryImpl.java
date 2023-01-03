@@ -1,10 +1,12 @@
-package ru.yandex.practicum.filmorate.storage.review;
+package ru.yandex.practicum.filmorate.repository.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Review;
+import ru.yandex.practicum.filmorate.repository.ReviewRepository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,16 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class DbReviewStorage implements ReviewStorage {
+@RequiredArgsConstructor
+public class ReviewRepositoryImpl implements ReviewRepository {
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
-
-    public DbReviewStorage(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("review")
-                .usingGeneratedKeyColumns("review_id");
-    }
 
     @Override
     public List<Review> getAll(Integer filmId, int count) {
@@ -44,6 +39,10 @@ public class DbReviewStorage implements ReviewStorage {
 
     @Override
     public Review create(Review review) {
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("review")
+                .usingGeneratedKeyColumns("review_id");
+
         Map<String, Object> reviewColumns = new HashMap<>();
         reviewColumns.put("content", review.getContent());
         reviewColumns.put("is_positive", review.isPositive());
