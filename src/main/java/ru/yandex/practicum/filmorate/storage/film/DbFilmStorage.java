@@ -73,7 +73,7 @@ public class DbFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film update(int id, Film film) {
+    public Film update(Film film) {
         jdbcTemplate.update(
                 FilmQueries.UPDATE,
                 film.getName(),
@@ -81,16 +81,16 @@ public class DbFilmStorage implements FilmStorage {
                 film.getReleaseDate(),
                 film.getDuration(),
                 film.getMpa().getId(),
-                id
+                film.getId()
         );
 
         jdbcTemplate.update(FilmQueries.DELETE_FILM_GENRES, film.getId());
         jdbcTemplate.update(FilmQueries.DELETE_FILM_DIRECTORS, film.getId());
 
-        updateFilmGenres(film.getGenres(), id);
-        updateFilmDirectors(film.getDirectors(), id);
+        updateFilmGenres(film.getGenres(), film.getId());
+        updateFilmDirectors(film.getDirectors(), film.getId());
 
-        return getById(id);
+        return getById(film.getId());
     }
 
     @Override

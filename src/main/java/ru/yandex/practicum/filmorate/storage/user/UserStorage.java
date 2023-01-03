@@ -10,7 +10,7 @@ public interface UserStorage {
     User getById(int id);
     User getByEmail(String email);
     User create(User user);
-    User update(int id, User user);
+    User update(User user);
     void delete(int id);
     void addFriend(int userId, int friendId);
     void deleteFriend(int userId, int friendId);

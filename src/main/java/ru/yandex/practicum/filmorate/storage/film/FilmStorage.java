@@ -10,7 +10,7 @@ public interface FilmStorage {
     List<Film> getFilmsByDirectorId(int directorId, String sortBy);
     Film getById(int id);
     Film create(Film film);
-    Film update(int id, Film film);
+    Film update(Film film);
     void delete(int id);
     List<Film> getPopularFilms(int count, Integer genreId, Integer year);
     void likeFilm(int filmId, int userId);

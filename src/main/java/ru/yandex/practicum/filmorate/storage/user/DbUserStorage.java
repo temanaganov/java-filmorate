@@ -63,17 +63,17 @@ public class DbUserStorage implements UserStorage {
     }
 
     @Override
-    public User update(int id, User user) {
+    public User update(User user) {
         jdbcTemplate.update(
                 UserQueries.update,
                 user.getEmail(),
                 user.getLogin(),
                 user.getName(),
                 user.getBirthday(),
-                id
+                user.getId()
         );
 
-        return getById(id);
+        return getById(user.getId());
     }
 
     @Override

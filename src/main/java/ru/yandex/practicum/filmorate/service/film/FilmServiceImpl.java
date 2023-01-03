@@ -65,7 +65,7 @@ public class FilmServiceImpl implements FilmService {
         Film film = filmDtoToFilmMapper.mapFrom(dto);
         checkExistenceOfFilmFields(film);
 
-        return filmStorage.update(film.getId(), film);
+        return filmStorage.update(film);
     }
 
     @Override

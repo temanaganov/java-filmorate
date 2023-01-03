@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
             throw new FieldValidationException("email", "User with this email is already exists");
         }
 
-        return userStorage.update(user.getId(), user);
+        return userStorage.update(user);
     }
 
     @Override
