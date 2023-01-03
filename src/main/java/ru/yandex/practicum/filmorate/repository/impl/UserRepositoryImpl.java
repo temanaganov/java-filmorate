@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.repository.GenreRepository;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.UserRepository;
+import ru.yandex.practicum.filmorate.repository.queries.UserQueries;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -146,8 +147,8 @@ public class UserRepositoryImpl implements UserRepository {
                 .releaseDate(resultSet.getDate("release_date").toLocalDate())
                 .duration(resultSet.getInt("duration"))
                 .mpa(new Mpa(resultSet.getInt("mpa_id"), resultSet.getString("mpa.name")))
-                .genres(genreRepository.getAllByFilmId(resultSet.getInt("film_id")))
-                .directors(directorRepository.getAllByFilmId(resultSet.getInt("film_id")))
+                .genres(genreRepository.getByFilmId(resultSet.getInt("film_id")))
+                .directors(directorRepository.getByFilmId(resultSet.getInt("film_id")))
                 .build();
     }
 }

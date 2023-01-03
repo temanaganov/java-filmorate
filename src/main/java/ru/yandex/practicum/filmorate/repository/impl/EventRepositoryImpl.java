@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.model.event.Event;
 import ru.yandex.practicum.filmorate.model.event.EventOperation;
 import ru.yandex.practicum.filmorate.model.event.EventType;
 import ru.yandex.practicum.filmorate.repository.EventRepository;
+import ru.yandex.practicum.filmorate.repository.queries.EventQueries;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,9 +23,7 @@ public class EventRepositoryImpl implements EventRepository {
 
     @Override
     public List<Event> getFeed(int userId) {
-        String sqlQuery = "SELECT * FROM event WHERE user_id = ?";
-
-        return jdbcTemplate.query(sqlQuery, this::mapRowToEvent, userId);
+        return jdbcTemplate.query(EventQueries.GET_FEED, this::mapRowToEvent, userId);
     }
 
     @Override

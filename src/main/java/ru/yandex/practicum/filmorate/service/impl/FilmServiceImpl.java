@@ -41,10 +41,10 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public List<Film> getFilmsByDirectorId(int directorId, String sortBy) {
+    public List<Film> getByDirectorId(int directorId, String sortBy) {
         directorGuard.checkIfExists(directorId);
 
-        return filmRepository.getFilmsByDirectorId(directorId, sortBy);
+        return filmRepository.getByDirectorId(directorId, sortBy);
     }
 
     @Override

@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.repository.GenreRepository;
+import ru.yandex.practicum.filmorate.repository.queries.GenreQueries;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,29 +19,22 @@ public class GenreRepositoryImpl implements GenreRepository {
 
     @Override
     public List<Genre> getAll() {
-        String sql = "SELECT * FROM genre ORDER BY genre_id";
-
-        return jdbcTemplate.query(sql, this::mapRowToGenre);
+        return jdbcTemplate.query(GenreQueries.GET_ALL, this::mapRowToGenre);
     }
 
     @Override
     public Genre getById(int id) {
-        String sql = "SELECT * FROM genre WHERE genre_id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, this::mapRowToGenre, id);
+            return jdbcTemplate.queryForObject(GenreQueries.GET_BY_ID, this::mapRowToGenre, id);
         } catch (DataAccessException exception) {
             return null;
         }
     }
 
     @Override
-    public List<Genre> getAllByFilmId(int filmId) {
-        String sql = "SELECT fg.genre_id AS genre_id, g.name AS name " +
-                "FROM film_genre AS fg " +
-                "JOIN genre AS g ON fg.genre_id = g.genre_id " +
-                "WHERE fg.film_id = ? ";
+    public List<Genre> getByFilmId(int filmId) {
         try {
-            return jdbcTemplate.query(sql, this::mapRowToGenre, filmId);
+            return jdbcTemplate.query(GenreQueries.GET_BY_FILM_ID, this::mapRowToGenre, filmId);
         } catch (DataAccessException exception) {
             return null;
         }

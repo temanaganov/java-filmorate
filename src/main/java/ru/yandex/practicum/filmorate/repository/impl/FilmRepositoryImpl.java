@@ -13,6 +13,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.repository.FilmRepository;
 import ru.yandex.practicum.filmorate.repository.GenreRepository;
 import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.repository.queries.FilmQueries;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,8 +36,8 @@ public class FilmRepositoryImpl implements FilmRepository {
     }
 
     @Override
-    public List<Film> getFilmsByDirectorId(int directorId, String sortBy) {
-        return jdbcTemplate.query(FilmQueries.getAllByDirectorId(sortBy), this::mapRowToFilm, directorId);
+    public List<Film> getByDirectorId(int directorId, String sortBy) {
+        return jdbcTemplate.query(FilmQueries.getByDirectorId(sortBy), this::mapRowToFilm, directorId);
     }
 
     @Override
@@ -193,8 +194,8 @@ public class FilmRepositoryImpl implements FilmRepository {
                 .releaseDate(resultSet.getDate("release_date").toLocalDate())
                 .duration(resultSet.getInt("duration"))
                 .mpa(new Mpa(resultSet.getInt("mpa_id"), resultSet.getString("mpa.name")))
-                .genres(genreRepository.getAllByFilmId(resultSet.getInt("film_id")))
-                .directors(directorRepository.getAllByFilmId(resultSet.getInt("film_id")))
+                .genres(genreRepository.getByFilmId(resultSet.getInt("film_id")))
+                .directors(directorRepository.getByFilmId(resultSet.getInt("film_id")))
                 .build();
     }
 }

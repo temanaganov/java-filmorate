@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface DirectorRepository {
     List<Director> getAll();
-    List<Director> getAllByFilmId(int filmId);
+    List<Director> getByFilmId(int filmId);
     Director getById(int id);
     Director create(Director director);
     Director update(Director director);

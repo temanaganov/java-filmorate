@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface GenreRepository {
     List<Genre> getAll();
-    List<Genre> getAllByFilmId(int filmId);
+    List<Genre> getByFilmId(int filmId);
     Genre getById(int id);
 }

@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.repository.MpaRepository;
+import ru.yandex.practicum.filmorate.repository.queries.MpaQueries;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,16 +19,13 @@ public class MpaRepositoryImpl implements MpaRepository {
 
     @Override
     public List<Mpa> getAll() {
-        String sql = "SELECT * FROM mpa ORDER BY mpa_id";
-
-        return jdbcTemplate.query(sql, this::mapRowToRate);
+        return jdbcTemplate.query(MpaQueries.GET_ALL, this::mapRowToRate);
     }
 
     @Override
     public Mpa getById(int id) {
-        String sql = "SELECT * FROM mpa WHERE mpa_id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, this::mapRowToRate, id);
+            return jdbcTemplate.queryForObject(MpaQueries.GET_BY_ID, this::mapRowToRate, id);
         } catch (DataAccessException exception) {
             return null;
         }

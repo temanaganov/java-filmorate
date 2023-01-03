@@ -1,12 +1,12 @@
-package ru.yandex.practicum.filmorate.repository.impl;
+package ru.yandex.practicum.filmorate.repository.queries;
 
 public class FilmQueries {
-    static final String GET_ALL = "SELECT * " +
+    public static final String GET_ALL = "SELECT * " +
             "FROM film AS f " +
             "JOIN mpa AS m ON f.mpa_id = m.mpa_id";
 
-    static String getAllByDirectorId(String sortBy) {
-        boolean isOrderByIsYearOrLikes = sortBy.equals("year") || sortBy.equals("likes");
+    public static String getByDirectorId(String sortBy) {
+        boolean isSortByIsYearOrLikes = sortBy.equals("year") || sortBy.equals("likes");
         StringBuilder sb = new StringBuilder("SELECT *, COUNT(*) AS likes " +
                 "FROM film AS f " +
                 "JOIN film_director AS fd ON f.film_id = fd.film_id " +
@@ -16,14 +16,14 @@ public class FilmQueries {
                 "GROUP BY f.film_id "
         );
 
-        if (isOrderByIsYearOrLikes) {
+        if (isSortByIsYearOrLikes) {
             sb.append("ORDER BY ").append(sortBy.equals("year") ? "f.release_date" : "likes");
         }
 
         return sb.toString();
     }
 
-    static final String SEARCH_BY_DIRECTOR = "SELECT f.*,m.* FROM film f " +
+    public static final String SEARCH_BY_DIRECTOR = "SELECT f.*,m.* FROM film f " +
             "JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
             "LEFT JOIN film_director fd ON f.film_id = fd.film_id " +
             "LEFT JOIN director d ON fd.director_id = d.director_id " +
@@ -31,13 +31,13 @@ public class FilmQueries {
             "WHERE LOWER(d.name) LIKE ? " +
             "GROUP BY f.film_id ORDER BY COUNT(l.film_id) DESC";
 
-    static final String SEARCH_BY_FILM = "SELECT f.*,m.* FROM film f " +
+    public static final String SEARCH_BY_FILM = "SELECT f.*,m.* FROM film f " +
             "JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
             "LEFT JOIN likes l ON f.film_id = l.film_id " +
             "WHERE LOWER(f.name) LIKE ? " +
             "GROUP BY f.film_id ORDER BY COUNT(l.film_id) DESC";
 
-    static final String SEARCH_BY_FILM_OR_DIRECTOR = "SELECT f.*,m.* FROM film f " +
+    public static final String SEARCH_BY_FILM_OR_DIRECTOR = "SELECT f.*,m.* FROM film f " +
             "JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
             "LEFT JOIN film_director fd on f.film_id = fd.film_id " +
             "LEFT JOIN director d on fd.director_id = d.director_id " +
@@ -45,17 +45,17 @@ public class FilmQueries {
             "WHERE LOWER(f.name) LIKE ? OR LOWER(d.name) LIKE ?" +
             "GROUP BY f.film_id ORDER BY COUNT(l.film_id) DESC";
 
-    static final String SEARCH_NO_ARGS = "SELECT f.*,m.* FROM film f " +
+    public static final String SEARCH_NO_ARGS = "SELECT f.*,m.* FROM film f " +
             "JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
             "LEFT JOIN likes l on f.film_id = l.film_id " +
             "GROUP BY f.film_id ORDER BY COUNT(l.film_id) DESC";
 
-    static final String GET_BY_ID = "SELECT * " +
+    public static final String GET_BY_ID = "SELECT * " +
             "FROM film AS f " +
             "JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
             "WHERE f.film_id = ?";
 
-    static final String UPDATE = "UPDATE film " +
+    public static final String UPDATE = "UPDATE film " +
             "SET " +
             "name = ?, " +
             "description = ?, " +
@@ -64,9 +64,9 @@ public class FilmQueries {
             "mpa_id = ? " +
             "WHERE film_id = ?";
 
-    static final String DELETE = "DELETE FROM film WHERE film_id = ?";
+    public static final String DELETE = "DELETE FROM film WHERE film_id = ?";
 
-    static String getPopularFilms(Integer genreId, Integer year) {
+    public static String getPopularFilms(Integer genreId, Integer year) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT *, ")
                 .append("COUNT(l.film_id) AS likes ")
@@ -88,19 +88,19 @@ public class FilmQueries {
         return sb.toString();
     }
 
-    static final String DELETE_FILM_GENRES = "DELETE FROM film_genre WHERE film_id = ?";
+    public static final String DELETE_FILM_GENRES = "DELETE FROM film_genre WHERE film_id = ?";
 
-    static final String DELETE_FILM_DIRECTORS = "DELETE FROM film_director WHERE film_id = ?";
+    public static final String DELETE_FILM_DIRECTORS = "DELETE FROM film_director WHERE film_id = ?";
 
-    static final String LIKE_FILM = "INSERT INTO likes VALUES(?, ?)";
+    public static final String LIKE_FILM = "INSERT INTO likes VALUES(?, ?)";
 
-    static final String DELETE_LIKE_FROM_FILM = "DELETE FROM likes WHERE film_id = ? AND user_id = ?";
+    public static final String DELETE_LIKE_FROM_FILM = "DELETE FROM likes WHERE film_id = ? AND user_id = ?";
 
-    static final String ADD_GENRE = "INSERT INTO film_genre VALUES(?, ?)";
+    public static final String ADD_GENRE = "INSERT INTO film_genre VALUES(?, ?)";
 
-    static final String ADD_DIRECTOR = "INSERT INTO film_director VALUES(?, ?)";
+    public static final String ADD_DIRECTOR = "INSERT INTO film_director VALUES(?, ?)";
 
-    static final String GET_COMMON_FILMS = "SELECT * " +
+    public static final String GET_COMMON_FILMS = "SELECT * " +
             "FROM film AS f " +
             "JOIN mpa AS m ON m.mpa_id = f.mpa_id " +
             "JOIN likes AS l1 ON (l1.film_id = f.film_id AND l1.user_id = ?) " +

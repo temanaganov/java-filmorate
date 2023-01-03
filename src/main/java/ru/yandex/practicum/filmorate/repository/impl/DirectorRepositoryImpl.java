@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.repository.DirectorRepository;
+import ru.yandex.practicum.filmorate.repository.queries.DirectorQueries;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,19 +22,13 @@ public class DirectorRepositoryImpl implements DirectorRepository {
 
     @Override
     public List<Director> getAll() {
-        String sql = "SELECT * FROM director ORDER BY director_id";
-
-        return jdbcTemplate.query(sql, this::mapRowToDirector);
+        return jdbcTemplate.query(DirectorQueries.GET_ALL, this::mapRowToDirector);
     }
 
     @Override
-    public List<Director> getAllByFilmId(int filmId) {
-        String sql = "SELECT fd.director_id AS director_id, d.name AS name " +
-                "FROM film_director AS fd " +
-                "JOIN director AS d ON fd.director_id = d.director_id " +
-                "WHERE fd.film_id = ?";
+    public List<Director> getByFilmId(int filmId) {
         try {
-            return jdbcTemplate.query(sql, this::mapRowToDirector, filmId);
+            return jdbcTemplate.query(DirectorQueries.GET_BY_FILM_ID, this::mapRowToDirector, filmId);
         } catch (DataAccessException exception) {
             return null;
         }
@@ -41,9 +36,8 @@ public class DirectorRepositoryImpl implements DirectorRepository {
 
     @Override
     public Director getById(int id) {
-        String sql = "SELECT * FROM director WHERE director_id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, this::mapRowToDirector, id);
+            return jdbcTemplate.queryForObject(DirectorQueries.GET_BY_ID, this::mapRowToDirector, id);
         } catch (DataAccessException exception) {
             return null;
         }
@@ -64,16 +58,14 @@ public class DirectorRepositoryImpl implements DirectorRepository {
 
     @Override
     public Director update(Director director) {
-        String sql = "UPDATE director SET name = ? WHERE director_id = ?";
-        jdbcTemplate.update(sql, director.getName(), director.getId());
+        jdbcTemplate.update(DirectorQueries.UPDATE, director.getName(), director.getId());
 
         return getById(director.getId());
     }
 
     @Override
     public void delete(int id) {
-        String sql = "DELETE FROM director WHERE director_id = ?";
-        jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(DirectorQueries.DELETE, id);
     }
 
     private Director mapRowToDirector(ResultSet resultSet, int rowNum) throws SQLException {
