@@ -3,17 +3,17 @@ package ru.yandex.practicum.filmorate.repository.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Review;
+import ru.yandex.practicum.filmorate.repository.BeanPropertySqlParameterSource;
 import ru.yandex.practicum.filmorate.repository.ReviewRepository;
 import ru.yandex.practicum.filmorate.repository.queries.ReviewQueries;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
@@ -44,14 +44,8 @@ public class ReviewRepositoryImpl implements ReviewRepository {
                 .withTableName("review")
                 .usingGeneratedKeyColumns("review_id");
 
-        Map<String, Object> reviewColumns = new HashMap<>();
-        reviewColumns.put("content", review.getContent());
-        reviewColumns.put("is_positive", review.isPositive());
-        reviewColumns.put("user_id", review.getUserId());
-        reviewColumns.put("film_id", review.getFilmId());
-        reviewColumns.put("useful", review.getUseful());
-
-        int reviewId = simpleJdbcInsert.executeAndReturnKey(reviewColumns).intValue();
+        SqlParameterSource parameters = new BeanPropertySqlParameterSource(review);
+        int reviewId = simpleJdbcInsert.executeAndReturnKey(parameters).intValue();
 
         return getById(reviewId);
     }
@@ -61,7 +55,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
         jdbcTemplate.update(
                 ReviewQueries.UPDATE,
                 review.getContent(),
-                review.isPositive(),
+                review.getIsPositive(),
                 review.getReviewId()
         );
 
