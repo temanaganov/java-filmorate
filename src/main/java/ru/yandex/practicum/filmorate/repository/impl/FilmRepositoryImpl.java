@@ -9,8 +9,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Director;
+import ru.yandex.practicum.filmorate.model.film.FilmSort;
 import ru.yandex.practicum.filmorate.repository.DirectorRepository;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.repository.FilmRepository;
 import ru.yandex.practicum.filmorate.repository.GenreRepository;
@@ -36,7 +37,7 @@ public class FilmRepositoryImpl implements FilmRepository {
     }
 
     @Override
-    public List<Film> getByDirectorId(int directorId, String sortBy) {
+    public List<Film> getByDirectorId(int directorId, FilmSort sortBy) {
         return jdbcTemplate.query(FilmQueries.getByDirectorId(sortBy), this::mapRowToFilm, directorId);
     }
 

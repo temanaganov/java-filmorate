@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.exception.FieldValidationException;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.model.film.FilmSort;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.dto.FilmDto;
 
@@ -35,7 +36,7 @@ public class FilmController {
     }
 
     @GetMapping("/director/{directorId}")
-    public List<Film> getByDirectorId(@PathVariable int directorId, @RequestParam String sortBy) {
+    public List<Film> getByDirectorId(@PathVariable int directorId, @RequestParam FilmSort sortBy) {
         return filmService.getByDirectorId(directorId, sortBy);
     }
 

@@ -1,14 +1,15 @@
 package ru.yandex.practicum.filmorate.service;
 
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.dto.FilmDto;
+import ru.yandex.practicum.filmorate.model.film.FilmSort;
 
 import java.util.List;
 
 public interface FilmService {
     List<Film> search(String query, String criteria);
     List<Film> getAll();
-    List<Film> getByDirectorId(int directorId, String sortBy);
+    List<Film> getByDirectorId(int directorId, FilmSort sortBy);
     Film getById(int id);
     Film create(FilmDto dto);
     Film update(FilmDto dto);

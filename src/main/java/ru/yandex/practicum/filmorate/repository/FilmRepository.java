@@ -1,13 +1,14 @@
 package ru.yandex.practicum.filmorate.repository;
 
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.model.film.FilmSort;
 
 import java.util.List;
 
 public interface FilmRepository {
     List<Film> search(String query, String criteria);
     List<Film> getAll();
-    List<Film> getByDirectorId(int directorId, String sortBy);
+    List<Film> getByDirectorId(int directorId, FilmSort sortBy);
     Film getById(int id);
     Film create(Film film);
     Film update(Film film);

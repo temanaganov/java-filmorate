@@ -1,12 +1,13 @@
 package ru.yandex.practicum.filmorate.repository.queries;
 
+import ru.yandex.practicum.filmorate.model.film.FilmSort;
+
 public class FilmQueries {
     public static final String GET_ALL = "SELECT * " +
             "FROM film AS f " +
             "JOIN mpa AS m ON f.mpa_id = m.mpa_id";
 
-    public static String getByDirectorId(String sortBy) {
-        boolean isSortByIsYearOrLikes = sortBy.equals("year") || sortBy.equals("likes");
+    public static String getByDirectorId(FilmSort sortBy) {
         StringBuilder sb = new StringBuilder("SELECT *, COUNT(*) AS likes " +
                 "FROM film AS f " +
                 "JOIN film_director AS fd ON f.film_id = fd.film_id " +
@@ -16,8 +17,8 @@ public class FilmQueries {
                 "GROUP BY f.film_id "
         );
 
-        if (isSortByIsYearOrLikes) {
-            sb.append("ORDER BY ").append(sortBy.equals("year") ? "f.release_date" : "likes");
+        if (sortBy != null) {
+            sb.append("ORDER BY ").append(sortBy == FilmSort.year ? "f.release_date" : "likes");
         }
 
         return sb.toString();

@@ -3,11 +3,12 @@ package ru.yandex.practicum.filmorate.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.mapper.Mapper;
+import ru.yandex.practicum.filmorate.model.film.FilmSort;
 import ru.yandex.practicum.filmorate.model.event.EventOperation;
 import ru.yandex.practicum.filmorate.model.event.EventType;
 import ru.yandex.practicum.filmorate.service.EventService;
 import ru.yandex.practicum.filmorate.guard.DirectorGuard;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.repository.FilmRepository;
 import ru.yandex.practicum.filmorate.dto.FilmDto;
@@ -41,7 +42,7 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public List<Film> getByDirectorId(int directorId, String sortBy) {
+    public List<Film> getByDirectorId(int directorId, FilmSort sortBy) {
         directorGuard.checkIfExists(directorId);
 
         return filmRepository.getByDirectorId(directorId, sortBy);
