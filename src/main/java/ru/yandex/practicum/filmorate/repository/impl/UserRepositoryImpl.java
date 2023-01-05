@@ -3,6 +3,8 @@ package ru.yandex.practicum.filmorate.repository.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.repository.DirectorRepository;
@@ -15,7 +17,8 @@ import ru.yandex.practicum.filmorate.repository.queries.UserQueries;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -53,13 +56,12 @@ public class UserRepositoryImpl implements UserRepository {
                 .withTableName("users")
                 .usingGeneratedKeyColumns("user_id");
 
-        Map<String, Object> userColumns = new HashMap<>();
-        userColumns.put("email", user.getEmail());
-        userColumns.put("login", user.getLogin());
-        userColumns.put("name", user.getName());
-        userColumns.put("birthday", user.getBirthday());
-
-        int userId = simpleJdbcInsert.executeAndReturnKey(userColumns).intValue();
+        SqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("email", user.getEmail())
+                .addValue("login", user.getLogin())
+                .addValue("name", user.getName())
+                .addValue("birthday", user.getBirthday());
+        int userId = simpleJdbcInsert.executeAndReturnKey(parameters).intValue();
 
         return getById(userId);
     }
@@ -97,11 +99,10 @@ public class UserRepositoryImpl implements UserRepository {
     public void addFriend(int userId, int friendId) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("friendship");
 
-        Map<String, Object> userColumns = new HashMap<>();
-        userColumns.put("user_id", userId);
-        userColumns.put("friend_id", friendId);
-
-        simpleJdbcInsert.execute(userColumns);
+        SqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("user_id", userId)
+                .addValue("friend_id", friendId);
+        simpleJdbcInsert.execute(parameters);
     }
 
     @Override

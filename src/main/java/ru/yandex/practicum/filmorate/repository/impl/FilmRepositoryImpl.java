@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Director;
@@ -18,9 +20,7 @@ import ru.yandex.practicum.filmorate.repository.queries.FilmQueries;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
@@ -55,14 +55,13 @@ public class FilmRepositoryImpl implements FilmRepository {
                 .withTableName("film")
                 .usingGeneratedKeyColumns("film_id");
 
-        Map<String, Object> filmColumns = new HashMap<>();
-        filmColumns.put("name", film.getName());
-        filmColumns.put("description", film.getDescription());
-        filmColumns.put("release_date", film.getReleaseDate());
-        filmColumns.put("duration", film.getDuration());
-        filmColumns.put("mpa_id", film.getMpa().getId());
-
-        int filmId = simpleJdbcInsert.executeAndReturnKey(filmColumns).intValue();
+        SqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("name", film.getName())
+                .addValue("description", film.getDescription())
+                .addValue("release_date", film.getReleaseDate())
+                .addValue("duration", film.getDuration())
+                .addValue("mpa_id", film.getMpa().getId());
+        int filmId = simpleJdbcInsert.executeAndReturnKey(parameters).intValue();
 
         updateFilmGenres(film.getGenres(), filmId);
         updateFilmDirectors(film.getDirectors(), filmId);

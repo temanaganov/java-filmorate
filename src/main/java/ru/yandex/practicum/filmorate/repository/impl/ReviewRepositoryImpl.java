@@ -3,11 +3,11 @@ package ru.yandex.practicum.filmorate.repository.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Review;
-import ru.yandex.practicum.filmorate.repository.BeanPropertySqlParameterSource;
 import ru.yandex.practicum.filmorate.repository.ReviewRepository;
 import ru.yandex.practicum.filmorate.repository.queries.ReviewQueries;
 

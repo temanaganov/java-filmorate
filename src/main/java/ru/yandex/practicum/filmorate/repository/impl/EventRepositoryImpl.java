@@ -2,13 +2,13 @@ package ru.yandex.practicum.filmorate.repository.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.event.Event;
 import ru.yandex.practicum.filmorate.model.event.EventOperation;
 import ru.yandex.practicum.filmorate.model.event.EventType;
-import ru.yandex.practicum.filmorate.repository.BeanPropertySqlParameterSource;
 import ru.yandex.practicum.filmorate.repository.EventRepository;
 import ru.yandex.practicum.filmorate.repository.queries.EventQueries;
 
@@ -32,7 +32,18 @@ public class EventRepositoryImpl implements EventRepository {
                 .withTableName("event")
                 .usingGeneratedKeyColumns("event_id");
 
-        SqlParameterSource parameters = new BeanPropertySqlParameterSource(event);
+        SqlParameterSource parameters = new BeanPropertySqlParameterSource(event) {
+            @Override
+            public Object getValue(String paramName) throws IllegalArgumentException {
+                Object value = super.getValue(paramName);
+
+                if (value instanceof Enum) {
+                    return value.toString();
+                }
+
+                return value;
+            }
+        };
         simpleJdbcInsert.executeAndReturnKey(parameters).intValue();
     }
 
