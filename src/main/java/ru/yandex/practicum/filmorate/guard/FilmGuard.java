@@ -3,12 +3,12 @@ package ru.yandex.practicum.filmorate.guard;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.film.Film;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.repository.FilmRepository;
 
 @Component
 @RequiredArgsConstructor
 public class FilmGuard extends Guard<Film> {
-    private final FilmStorage filmStorage;
+    private final FilmRepository filmRepository;
 
     @Override
     protected String getGuardClass() {
@@ -17,6 +17,6 @@ public class FilmGuard extends Guard<Film> {
 
     @Override
     protected Film checkMethod(int id) {
-        return filmStorage.getById(id);
+        return filmRepository.getById(id);
     }
 }

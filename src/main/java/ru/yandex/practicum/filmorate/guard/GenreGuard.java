@@ -2,13 +2,13 @@ package ru.yandex.practicum.filmorate.guard;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.model.genre.Genre;
-import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.repository.GenreRepository;
 
 @Component
 @RequiredArgsConstructor
 public class GenreGuard extends Guard<Genre> {
-    private final GenreStorage genreStorage;
+    private final GenreRepository genreRepository;
 
     @Override
     protected String getGuardClass() {
@@ -17,6 +17,6 @@ public class GenreGuard extends Guard<Genre> {
 
     @Override
     protected Genre checkMethod(int id) {
-        return genreStorage.getById(id);
+        return genreRepository.getById(id);
     }
 }

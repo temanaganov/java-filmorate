@@ -3,9 +3,9 @@ package ru.yandex.practicum.filmorate.model.film;
 import lombok.Builder;
 import lombok.Value;
 import lombok.With;
-import ru.yandex.practicum.filmorate.model.director.Director;
-import ru.yandex.practicum.filmorate.model.genre.Genre;
-import ru.yandex.practicum.filmorate.model.mpa.Mpa;
+import ru.yandex.practicum.filmorate.model.Director;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.exception.FieldValidationException;
 import ru.yandex.practicum.filmorate.model.film.Film;
-import ru.yandex.practicum.filmorate.service.film.FilmService;
-import ru.yandex.practicum.filmorate.model.film.FilmDto;
+import ru.yandex.practicum.filmorate.model.film.FilmSort;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.dto.FilmDto;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -35,14 +36,14 @@ public class FilmController {
     }
 
     @GetMapping("/director/{directorId}")
-    public List<Film> getFilmsByDirectorId(@PathVariable int directorId, @RequestParam String sortBy) {
-        return filmService.getFilmsByDirectorId(directorId, sortBy);
+    public List<Film> getByDirectorId(@PathVariable int directorId, @RequestParam FilmSort sortBy) {
+        return filmService.getByDirectorId(directorId, sortBy);
     }
 
     @GetMapping("/search")
-    public List<Film> search(@RequestParam String query, @RequestParam String by) {
-        log.info("query = " + query + " by = " + by);
-        return filmService.search(query, by);
+    public List<Film> search(@RequestParam String query, @RequestParam("by") String criteria) {
+        log.info("query = " + query + " by = " + criteria);
+        return filmService.search(query, criteria);
     }
 
     @GetMapping("/{id}")

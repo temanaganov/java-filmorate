@@ -2,13 +2,13 @@ package ru.yandex.practicum.filmorate.guard;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.model.review.Review;
-import ru.yandex.practicum.filmorate.storage.review.ReviewStorage;
+import ru.yandex.practicum.filmorate.model.Review;
+import ru.yandex.practicum.filmorate.repository.ReviewRepository;
 
 @Component
 @RequiredArgsConstructor
 public class ReviewGuard extends Guard<Review> {
-    private final ReviewStorage reviewStorage;
+    private final ReviewRepository reviewRepository;
 
     @Override
     protected String getGuardClass() {
@@ -17,6 +17,6 @@ public class ReviewGuard extends Guard<Review> {
 
     @Override
     protected Review checkMethod(int id) {
-        return reviewStorage.getById(id);
+        return reviewRepository.getById(id);
     }
 }
