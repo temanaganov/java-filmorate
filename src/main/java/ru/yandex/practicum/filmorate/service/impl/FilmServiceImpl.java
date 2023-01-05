@@ -31,8 +31,8 @@ public class FilmServiceImpl implements FilmService {
     private final DirectorGuard directorGuard;
 
     @Override
-    public List<Film> search(String query, String by) {
-        return filmRepository.search(query, by);
+    public List<Film> search(String query, String criteria) {
+        return filmRepository.search(query, criteria);
     }
 
     @Override

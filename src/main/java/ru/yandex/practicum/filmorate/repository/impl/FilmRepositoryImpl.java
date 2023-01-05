@@ -116,22 +116,22 @@ public class FilmRepositoryImpl implements FilmRepository {
     }
 
     @Override
-    public List<Film> search(String query, String by) {
-        query = "%" + query.toLowerCase() + "%";
-        String[] byList = by.split(",");
-        if (byList.length != 0) {
-            if (byList.length == 1) {
-                if (byList[0].equals("director")) {
-                    return jdbcTemplate.query(FilmQueries.SEARCH_BY_DIRECTOR, this::mapRowToFilm, query);
-                } else {
-                    return jdbcTemplate.query(FilmQueries.SEARCH_BY_FILM, this::mapRowToFilm, query);
-                }
-            } else {
-                return jdbcTemplate.query(FilmQueries.SEARCH_BY_FILM_OR_DIRECTOR, this::mapRowToFilm, query, query);
-            }
-        } else {
-            return jdbcTemplate.query(FilmQueries.SEARCH_NO_ARGS, this::mapRowToFilm);
+    public List<Film> search(String query, String criteria) {
+        String pattern = "%" + query.toLowerCase() + "%";
+
+        if (criteria.equals("director")) {
+            return jdbcTemplate.query(FilmQueries.SEARCH_BY_DIRECTOR, this::mapRowToFilm, pattern);
         }
+
+        if (criteria.equals("title")) {
+            return jdbcTemplate.query(FilmQueries.SEARCH_BY_FILM, this::mapRowToFilm, pattern);
+        }
+
+       if (criteria.equals("director,title") || criteria.equals("title,director")) {
+           return jdbcTemplate.query(FilmQueries.SEARCH_BY_FILM_OR_DIRECTOR, this::mapRowToFilm, pattern, pattern);
+       }
+
+       return jdbcTemplate.query(FilmQueries.SEARCH_NO_ARGS, this::mapRowToFilm);
     }
 
     private void updateFilmGenres(List<Genre> genres, int filmId) {

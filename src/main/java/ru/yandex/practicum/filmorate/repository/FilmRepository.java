@@ -5,7 +5,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import java.util.List;
 
 public interface FilmRepository {
-    List<Film> search(String query, String by);
+    List<Film> search(String query, String criteria);
     List<Film> getAll();
     List<Film> getByDirectorId(int directorId, String sortBy);
     Film getById(int id);

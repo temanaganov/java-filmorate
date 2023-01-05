@@ -42,7 +42,7 @@ public class FilmQueries {
             "LEFT JOIN film_director fd on f.film_id = fd.film_id " +
             "LEFT JOIN director d on fd.director_id = d.director_id " +
             "LEFT JOIN likes l on f.film_id = l.film_id " +
-            "WHERE LOWER(f.name) LIKE ? OR LOWER(d.name) LIKE ?" +
+            "WHERE LOWER(f.name) LIKE ? OR LOWER(d.name) LIKE ? " +
             "GROUP BY f.film_id ORDER BY COUNT(l.film_id) DESC";
 
     public static final String SEARCH_NO_ARGS = "SELECT f.*,m.* FROM film f " +

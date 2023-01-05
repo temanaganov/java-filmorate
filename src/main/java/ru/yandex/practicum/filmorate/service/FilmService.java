@@ -6,7 +6,7 @@ import ru.yandex.practicum.filmorate.dto.FilmDto;
 import java.util.List;
 
 public interface FilmService {
-    List<Film> search(String query, String by);
+    List<Film> search(String query, String criteria);
     List<Film> getAll();
     List<Film> getByDirectorId(int directorId, String sortBy);
     Film getById(int id);
