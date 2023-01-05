@@ -57,7 +57,6 @@ public class ReviewServiceImpl implements ReviewService {
         filmGuard.checkIfExists(review.getFilmId());
 
         Review eventReview = reviewRepository.update(review);
-
         eventService.createEvent(eventReview.getUserId(), EventType.REVIEW, EventOperation.UPDATE, eventReview.getReviewId());
 
         return eventReview;
@@ -66,8 +65,9 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public Review delete(int id) {
         Review review = reviewGuard.checkIfExists(id);
-        eventService.createEvent(review.getUserId(), EventType.REVIEW, EventOperation.REMOVE, review.getReviewId());
+
         reviewRepository.delete(id);
+        eventService.createEvent(review.getUserId(), EventType.REVIEW, EventOperation.REMOVE, review.getReviewId());
 
         return review;
     }

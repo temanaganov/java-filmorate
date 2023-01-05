@@ -83,8 +83,8 @@ public class UserServiceImpl implements UserService {
         userGuard.checkIfExists(userId);
         userGuard.checkIfExists(friendId);
 
-        eventService.createEvent(userId, EventType.FRIEND, EventOperation.REMOVE, friendId);
         userRepository.deleteFriend(userId, friendId);
+        eventService.createEvent(userId, EventType.FRIEND, EventOperation.REMOVE, friendId);
     }
 
     @Override

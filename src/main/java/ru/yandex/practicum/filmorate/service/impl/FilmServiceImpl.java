@@ -84,7 +84,6 @@ public class FilmServiceImpl implements FilmService {
         userGuard.checkIfExists(userId);
 
         filmRepository.likeFilm(filmId, userId);
-
         eventService.createEvent(userId, EventType.LIKE, EventOperation.ADD, filmId);
     }
 
@@ -93,8 +92,8 @@ public class FilmServiceImpl implements FilmService {
         filmGuard.checkIfExists(filmId);
         userGuard.checkIfExists(userId);
 
-        eventService.createEvent(userId, EventType.LIKE, EventOperation.REMOVE, filmId);
         filmRepository.deleteLikeFromFilm(filmId, userId);
+        eventService.createEvent(userId, EventType.LIKE, EventOperation.REMOVE, filmId);
     }
 
     @Override
